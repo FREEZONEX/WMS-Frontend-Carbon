@@ -1,0 +1,20 @@
+@use '@carbon/react';
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@media (min-width: 42rem) {
+  .cds--grid--no-gutter {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+.cds--content {
+  margin-top: 3rem;
+  // background: var(--cds-background);
+}
+
+.button-primary {
+  background: var(--Button-button-primary, #0f62fe);
+}
