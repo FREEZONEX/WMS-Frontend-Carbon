@@ -13,31 +13,21 @@ import {
   SideNav,
   SideNavItems,
   SideNavLink,
-  SideNavMenu,
-  SideNavMenuItem,
-  HeaderSideNavItems,
-  Switcher,
   SwitcherDivider,
-  SwitcherItem,
 } from '@carbon/react';
 
 import {
-  Dashboard,
   IbmDb2Warehouse,
   Product,
   InventoryManagement,
   PortInput,
   PortOutput,
-  Task,
-  WatsonHealth3DCursor,
-  Version,
   User,
   Information,
   Settings,
   Help,
+  Analytics,
 } from '@carbon/icons-react';
-
-import Link from 'next/link';
 
 export const HeaderWSideNav = () => (
   <HeaderContainer
@@ -82,20 +72,8 @@ export const HeaderWSideNav = () => (
                 Stocktaking
               </SideNavLink>
               <SwitcherDivider />
-              <SideNavLink
-                renderIcon={Version}
-                href="https://www.carbondesignsystem.com/"
-              >
-                Current Stock
-              </SideNavLink>
-              <SideNavLink
-                renderIcon={Task}
-                href="https://www.carbondesignsystem.com/"
-              >
-                Day-to-day Task
-              </SideNavLink>
-              <SideNavLink renderIcon={WatsonHealth3DCursor}>
-                3D Visualisation
+              <SideNavLink renderIcon={Analytics} href="/analysis">
+                Analysis
               </SideNavLink>
             </SideNavItems>
           </SideNav>
