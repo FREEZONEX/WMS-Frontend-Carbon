@@ -11,17 +11,59 @@ import {
   DatePickerInput,
 } from '@carbon/react';
 import { Add, Search } from '@carbon/icons-react';
-import WMSTable from '@/components/Table/Table';
+import StocktakingTable from '@/components/Table/StocktakingTable';
 
 const headers = [
-  'ID',
-  'Type',
-  'Warehouse',
-  'Location',
-  'Time',
-  'Operator',
-  'Result',
-  'Details',
+  { key: 'id', header: 'ID' },
+  { key: 'type', header: 'Type' },
+  { key: 'warehouse', header: 'Warehouse' },
+  { key: 'location', header: 'Location' },
+  { key: 'time', header: 'Time' },
+  { key: 'operator', header: 'Operator' },
+  { key: 'result', header: 'Result' },
+  { key: 'details', header: 'Details' },
+];
+const rows = [
+  {
+    id: 'S#24022901',
+    type: 'Dynamic',
+    warehouse: 'Warehouse01',
+    location: 'E30',
+    time: '11/02/2024',
+    operator: 'Mick',
+    result: 'Done',
+    details: 'View Detail',
+  },
+  {
+    id: 'S#24022901',
+    type: 'Dynamic',
+    warehouse: 'Warehouse01',
+    location: 'E30',
+    time: '11/02/2024',
+    operator: 'Joy',
+    result: 'Done',
+    details: 'View Detail',
+  },
+  {
+    id: 'S#24022901',
+    type: 'Dynamic',
+    warehouse: 'Warehouse01',
+    location: 'E30',
+    time: '11/02/2024',
+    operator: 'Cheery',
+    result: 'Done',
+    details: 'View Detail',
+  },
+  {
+    id: 'S#24022901',
+    type: 'Dynamic',
+    warehouse: 'Warehouse01',
+    location: 'E30',
+    time: '11/02/2024',
+    operator: 'Alice',
+    result: 'Done',
+    details: 'View Detail',
+  },
 ];
 function page() {
   return (
@@ -93,7 +135,7 @@ function page() {
         </HeaderGlobalAction>
       </div>
       <div className="mt-12">
-        <WMSTable headers={headers} />
+        <StocktakingTable headers={headers} rows={rows} />
       </div>
     </div>
   );

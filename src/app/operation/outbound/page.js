@@ -13,18 +13,75 @@ import {
   HeaderGlobalAction,
 } from '@carbon/react';
 import { Add, Search } from '@carbon/icons-react';
-import WMSTable from '@/components/Table/Table';
+import OutboundTable from '@/components/Table/OutboundTable';
 
 const headers = [
-  'ID',
-  'Type',
-  'Warehouse',
-  'Shelves',
-  'Material',
-  'Operator',
-  'Status',
-  'Outbound Time',
-  'Product',
+  { key: 'id', header: 'ID' },
+  { key: 'type', header: 'Type' },
+  { key: 'warehouse', header: 'Warehouse' },
+  { key: 'location', header: 'Location' },
+  { key: 'material', header: 'Material' },
+  { key: 'operator', header: 'Operator' },
+  { key: 'status', header: 'Status' },
+  { key: 'outboundTime', header: 'Outbound Time' },
+  { key: 'product', header: 'Product' },
+];
+const rows = [
+  {
+    id: 'S#24022901',
+    type: 'Procurement',
+    warehouse: 'Warehouse01',
+    location: 'E30',
+    material: 'Apple',
+    operator: 'Mick',
+    status: 'Done',
+    outboundTime: '11/02/2024',
+    product: 'More',
+  },
+  {
+    id: 'S#24022901',
+    type: 'Procurement',
+    warehouse: 'Warehouse01',
+    location: 'E30',
+    material: 'Banana',
+    operator: 'Joy',
+    status: 'Done',
+    outboundTime: '11/02/2024',
+    product: 'More',
+  },
+  {
+    id: 'S#24022901',
+    type: 'Procurement',
+    warehouse: 'Warehouse01',
+    location: 'E30',
+    material: 'Apple',
+    operator: 'Cheery',
+    status: 'Done',
+    outboundTime: '11/02/2024',
+    product: 'More',
+  },
+  {
+    id: 'S#24022901',
+    type: 'Procurement',
+    warehouse: 'Warehouse01',
+    location: 'E30',
+    material: 'Apple',
+    operator: 'Alice',
+    status: 'Done',
+    outboundTime: '11/02/2024',
+    product: 'More',
+  },
+  {
+    id: 'S#24022901',
+    type: 'Procurement',
+    warehouse: 'Warehouse01',
+    location: 'E30',
+    material: 'Apple',
+    operator: 'Sam',
+    status: 'Done',
+    outboundTime: '11/02/2024',
+    product: 'More',
+  },
 ];
 function page() {
   return (
@@ -52,7 +109,7 @@ function page() {
           Create an Outbound List
         </Button>
       </div>
-      <div className="flex mt-[50px] space-x-4 items-end">
+      <div className="flex mt-20 space-x-4 items-end">
         <TextInput
           className="flex-auto self-stretch"
           labelText="Outbound Id"
@@ -108,7 +165,7 @@ function page() {
         </HeaderGlobalAction>
       </div>
       <div className="mt-12">
-        <WMSTable headers={headers} />
+        <OutboundTable headers={headers} rows={rows} />
       </div>
     </div>
   );
