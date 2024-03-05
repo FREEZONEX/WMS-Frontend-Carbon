@@ -9,18 +9,38 @@ import {
   HeaderGlobalAction,
 } from '@carbon/react';
 import { Add, Search } from '@carbon/icons-react';
-import WMSTable from '@/components/Table/Table';
-import CreateWarehouseModal from '@/components/CreateWarehouseModal/CreateWarehouseModal';
+import WarehouseTable from '@/components/Table/WarehouseTable';
+import CreateWarehouseModal from '@/components/Modal/CreateWarehouseModal';
 
 const headers = [
-  'Name',
-  'ID',
-  'Is Active',
-  'Type',
-  'Manage',
-  'Shelf Location',
-  'Actions',
+  { key: 'name', header: 'Name' },
+  { key: 'id', header: 'ID' },
+  { key: 'isActive', header: 'Is Active' },
+  { key: 'type', header: 'Type' },
+  { key: 'manager', header: 'Manager' },
+  { key: 'shelfLocation', header: 'Shelf Location' },
 ];
+const rows = [
+  {
+    id: '1',
+    name: 'Warehouse01',
+    code: 'house#1',
+    isActive: 'Active',
+    type: 'Serial',
+    manager: 'Mick',
+    shelfLocation: 'All Shelves',
+  },
+  {
+    id: '2',
+    name: 'Warehouse02',
+    code: 'house#2',
+    isActive: 'Active',
+    type: 'Serial',
+    manager: 'Frank',
+    shelfLocation: 'All Shelves',
+  },
+];
+
 function page() {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const handleModalClose = () => {
@@ -88,7 +108,7 @@ function page() {
         </HeaderGlobalAction>
       </div>
       <div className="mt-12">
-        <WMSTable headers={headers} />
+        <WarehouseTable headers={headers} rows={rows} />
       </div>
     </div>
   );

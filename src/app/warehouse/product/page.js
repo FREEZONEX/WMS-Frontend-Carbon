@@ -9,16 +9,121 @@ import {
   HeaderGlobalAction,
 } from '@carbon/react';
 import { Add, Search } from '@carbon/icons-react';
-import WMSTable from '@/components/Table/Table';
+import ProductTable from '@/components/Table/ProductTable';
 
 const headers = [
-  'ID',
-  'Product Code',
-  'Product Name',
-  'Product Type',
-  'Unit',
-  'Note',
-  'Actions',
+  { key: 'id', header: 'ID' },
+  { key: 'code', header: 'Product Code' },
+  { key: 'name', header: 'Product Name' },
+  { key: 'type', header: 'Product Type' },
+  { key: 'unit', header: 'Unit' },
+  { key: 'note', header: 'Note' },
+];
+const rows = [
+  {
+    id: '01',
+    code: 'Product#1',
+    name: 'oil',
+    type: 'Shell',
+    unit: 'Tondasfw',
+    note: '-asfffffffffffff',
+  },
+  {
+    id: '02',
+    code: 'Product#2',
+    name: 'oil',
+    type: 'Shell',
+    unit: 'Ton',
+    note: '-',
+  },
+  {
+    id: '03',
+    code: 'Product#3',
+    name: 'oil',
+    type: 'Shell',
+    unit: 'Ton',
+    note: '-',
+  },
+  {
+    id: '04',
+    code: 'Product#4',
+    name: 'oil',
+    type: 'Shell',
+    unit: 'Ton',
+    note: '-',
+  },
+  {
+    id: '05',
+    code: 'Product#5',
+    name: 'oil',
+    type: 'Shell',
+    unit: 'Ton',
+    note: '-',
+  },
+  {
+    id: '06',
+    code: 'Product#6',
+    name: 'oil',
+    type: 'Shell',
+    unit: 'Ton',
+    note: '-',
+  },
+  {
+    id: '07',
+    code: 'Product#7',
+    name: 'oil',
+    type: 'Shell',
+    unit: 'Ton',
+    note: '-',
+  },
+  {
+    id: '08',
+    code: 'Product#8',
+    name: 'oil',
+    type: 'Shell',
+    unit: 'Ton',
+    note: '-',
+  },
+  {
+    id: '09',
+    code: 'Product#9',
+    name: 'oil',
+    type: 'Shell',
+    unit: 'Ton',
+    note: '-',
+  },
+  {
+    id: '10',
+    code: 'Product#10',
+    name: 'oil',
+    type: 'Shell',
+    unit: 'Ton',
+    note: '-',
+  },
+  {
+    id: '11',
+    code: 'Product#11',
+    name: 'oil',
+    type: 'Shell',
+    unit: 'Ton',
+    note: '-',
+  },
+  {
+    id: '12',
+    code: 'Product#12',
+    name: 'oil',
+    type: 'Shell',
+    unit: 'Ton',
+    note: '-',
+  },
+  {
+    id: '13',
+    code: 'Product#13',
+    name: 'oil',
+    type: 'Shell',
+    unit: 'Ton',
+    note: '-',
+  },
 ];
 function page() {
   return (
@@ -82,7 +187,7 @@ function page() {
         </HeaderGlobalAction>
       </div>
       <div className="mt-12">
-        <WMSTable headers={headers} />
+        <ProductTable headers={headers} rows={rows} />
       </div>
     </div>
   );

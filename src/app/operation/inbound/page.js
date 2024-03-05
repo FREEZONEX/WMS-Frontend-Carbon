@@ -13,19 +13,77 @@ import {
   HeaderGlobalAction,
 } from '@carbon/react';
 import { Add, Search } from '@carbon/icons-react';
-import WMSTable from '@/components/Table/Table';
+import InboundTable from '@/components/Table/InboundTable';
 
 const headers = [
-  'ID',
-  'Type',
-  'Warehouse',
-  'Location',
-  'Material',
-  'Operator',
-  'Status',
-  'Inbound Time',
-  'Product',
+  { key: 'id', header: 'ID' },
+  { key: 'type', header: 'Type' },
+  { key: 'warehouse', header: 'Warehouse' },
+  { key: 'location', header: 'Location' },
+  { key: 'material', header: 'Material' },
+  { key: 'operator', header: 'Operator' },
+  { key: 'status', header: 'Status' },
+  { key: 'inboundTime', header: 'Inbound Time' },
+  { key: 'product', header: 'Product' },
 ];
+const rows = [
+  {
+    id: 'S#24022901',
+    type: 'Procurement',
+    warehouse: 'Warehouse01',
+    location: 'E30',
+    material: 'Apple',
+    operator: 'Mick',
+    status: 'Done',
+    inboundTime: '11/02/2024',
+    product: 'More',
+  },
+  {
+    id: 'S#24022901',
+    type: 'Procurement',
+    warehouse: 'Warehouse01',
+    location: 'E30',
+    material: 'Banana',
+    operator: 'Joy',
+    status: 'Done',
+    inboundTime: '11/02/2024',
+    product: 'More',
+  },
+  {
+    id: 'S#24022901',
+    type: 'Procurement',
+    warehouse: 'Warehouse01',
+    location: 'E30',
+    material: 'Apple',
+    operator: 'Cheery',
+    status: 'Done',
+    inboundTime: '11/02/2024',
+    product: 'More',
+  },
+  {
+    id: 'S#24022901',
+    type: 'Procurement',
+    warehouse: 'Warehouse01',
+    location: 'E30',
+    material: 'Apple',
+    operator: 'Alice',
+    status: 'Done',
+    inboundTime: '11/02/2024',
+    product: 'More',
+  },
+  {
+    id: 'S#24022901',
+    type: 'Procurement',
+    warehouse: 'Warehouse01',
+    location: 'E30',
+    material: 'Apple',
+    operator: 'Sam',
+    status: 'Done',
+    inboundTime: '11/02/2024',
+    product: 'More',
+  },
+];
+
 function page() {
   return (
     <div>
@@ -107,7 +165,7 @@ function page() {
         </HeaderGlobalAction>
       </div>
       <div className="mt-12">
-        <WMSTable headers={headers} />
+        <InboundTable headers={headers} rows={rows} />
       </div>
     </div>
   );
