@@ -62,14 +62,6 @@ export const HeaderWSideNav = () => (
             href="#main-content"
           >
             <SideNavItems>
-              <SideNavLink
-                component={Link}
-                renderIcon={Dashboard}
-                href="/dashboard"
-              >
-                Dashboard
-              </SideNavLink>
-              <SwitcherDivider />
               <SideNavLink renderIcon={IbmDb2Warehouse} href="/warehouse">
                 Warehouse
               </SideNavLink>
@@ -77,23 +69,17 @@ export const HeaderWSideNav = () => (
                 Product
               </SideNavLink>
               <SwitcherDivider />
-              <SideNavLink
-                renderIcon={PortInput}
-                href="https://www.carbondesignsystem.com/"
-              >
+              <SideNavLink renderIcon={PortInput} href="/operation/inbound">
                 Inbound
               </SideNavLink>
-              <SideNavLink
-                renderIcon={PortOutput}
-                href="https://www.carbondesignsystem.com/"
-              >
+              <SideNavLink renderIcon={PortOutput} href="/operation/outbound">
                 Outbound
               </SideNavLink>
               <SideNavLink
                 renderIcon={InventoryManagement}
-                href="https://www.carbondesignsystem.com/"
+                href="/operation/stocktaking"
               >
-                Inventory
+                Stocktaking
               </SideNavLink>
               <SwitcherDivider />
               <SideNavLink

@@ -30,22 +30,14 @@ function page() {
         <BreadcrumbItem href="/warehouse">Warehouse Management</BreadcrumbItem>
         <BreadcrumbItem href="/warehouse/product">Product</BreadcrumbItem>
       </Breadcrumb>
-      <div
-        className="bx--col-lg-16"
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
+      <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
-          <Heading className="mt-1 text-xl">Product</Heading>
+          <Heading className="mt-2 text-[28px] font-normal">Product</Heading>
           <Heading className="mt-1 text-sm">
             Description of product view goes here.
           </Heading>
         </div>
         <Button
-          className="button-primary"
           href="/warehouse/product/create"
           isExpressive
           size="sm"

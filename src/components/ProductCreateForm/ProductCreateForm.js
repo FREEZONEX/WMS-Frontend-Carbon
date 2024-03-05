@@ -114,9 +114,7 @@ function ProductCreateForm() {
         </Grid>
       </div>
       <div className="flex space-x-4 mt-4 justify-center ">
-        <Button size="sm" className="button-primary" kind="secondary">
-          Save
-        </Button>
+        <Button size="sm">Save</Button>
         <Button size="sm" kind="tertiary">
           Cancel
         </Button>
