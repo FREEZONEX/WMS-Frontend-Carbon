@@ -115,7 +115,7 @@ function ProductCreateForm() {
       </div>
       <div className="flex space-x-4 mt-4 justify-center ">
         <Button size="sm">Save</Button>
-        <Button size="sm" kind="tertiary">
+        <Button size="sm" kind="tertiary" href="/warehouse/product">
           Cancel
         </Button>
       </div>
