@@ -41,7 +41,7 @@ const rows = [
   },
 ];
 
-function page() {
+function Page() {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const handleModalClose = () => {
     setCreateModalOpen(false);
@@ -114,4 +114,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;
