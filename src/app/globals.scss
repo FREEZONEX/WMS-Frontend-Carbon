@@ -15,6 +15,15 @@
   // background: var(--cds-background);
 }
 
-.button-primary {
-  background: var(--Button-button-primary, #0f62fe);
+.cds--date-picker--range .cds--date-picker-container,
+.cds--date-picker--range .cds--date-picker__input {
+  width: 100%;
+}
+
+.cds--date-picker.cds--date-picker--single .cds--date-picker__input {
+  width: 100%;
+}
+
+.cds--css-grid {
+  max-width: inherit;
 }

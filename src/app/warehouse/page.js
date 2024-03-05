@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   TextInput,
   Heading,
@@ -10,6 +10,7 @@ import {
 } from '@carbon/react';
 import { Add, Search } from '@carbon/icons-react';
 import WMSTable from '@/components/Table/Table';
+import CreateWarehouseModal from '@/components/CreateWarehouseModal/CreateWarehouseModal';
 
 const headers = [
   'Name',
@@ -21,6 +22,10 @@ const headers = [
   'Actions',
 ];
 function page() {
+  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
+  const handleModalClose = () => {
+    setCreateModalOpen(false);
+  };
   return (
     <div>
       <Breadcrumb>
@@ -29,29 +34,29 @@ function page() {
         </BreadcrumbItem>
         <BreadcrumbItem href="/warehouse">Warehouse Management</BreadcrumbItem>
       </Breadcrumb>
-      <div
-        className="bx--col-lg-16"
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
+      <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
-          <Heading className="mt-1 text-xl">Warehouse Structure</Heading>
+          <Heading className="mt-2 text-[28px] font-normal">
+            Warehouse Structure
+          </Heading>
           <Heading className="mt-1 text-sm">
             Description of warehouse view goes here.
           </Heading>
         </div>
         <Button
-          className="button-primary"
-          href="/warehouse/warehouse/create"
+          onClick={() => {
+            setCreateModalOpen(true);
+          }}
           isExpressive
           size="sm"
           renderIcon={Add}
         >
           Create a Warehouse
         </Button>
+        <CreateWarehouseModal
+          isOpen={isCreateModalOpen}
+          onClose={handleModalClose}
+        />
       </div>
       <div className="flex mt-20 space-x-4 items-end">
         <TextInput
