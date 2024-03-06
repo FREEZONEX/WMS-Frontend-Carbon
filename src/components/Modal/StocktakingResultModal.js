@@ -16,7 +16,6 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Heading,
-  Button,
   IconButton,
 } from '@carbon/react';
 import { Add, Subtract } from '@carbon/icons-react';
