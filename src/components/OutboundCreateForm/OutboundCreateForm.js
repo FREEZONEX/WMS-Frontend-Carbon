@@ -12,12 +12,12 @@ import {
   Button,
   TextArea,
 } from '@carbon/react';
-import '@/components/ProductCreateForm/_productcreateform.scss';
+import '@/components/MaterialCreateForm/_materialcreateform.scss';
 import WMSDataTable from '../Table/DataTable';
 
 const headers = [
-  { key: 'name', header: 'Product Name' },
-  { key: 'code', header: 'Product Code' },
+  { key: 'name', header: 'Material Name' },
+  { key: 'code', header: 'Material Code' },
   { key: 'rfid', header: 'RFID' },
   { key: 'unit', header: 'Unit' },
   { key: 'amount', header: 'Amount' },
@@ -26,7 +26,7 @@ const rows = [
   {
     id: 'a',
     name: 'Apple',
-    code: 'Product#2',
+    code: 'Material#2',
     rfid: 'fjsewol39492',
     unit: 'Ton',
     amount: 1,
@@ -34,7 +34,7 @@ const rows = [
   {
     id: 'b',
     name: 'Banana',
-    code: 'Product#4',
+    code: 'Material#4',
     rfid: 'fjsewol39492',
     unit: 'Ton',
     amount: 5,
@@ -110,7 +110,7 @@ function OutboundCreateForm() {
             />
           </Column>
         </Grid>
-        <FormLabel>Product List</FormLabel>
+        <FormLabel>Material List</FormLabel>
         <WMSDataTable headers={headers} rows={rows} />
         <TextArea
           className="mt-10 w-full"

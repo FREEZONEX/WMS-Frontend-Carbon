@@ -1,7 +1,6 @@
 'use client';
-import React, { useEffect } from 'react';
-import { Button, Heading, Link } from '@carbon/react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
+import { Heading, Link } from '@carbon/react';
 
 export default function Home() {
   // const router = useRouter();

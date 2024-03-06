@@ -8,38 +8,9 @@ import {
   Column,
   Select,
   SelectItem,
-  FormLabel,
   Button,
-  TextArea,
 } from '@carbon/react';
-import '@/components/ProductCreateForm/_productcreateform.scss';
-import WMSDataTable from '../Table/DataTable';
-
-const headers = [
-  { key: 'name', header: 'Product Name' },
-  { key: 'code', header: 'Product Code' },
-  { key: 'rfid', header: 'RFID' },
-  { key: 'unit', header: 'Unit' },
-  { key: 'amount', header: 'Amount' },
-];
-const rows = [
-  {
-    id: 'a',
-    name: 'Apple',
-    code: 'Product#2',
-    rfid: 'fjsewol39492',
-    unit: 'Ton',
-    amount: 1,
-  },
-  {
-    id: 'b',
-    name: 'Banana',
-    code: 'Product#4',
-    rfid: 'fjsewol39492',
-    unit: 'Ton',
-    amount: 5,
-  },
-];
+import '@/components/MaterialCreateForm/_materialcreateform.scss';
 
 function StocktakingCreateForm() {
   return (
@@ -128,8 +99,6 @@ function StocktakingCreateForm() {
             />
           </Column>
         </Grid>
-        <FormLabel>Product List</FormLabel>
-        <WMSDataTable headers={headers} rows={rows} />
       </div>
       <div className="flex space-x-4 mt-10 justify-center ">
         <Button size="sm">Save</Button>
