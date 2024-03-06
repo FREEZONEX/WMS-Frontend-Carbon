@@ -8,11 +8,16 @@ import {
   StructuredListCell,
   StructuredListBody,
   Link,
+  Tag,
   Pagination,
 } from '@carbon/react';
 import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
 import StocktakingResultModal from '../Modal/StocktakingResultModal';
+
+const TodoTag = () => <Tag type="purple">To-do</Tag>;
+const ExecutingTag = () => <Tag type="blue">Executing</Tag>;
+const DoneTag = () => <Tag type="green">Done</Tag>;
 
 function StocktakingTable({ headers, rows }) {
   const [page, setPage] = useState(1);
@@ -45,6 +50,19 @@ function StocktakingTable({ headers, rows }) {
                       >
                         View Detail
                       </Link>
+                    </StructuredListCell>
+                  );
+                }
+                if (header.key === 'status') {
+                  return (
+                    <StructuredListCell key={header.key}>
+                      {row[header.key] === 'Done' ? (
+                        <DoneTag />
+                      ) : row[header.key] === 'Executing' ? (
+                        <ExecutingTag />
+                      ) : (
+                        <TodoTag />
+                      )}
                     </StructuredListCell>
                   );
                 }

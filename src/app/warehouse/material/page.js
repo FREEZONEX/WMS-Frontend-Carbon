@@ -9,13 +9,13 @@ import {
   HeaderGlobalAction,
 } from '@carbon/react';
 import { Add, Search } from '@carbon/icons-react';
-import ProductTable from '@/components/Table/ProductTable';
+import MaterialTable from '@/components/Table/MaterialTable';
 
 const headers = [
   { key: 'id', header: 'ID' },
-  { key: 'code', header: 'Product Code' },
-  { key: 'name', header: 'Product Name' },
-  { key: 'type', header: 'Product Type' },
+  { key: 'code', header: 'Material Code' },
+  { key: 'name', header: 'Material Name' },
+  { key: 'type', header: 'Material Type' },
   { key: 'unit', header: 'Unit' },
   { key: 'note', header: 'Note' },
 ];
@@ -133,22 +133,22 @@ function page() {
           <a href="/">Home</a>
         </BreadcrumbItem>
         <BreadcrumbItem href="/warehouse">Warehouse Management</BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse/product">Product</BreadcrumbItem>
+        <BreadcrumbItem href="/warehouse/material">Material</BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
-          <Heading className="mt-2 text-[28px] font-normal">Product</Heading>
+          <Heading className="mt-2 text-[28px] font-normal">Material</Heading>
           <Heading className="mt-1 text-sm">
-            Description of product view goes here.
+            Description of material view goes here.
           </Heading>
         </div>
         <Button
-          href="/warehouse/product/create"
+          href="/warehouse/material/create"
           isExpressive
           size="sm"
           renderIcon={Add}
         >
-          Create a Product
+          Create a Material
         </Button>
       </div>
       <div className="flex mt-20 space-x-4 items-end">
@@ -160,34 +160,34 @@ function page() {
         />
         <TextInput
           className="flex-auto w-20"
-          labelText="Product Code"
+          labelText="Material Code"
           id="filter-2"
-          placeholder="Product Code"
+          placeholder="Material Code"
         />
         <TextInput
           className="flex-auto w-20"
-          labelText="Product Name"
+          labelText="Material Name"
           id="filter-3"
-          placeholder="Product Name"
+          placeholder="Material Name"
         />
         <TextInput
           className="flex-auto w-20"
-          labelText="Product Type"
+          labelText="Material Type"
           id="filter-4"
-          placeholder="Product Type"
+          placeholder="Material Type"
         />
         <TextInput
           className="flex-auto w-20"
-          labelText="Product Size"
+          labelText="Material Size"
           id="filter-4"
-          placeholder="Product Size"
+          placeholder="Material Size"
         />
         <HeaderGlobalAction aria-label="Search">
           <Search size={15} />
         </HeaderGlobalAction>
       </div>
       <div className="mt-12">
-        <ProductTable headers={headers} rows={rows} />
+        <MaterialTable headers={headers} rows={rows} />
       </div>
     </div>
   );

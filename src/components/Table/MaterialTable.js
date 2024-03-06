@@ -12,7 +12,7 @@ import {
 import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
 
-function ProductTable({ headers, rows }) {
+function MaterialTable({ headers, rows }) {
   const [page, setPage] = useState(1);
   const pageSize = 10;
   const rowsToShow = rows.slice((page - 1) * pageSize, page * pageSize);
@@ -65,4 +65,4 @@ function ProductTable({ headers, rows }) {
   );
 }
 
-export default ProductTable;
+export default MaterialTable;

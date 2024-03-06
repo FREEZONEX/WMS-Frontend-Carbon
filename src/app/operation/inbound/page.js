@@ -17,13 +17,14 @@ import InboundTable from '@/components/Table/InboundTable';
 
 const headers = [
   { key: 'id', header: 'ID' },
-  { key: 'type', header: 'Type' },
+  { key: 'materialId', header: 'Material Id' },
+  { key: 'materialName', header: 'Material Name' },
+  { key: 'inboundTime', header: 'Inbound Time' },
   { key: 'warehouse', header: 'Warehouse' },
   { key: 'location', header: 'Location' },
-  { key: 'material', header: 'Material' },
+  { key: 'type', header: 'Type' },
   { key: 'operator', header: 'Operator' },
   { key: 'status', header: 'Status' },
-  { key: 'inboundTime', header: 'Inbound Time' },
   { key: 'product', header: 'Product' },
 ];
 const rows = [
@@ -32,7 +33,8 @@ const rows = [
     type: 'Procurement',
     warehouse: 'Warehouse01',
     location: 'E30',
-    material: 'Apple',
+    materialId: '01',
+    materialName: 'Apple',
     operator: 'Mick',
     status: 'Done',
     inboundTime: '11/02/2024',
@@ -43,7 +45,8 @@ const rows = [
     type: 'Procurement',
     warehouse: 'Warehouse01',
     location: 'E30',
-    material: 'Banana',
+    materialId: '02',
+    materialName: 'Banana',
     operator: 'Joy',
     status: 'Done',
     inboundTime: '11/02/2024',
@@ -54,7 +57,8 @@ const rows = [
     type: 'Procurement',
     warehouse: 'Warehouse01',
     location: 'E30',
-    material: 'Apple',
+    materialId: '01',
+    materialName: 'Apple',
     operator: 'Cheery',
     status: 'Done',
     inboundTime: '11/02/2024',
@@ -65,7 +69,8 @@ const rows = [
     type: 'Procurement',
     warehouse: 'Warehouse01',
     location: 'E30',
-    material: 'Apple',
+    materialId: '01',
+    materialName: 'Apple',
     operator: 'Alice',
     status: 'Done',
     inboundTime: '11/02/2024',
@@ -76,7 +81,8 @@ const rows = [
     type: 'Procurement',
     warehouse: 'Warehouse01',
     location: 'E30',
-    material: 'Apple',
+    materialId: '01',
+    materialName: 'Apple',
     operator: 'Sam',
     status: 'Done',
     inboundTime: '11/02/2024',
@@ -134,10 +140,16 @@ function page() {
           <SelectItem value="option-2" text="type 2" />
         </Select>
         <TextInput
-          className="flex-auto"
-          labelText="Warehouse"
-          id="warehouse"
-          placeholder="Warehouse"
+          className="flex-auto "
+          labelText="Material Id"
+          id="material id"
+          placeholder="Material Id"
+        />
+        <TextInput
+          className="flex-auto "
+          labelText="Material Name"
+          id="material name"
+          placeholder="Material Name"
         />
         <DatePicker datePickerType="single" className="flex-auto">
           <DatePickerInput
@@ -147,7 +159,7 @@ function page() {
           />
         </DatePicker>
       </div>
-      <div className="flex mt-5 space-x-4 items-end w-2/4">
+      <div className="flex mt-5 space-x-4 items-end w-2/5">
         <TextInput
           className="flex-auto "
           labelText="Operator"
@@ -155,11 +167,12 @@ function page() {
           placeholder="Operator"
         />
         <TextInput
-          className="flex-auto "
-          labelText="Product"
-          id="product"
-          placeholder="Product"
+          className="flex-auto"
+          labelText="Warehouse"
+          id="warehouse"
+          placeholder="Warehouse"
         />
+
         <HeaderGlobalAction aria-label="Search">
           <Search size={15} />
         </HeaderGlobalAction>
