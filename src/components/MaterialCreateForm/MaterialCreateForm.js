@@ -9,9 +9,9 @@ import {
   TextArea,
   Button,
 } from '@carbon/react';
-import './_productcreateform.scss';
+import './_materialcreateform.scss';
 
-function ProductCreateForm() {
+function MaterialCreateForm() {
   return (
     <div>
       <div className=" mt-8">
@@ -19,17 +19,17 @@ function ProductCreateForm() {
           <Column sm={2} md={4} lg={4}>
             <TextInput
               className="mb-4"
-              labelText="Product Code"
+              labelText="Material Code"
               id="filter-1"
-              placeholder="Product Code"
+              placeholder="Material Code"
             />
           </Column>
           <Column sm={2} md={4} lg={4}>
             <TextInput
               className="mb-4"
-              labelText="Product Name"
+              labelText="Material Name"
               id="filter-2"
-              placeholder="Product Name"
+              placeholder="Material Name"
             />
           </Column>
           <Column sm={2} md={4} lg={4}>
@@ -52,9 +52,9 @@ function ProductCreateForm() {
           <Column sm={2} md={4} lg={4}>
             <TextInput
               className="mb-4"
-              labelText="Product Properties"
+              labelText="Material Properties"
               id="filter-5"
-              placeholder="Product Properties"
+              placeholder="Material Properties"
             />
           </Column>
           <Column sm={2} md={4} lg={4}>
@@ -123,4 +123,4 @@ function ProductCreateForm() {
   );
 }
 
-export default ProductCreateForm;
+export default MaterialCreateForm;

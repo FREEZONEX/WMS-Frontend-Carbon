@@ -20,7 +20,7 @@ const headers = [
   { key: 'location', header: 'Location' },
   { key: 'time', header: 'Time' },
   { key: 'operator', header: 'Operator' },
-  { key: 'result', header: 'Result' },
+  { key: 'status', header: 'Status' },
   { key: 'details', header: 'Details' },
 ];
 const rows = [
@@ -31,7 +31,7 @@ const rows = [
     location: 'E30',
     time: '11/02/2024',
     operator: 'Mick',
-    result: 'Done',
+    status: 'Done',
     details: 'View Detail',
   },
   {
@@ -41,7 +41,7 @@ const rows = [
     location: 'E30',
     time: '11/02/2024',
     operator: 'Joy',
-    result: 'Done',
+    status: 'To-do',
     details: 'View Detail',
   },
   {
@@ -51,7 +51,7 @@ const rows = [
     location: 'E30',
     time: '11/02/2024',
     operator: 'Cheery',
-    result: 'Done',
+    status: 'Done',
     details: 'View Detail',
   },
   {
@@ -61,7 +61,7 @@ const rows = [
     location: 'E30',
     time: '11/02/2024',
     operator: 'Alice',
-    result: 'Done',
+    status: 'Executing',
     details: 'View Detail',
   },
 ];

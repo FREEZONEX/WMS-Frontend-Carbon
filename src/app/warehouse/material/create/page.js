@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
-import ProductCreateForm from '@/components/ProductCreateForm/ProductCreateForm';
+import MaterialCreateForm from '@/components/MaterialCreateForm/MaterialCreateForm';
 
 function page() {
   return (
@@ -11,15 +11,17 @@ function page() {
           <a href="/">Home</a>
         </BreadcrumbItem>
         <BreadcrumbItem href="/warehouse">Warehouse Management</BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse/product">Product</BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse/product/create">Create</BreadcrumbItem>
+        <BreadcrumbItem href="/warehouse/material">Material</BreadcrumbItem>
+        <BreadcrumbItem href="/warehouse/material/create">
+          Create
+        </BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <Heading className="mt-2 text-[28px] font-normal">
-          Create a Product
+          Create a Material
         </Heading>
       </div>
-      <ProductCreateForm />
+      <MaterialCreateForm />
     </div>
   );
 }
