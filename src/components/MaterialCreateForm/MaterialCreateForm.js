@@ -1,17 +1,63 @@
 'use client';
-import React from 'react';
-import {
-  TextInput,
-  DatePicker,
-  DatePickerInput,
-  Grid,
-  Column,
-  TextArea,
-  Button,
-} from '@carbon/react';
+import React, { useState } from 'react';
+import { TextInput, Grid, Column, TextArea, Button } from '@carbon/react';
 import './_materialcreateform.scss';
+import { useRouter } from 'next/navigation';
+import { addMaterial } from '@/actions/actions';
 
 function MaterialCreateForm() {
+  const [fieldValidation, setFieldValidation] = useState({
+    codeInvalid: false,
+    nameInvalid: false,
+  });
+  const [formValue, setFormValue] = useState({
+    product_code: '',
+    name: '',
+    product_type: '',
+    unit: '',
+    note: '',
+  });
+
+  const router = useRouter();
+
+  const onFormValueChange = (e) => {
+    const { id, value } = e.target;
+    setFormValue((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const newValidation = {
+      codeInvalid: !formValue.product_code || formValue.product_code === '',
+      nameInvalid: !formValue.name || formValue.name === '',
+    };
+    setFieldValidation(newValidation);
+
+    if (Object.values(fieldValidation).some((v) => v)) {
+      setFieldValidation(newValidation);
+      return;
+    }
+    addMaterial(formValue)
+      .then(() => {
+        setFormValue({
+          product_code: '',
+          name: '',
+          product_type: '',
+          unit: '',
+          note: '',
+        });
+        setFieldValidation({
+          codeInvalid: false,
+          nameInvalid: false,
+        });
+      })
+      .then(() => {
+        router.push('/warehouse/material');
+      });
+  };
   return (
     <div>
       <div className=" mt-8">
@@ -20,102 +66,63 @@ function MaterialCreateForm() {
             <TextInput
               className="mb-4"
               labelText="Material Code"
-              id="filter-1"
+              id="product_code"
               placeholder="Material Code"
+              invalid={fieldValidation.codeInvalid}
+              invalidText="This field cannot be empty"
+              value={formValue.product_code}
+              onChange={onFormValueChange}
             />
           </Column>
           <Column sm={2} md={4} lg={4}>
             <TextInput
               className="mb-4"
               labelText="Material Name"
-              id="filter-2"
+              id="name"
               placeholder="Material Name"
+              invalid={fieldValidation.nameInvalid}
+              invalidText="This field cannot be empty"
+              value={formValue.name}
+              onChange={onFormValueChange}
             />
           </Column>
           <Column sm={2} md={4} lg={4}>
             <TextInput
               className="mb-4"
-              labelText="Company"
-              id="filter-3"
-              placeholder="Company"
+              labelText="Material Type"
+              id="product_type"
+              placeholder="Material Type"
+              value={formValue.product_type}
+              onChange={onFormValueChange}
             />
           </Column>
           <Column sm={2} md={4} lg={4}>
             <TextInput
               className="mb-4"
               labelText="Unit"
-              id="filter-4"
+              id="unit"
               placeholder="Unit"
+              value={formValue.unit}
+              onChange={onFormValueChange}
             />
-          </Column>
-
-          <Column sm={2} md={4} lg={4}>
-            <TextInput
-              className="mb-4"
-              labelText="Material Properties"
-              id="filter-5"
-              placeholder="Material Properties"
-            />
-          </Column>
-          <Column sm={2} md={4} lg={4}>
-            <TextInput
-              className="mb-4"
-              labelText="Maximum Stock"
-              id="filter-6"
-              placeholder="Maximum Stock"
-            />
-          </Column>
-          <Column sm={2} md={4} lg={4}>
-            <TextInput
-              className="mb-4"
-              labelText="Minimum Stock"
-              id="filter-7"
-              placeholder="Minimum Stock"
-            />
-          </Column>
-          <Column sm={4} md={4} lg={4}>
-            <DatePicker datePickerType="single" className="mb-4 w-full">
-              <DatePickerInput
-                className="mb-4 w-full"
-                placeholder="mm/dd/yyyy"
-                labelText="Expiry Date"
-                id="date-picker"
-              />
-            </DatePicker>
-          </Column>
-          <Column sm={4} md={8} lg={8}>
-            <DatePicker datePickerType="single" className="mb-4 w-full">
-              <DatePickerInput
-                className="mb-4 w-full"
-                id="warning-period"
-                placeholder="mm/dd/yyyy"
-                labelText="Warning Period"
-              />
-            </DatePicker>
-          </Column>
-          <Column sm={4} md={8} lg={8}>
-            <DatePicker datePickerType="single" className="mb-4 w-full">
-              <DatePickerInput
-                className="mb-4 w-full"
-                id="best-before-date"
-                placeholder="mm/dd/yyyy"
-                labelText="Best Before Date"
-              />
-            </DatePicker>
           </Column>
           <Column sm={4} md={8} lg={16}>
             <TextArea
               className="mb-4 w-full"
               labelText="Note"
               rows={4}
-              id="text-area-1"
+              id="note"
+              value={formValue.note}
+              onChange={onFormValueChange}
             />
           </Column>
         </Grid>
       </div>
       <div className="flex space-x-4 mt-4 justify-center ">
-        <Button size="sm">Save</Button>
-        <Button size="sm" kind="tertiary" href="/warehouse/product">
+        <Button size="sm" onClick={handleSubmit}>
+          Save
+        </Button>
+        <Button size="sm" kind="tertiary" href="/warehouse/material">
           Cancel
         </Button>
       </div>

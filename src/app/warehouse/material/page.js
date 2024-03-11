@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   TextInput,
   Heading,
@@ -8,124 +8,61 @@ import {
   Button,
   HeaderGlobalAction,
 } from '@carbon/react';
-import { Add, Search } from '@carbon/icons-react';
+import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import MaterialTable from '@/components/Table/MaterialTable';
+import { fetchMaterial, fetchMaterialWithFilters } from '@/actions/actions';
 
 const headers = [
-  { key: 'id', header: 'ID' },
-  { key: 'code', header: 'Material Code' },
+  { key: 'product_code', header: 'Material Code' },
   { key: 'name', header: 'Material Name' },
-  { key: 'type', header: 'Material Type' },
+  { key: 'product_type', header: 'Material Type' },
   { key: 'unit', header: 'Unit' },
   { key: 'note', header: 'Note' },
 ];
-const rows = [
-  {
-    id: '01',
-    code: 'Product#1',
-    name: 'oil',
-    type: 'Shell',
-    unit: 'Tondasfw',
-    note: '-asfffffffffffff',
-  },
-  {
-    id: '02',
-    code: 'Product#2',
-    name: 'oil',
-    type: 'Shell',
-    unit: 'Ton',
-    note: '-',
-  },
-  {
-    id: '03',
-    code: 'Product#3',
-    name: 'oil',
-    type: 'Shell',
-    unit: 'Ton',
-    note: '-',
-  },
-  {
-    id: '04',
-    code: 'Product#4',
-    name: 'oil',
-    type: 'Shell',
-    unit: 'Ton',
-    note: '-',
-  },
-  {
-    id: '05',
-    code: 'Product#5',
-    name: 'oil',
-    type: 'Shell',
-    unit: 'Ton',
-    note: '-',
-  },
-  {
-    id: '06',
-    code: 'Product#6',
-    name: 'oil',
-    type: 'Shell',
-    unit: 'Ton',
-    note: '-',
-  },
-  {
-    id: '07',
-    code: 'Product#7',
-    name: 'oil',
-    type: 'Shell',
-    unit: 'Ton',
-    note: '-',
-  },
-  {
-    id: '08',
-    code: 'Product#8',
-    name: 'oil',
-    type: 'Shell',
-    unit: 'Ton',
-    note: '-',
-  },
-  {
-    id: '09',
-    code: 'Product#9',
-    name: 'oil',
-    type: 'Shell',
-    unit: 'Ton',
-    note: '-',
-  },
-  {
-    id: '10',
-    code: 'Product#10',
-    name: 'oil',
-    type: 'Shell',
-    unit: 'Ton',
-    note: '-',
-  },
-  {
-    id: '11',
-    code: 'Product#11',
-    name: 'oil',
-    type: 'Shell',
-    unit: 'Ton',
-    note: '-',
-  },
-  {
-    id: '12',
-    code: 'Product#12',
-    name: 'oil',
-    type: 'Shell',
-    unit: 'Ton',
-    note: '-',
-  },
-  {
-    id: '13',
-    code: 'Product#13',
-    name: 'oil',
-    type: 'Shell',
-    unit: 'Ton',
-    note: '-',
-  },
-];
-function page() {
+
+function Page() {
+  const [formValue, setFormValues] = useState({
+    product_code: '',
+    name: '',
+    product_type: '',
+  });
+  const onFormValueChange = (e) => {
+    const { id, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [id]: value,
+    }));
+  };
+  const handleSeachRows = () => {
+    const filteredFormValue = Object.entries(formValue).reduce(
+      (acc, [key, value]) => {
+        if (value !== '') {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {}
+    );
+    if (Object.entries(filteredFormValue).length > 0) {
+      fetchMaterialWithFilters(filteredFormValue).then((res) => setRows(res));
+    } else {
+      fetchMaterial().then((res) => setRows(res));
+    }
+  };
+  const handleRemoveFilters = () => {
+    fetchMaterial().then((res) => setRows(res));
+    setFormValues({
+      product_code: '',
+      name: '',
+      product_type: '',
+    });
+  };
+  const [rows, setRows] = useState([]);
+  const [refresh, setRefresh] = useState({});
+
+  useEffect(() => {
+    fetchMaterial().then((res) => setRows(res));
+  }, [refresh]);
   return (
     <div>
       <Breadcrumb>
@@ -142,55 +79,66 @@ function page() {
             Description of material view goes here.
           </Heading>
         </div>
-        <Button
-          href="/warehouse/material/create"
-          isExpressive
-          size="sm"
-          renderIcon={Add}
-        >
-          Create a Material
-        </Button>
+        <div>
+          <Button
+            href="/warehouse/material/rfid"
+            className="mr-2 bg-[#6929C4]"
+            isExpressive
+            size="sm"
+            renderIcon={Search}
+          >
+            RFID Tag
+          </Button>
+          <Button
+            href="/warehouse/material/create"
+            isExpressive
+            size="sm"
+            renderIcon={Add}
+          >
+            Create a Material
+          </Button>
+        </div>
       </div>
       <div className="flex mt-20 space-x-4 items-end">
         <TextInput
-          className="flex-auto w-5"
-          labelText="Id"
-          id="filter-1"
-          placeholder="Id"
-        />
-        <TextInput
           className="flex-auto w-20"
           labelText="Material Code"
-          id="filter-2"
+          id="product_code"
           placeholder="Material Code"
+          value={formValue.product_code}
+          onChange={onFormValueChange}
         />
         <TextInput
           className="flex-auto w-20"
           labelText="Material Name"
-          id="filter-3"
+          id="name"
           placeholder="Material Name"
+          value={formValue.name}
+          onChange={onFormValueChange}
         />
         <TextInput
           className="flex-auto w-20"
           labelText="Material Type"
-          id="filter-4"
+          id="product_type"
           placeholder="Material Type"
+          value={formValue.product_type}
+          onChange={onFormValueChange}
         />
-        <TextInput
-          className="flex-auto w-20"
-          labelText="Material Size"
-          id="filter-4"
-          placeholder="Material Size"
-        />
-        <HeaderGlobalAction aria-label="Search">
-          <Search size={15} />
+        <HeaderGlobalAction aria-label="Search" onClick={handleSeachRows}>
+          <Search size={16} />
+        </HeaderGlobalAction>
+        <HeaderGlobalAction
+          aria-label="Remove Filters"
+          onClick={handleRemoveFilters}
+        >
+          <CloseOutline size={16} />
         </HeaderGlobalAction>
       </div>
       <div className="mt-12">
-        <MaterialTable headers={headers} rows={rows} />
+        <MaterialTable headers={headers} rows={rows} setRefresh={setRefresh} />
       </div>
     </div>
   );
 }
 
-export default page;
+export default Page;

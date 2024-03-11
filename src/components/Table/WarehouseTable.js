@@ -13,12 +13,43 @@ import {
 import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
 import ShelfLocationModal from '../Modal/ShelfLocationModal';
+import { deleteWarehouse, fetchStorageLocationsByWId } from '@/actions/actions';
+import EditWarehouseModal from '../Modal/EditWarehouseModal';
 
-function WarehouseTable({ headers, rows }) {
+function WarehouseTable({ headers, rows, setRefresh }) {
   const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const [pageSize, setPageSize] = useState(10);
+
   const rowsToShow = rows.slice((page - 1) * pageSize, page * pageSize);
-  const [isModalOpen, setModalOpen] = React.useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [editRow, setEditRow] = useState({});
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [selectedWarehouseInfo, setSelectedWarehouseInfo] = useState({});
+
+  const handleEditModalClose = () => {
+    setEditModalOpen(false);
+  };
+  const handleEditRow = (row) => {
+    setEditRow(row);
+    setEditModalOpen(true);
+  };
+
+  const handleDeleteRow = async (id) => {
+    deleteWarehouse(id).then((res) => setRefresh({}));
+  };
+  const handleShowShelves = (id, warehouse_id, name) => {
+    fetchStorageLocationsByWId({ warehouse_id: id })
+      .then((res) =>
+        setSelectedWarehouseInfo({
+          id: id,
+          warehouse_id: warehouse_id,
+          warehouse_name: name,
+          shelf_location: res,
+        })
+      )
+      .then(setModalOpen(true));
+  };
+
   return (
     <div>
       <StructuredListWrapper isCondensed>
@@ -33,17 +64,21 @@ function WarehouseTable({ headers, rows }) {
         </StructuredListHead>
         <StructuredListBody>
           {rowsToShow.map((row, index) => (
-            <StructuredListRow key={index}>
+            <StructuredListRow key={row.id}>
               {headers.map((header) => {
-                if (header.key === 'shelfLocation') {
+                if (header.key === 'storage_location') {
                   return (
                     <StructuredListCell key={header.key}>
                       <Link
-                        onClick={() => {
-                          setModalOpen(true);
-                        }}
+                        onClick={() =>
+                          handleShowShelves(
+                            row.id,
+                            row['warehouse_id'],
+                            row['name']
+                          )
+                        }
                       >
-                        {row[header.key]}
+                        All Shelves
                       </Link>
                     </StructuredListCell>
                   );
@@ -55,11 +90,11 @@ function WarehouseTable({ headers, rows }) {
                 );
               })}
               <StructuredListCell>
-                <HeaderGlobalAction aria-label="Search">
-                  <Edit size={15} />
+                <HeaderGlobalAction aria-label="Edit">
+                  <Edit size={15} onClick={() => handleEditRow(row)} />
                 </HeaderGlobalAction>
-                <HeaderGlobalAction aria-label="Search">
-                  <Delete size={15} />
+                <HeaderGlobalAction aria-label="Delete">
+                  <Delete size={15} onClick={() => handleDeleteRow(row.id)} />
                 </HeaderGlobalAction>
               </StructuredListCell>
             </StructuredListRow>
@@ -73,14 +108,26 @@ function WarehouseTable({ headers, rows }) {
         page={page}
         pageNumberText="Page Number"
         pageSize={pageSize}
-        pageSizes={[5, 10, 20, 30, 40, 50]}
+        pageSizes={[10, 20, 30, 40, 50]}
         totalItems={rows.length}
-        onChange={({ page }) => setPage(page)}
+        onChange={({ page, pageSize }) => {
+          setPage(page);
+          setPageSize(pageSize);
+        }}
       />
       <ShelfLocationModal
+        warehouse_info={selectedWarehouseInfo}
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
       ></ShelfLocationModal>
+
+      <EditWarehouseModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        warehouseValues={editRow}
+        setRefresh={setRefresh}
+        setWarehouseValues={setEditRow}
+      ></EditWarehouseModal>
     </div>
   );
 }

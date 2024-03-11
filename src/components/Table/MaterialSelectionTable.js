@@ -10,9 +10,10 @@ import {
   TableCell,
   TableSelectRow,
   TableSelectAll,
+  TextInput,
 } from '@carbon/react';
 
-function WMSDataTable({ headers, rows }) {
+function MaterialSelectionTable({ headers, rows, onSelectionChange }) {
   return (
     <DataTable
       rows={rows}
@@ -36,28 +37,35 @@ function WMSDataTable({ headers, rows }) {
                   <TableSelectRow
                     {...getSelectionProps({ row })}
                     onChange={(checked) => {
-                      if (checked) {
-                        setSelectedRows((prevSelectedRows) => [
-                          ...prevSelectedRows,
-                          row,
-                        ]);
-                      } else {
-                        setSelectedRows((prevSelectedRows) =>
-                          prevSelectedRows.filter(
-                            (selectedRow) => selectedRow.id !== row.id
-                          )
-                        );
-                      }
+                      const quantity =
+                        document.getElementById(`quantity-${row.id}`)?.value ||
+                        0;
+                      onSelectionChange(row.id, quantity, checked);
                     }}
                   />
                   {headers.map((header) => {
                     const cell = row.cells.find(
                       (cell) => cell.id.split(':')[1] === header.key
                     );
-                    if (cell.id.split(':')[1] === 'occupied') {
+                    if (cell.id.split(':')[1] === 'quantity') {
                       return (
                         <TableCell key={header.key}>
-                          {cell ? (cell.value ? 'true' : 'false') : ''}
+                          <TextInput
+                            className="w-20"
+                            id={`quantity-${row.id}`}
+                            value={cell.value}
+                            onChange={(e) => {
+                              const checked = getSelectionProps({
+                                row,
+                              }).checked;
+                              onSelectionChange(
+                                row.id,
+                                'quantity',
+                                e.target.value,
+                                checked
+                              );
+                            }}
+                          ></TextInput>
                         </TableCell>
                       );
                     }
@@ -77,4 +85,4 @@ function WMSDataTable({ headers, rows }) {
   );
 }
 
-export default WMSDataTable;
+export default MaterialSelectionTable;

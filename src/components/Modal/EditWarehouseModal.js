@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Modal,
   TextInput,
@@ -7,28 +7,26 @@ import {
   Column,
   Grid,
 } from '@carbon/react';
-import { AddWarehouses } from '@/actions/actions';
+import { updateWarehouse } from '@/actions/actions';
 
-const CreateWarehouseModal = ({ isOpen, onClose, setRefresh }) => {
+const EditWarehouseModal = ({
+  isOpen,
+  onClose,
+  setRefresh,
+  warehouseValues,
+  setWarehouseValues,
+}) => {
   const [fieldValidation, setFieldValidation] = useState({
     nameInvalid: false,
     warehouseIdInvalid: false,
     typeInvalid: false,
   });
-  const [formValue, setFormValues] = useState({
-    name: '',
-    warehouse_id: '',
-    type: '',
-    manager: '',
-    department: '',
-    email: '',
-    project_group: '',
-    note: '',
-  });
-
+  const [formValue, setFormValues] = useState(warehouseValues);
+  useEffect(() => {
+    setFormValues(warehouseValues);
+  }, [warehouseValues]);
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
-
     setFormValues((prevValues) => ({
       ...prevValues,
       [id]: value,
@@ -36,16 +34,7 @@ const CreateWarehouseModal = ({ isOpen, onClose, setRefresh }) => {
   };
 
   const handleCancelClicked = () => {
-    setFormValues({
-      name: '',
-      warehouse_id: '',
-      type: '',
-      manager: '',
-      department: '',
-      email: '',
-      project_group: '',
-      note: '',
-    });
+    setWarehouseValues({});
     setFieldValidation({
       nameInvalid: false,
       warehouseIdInvalid: false,
@@ -54,8 +43,7 @@ const CreateWarehouseModal = ({ isOpen, onClose, setRefresh }) => {
     onClose();
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     const newValidation = {
       nameInvalid: !formValue.name || formValue.name === '',
       warehouseIdInvalid:
@@ -68,34 +56,16 @@ const CreateWarehouseModal = ({ isOpen, onClose, setRefresh }) => {
       setFieldValidation(newValidation);
       return;
     }
-    AddWarehouses(formValue)
-      .then((res) => {
-        setFormValues({
-          name: '',
-          warehouse_id: '',
-          type: '',
-          manager: '',
-          department: '',
-          email: '',
-          project_group: '',
-          note: '',
-        });
-        setFieldValidation({
-          nameInvalid: false,
-          warehouseIdInvalid: false,
-          typeInvalid: false,
-        });
-      })
-      .then(() => {
-        onClose();
-        setRefresh({});
-      });
+    updateWarehouse(formValue).then((res) => {
+      onClose();
+      setRefresh({});
+    });
   };
 
   return (
     <Modal
       open={isOpen}
-      modalHeading="Create a New Warehouse"
+      modalHeading="Edit a Warehouse"
       modalLabel="Warehouse Management"
       primaryButtonText="Save"
       secondaryButtonText="Cancel"
@@ -157,7 +127,7 @@ const CreateWarehouseModal = ({ isOpen, onClose, setRefresh }) => {
           <Select
             className="mb-5"
             id="department"
-            defaultValue=""
+            defaultValue="placeholder-item"
             labelText="Department"
             value={formValue.department}
             onChange={onFormValueChange}
@@ -202,4 +172,4 @@ const CreateWarehouseModal = ({ isOpen, onClose, setRefresh }) => {
   );
 };
 
-export default CreateWarehouseModal;
+export default EditWarehouseModal;

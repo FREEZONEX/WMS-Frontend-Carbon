@@ -1,71 +1,80 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   TextInput,
   Heading,
   Breadcrumb,
   BreadcrumbItem,
   Button,
+  Select,
+  SelectItem,
   HeaderGlobalAction,
-  DatePicker,
-  DatePickerInput,
 } from '@carbon/react';
-import { Add, Search } from '@carbon/icons-react';
+import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import StocktakingTable from '@/components/Table/StocktakingTable';
+import {
+  fetchStocktaking,
+  fetchStocktakingWithFilter,
+} from '@/actions/actions';
 
 const headers = [
-  { key: 'id', header: 'ID' },
+  // { key: 'id', header: 'ID' },
+  { key: 'ref_id', header: 'Ref ID' },
   { key: 'type', header: 'Type' },
-  { key: 'warehouse', header: 'Warehouse' },
-  { key: 'location', header: 'Location' },
-  { key: 'time', header: 'Time' },
+  { key: 'storage_location', header: 'Storage Location' },
   { key: 'operator', header: 'Operator' },
+  { key: 'source', header: 'Source' },
   { key: 'status', header: 'Status' },
-  { key: 'details', header: 'Details' },
+  { key: 'result', header: 'Result' },
+  { key: 'note', header: 'Note' },
 ];
-const rows = [
-  {
-    id: 'S#24022901',
-    type: 'Dynamic',
-    warehouse: 'Warehouse01',
-    location: 'E30',
-    time: '11/02/2024',
-    operator: 'Mick',
-    status: 'Done',
-    details: 'View Detail',
-  },
-  {
-    id: 'S#24022901',
-    type: 'Dynamic',
-    warehouse: 'Warehouse01',
-    location: 'E30',
-    time: '11/02/2024',
-    operator: 'Joy',
-    status: 'To-do',
-    details: 'View Detail',
-  },
-  {
-    id: 'S#24022901',
-    type: 'Dynamic',
-    warehouse: 'Warehouse01',
-    location: 'E30',
-    time: '11/02/2024',
-    operator: 'Cheery',
-    status: 'Done',
-    details: 'View Detail',
-  },
-  {
-    id: 'S#24022901',
-    type: 'Dynamic',
-    warehouse: 'Warehouse01',
-    location: 'E30',
-    time: '11/02/2024',
-    operator: 'Alice',
-    status: 'Executing',
-    details: 'View Detail',
-  },
-];
-function page() {
+
+function Page() {
+  const [rows, setRows] = useState([]);
+  const [refresh, setRefresh] = useState({});
+
+  const [formValue, setFormValues] = useState({
+    // id: '',
+    ref_id: '',
+    status: '',
+    type: '',
+  });
+  const onFormValueChange = (e) => {
+    const { id, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [id]: value,
+    }));
+  };
+  const handleSeachRows = () => {
+    const filteredFormValue = Object.entries(formValue).reduce(
+      (acc, [key, value]) => {
+        if (value !== '') {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {}
+    );
+    if (Object.entries(filteredFormValue).length > 0) {
+      fetchStocktakingWithFilter(filteredFormValue).then((res) => setRows(res));
+    } else {
+      fetchStocktaking().then((res) => setRows(res));
+    }
+  };
+  const handleRemoveFilters = () => {
+    fetchStocktaking().then((res) => setRows(res));
+    setFormValues({
+      id: '',
+      ref_id: '',
+      status: '',
+      type: '',
+    });
+  };
+  useEffect(() => {
+    fetchStocktaking().then((res) => setRows(res));
+  }, [refresh]);
+  console.log(formValue);
   return (
     <div>
       <Breadcrumb>
@@ -96,49 +105,70 @@ function page() {
         </Button>
       </div>
       <div className="flex mt-20 space-x-4 items-end">
-        <TextInput
-          className="flex-auto grow"
-          labelText="Stocktaking Id"
-          id="stocktaking id"
+        {/* <TextInput
+          className="flex-auto "
+          labelText="Id"
+          id="id"
           placeholder="Id"
-        />
+          value={formValue.id}
+          onChange={onFormValueChange}
+        /> */}
         <TextInput
-          className="flex-auto grow"
-          labelText="Warehouse"
-          id="warehouse"
-          placeholder="Warehouse"
+          className="flex-auto "
+          labelText="Ref Id"
+          id="ref_id"
+          placeholder="Ref Id"
+          value={formValue.ref_id}
+          onChange={onFormValueChange}
         />
-        <TextInput
-          className="flex-auto grow"
-          labelText="Operator"
-          id="operator"
-          placeholder="Operator"
-        />
-        <DatePicker datePickerType="range" className="flex-auto grow">
-          <DatePickerInput
-            className="flex-auto"
-            id="date-picker-input-id-start"
-            placeholder="mm/dd/yyyy"
-            labelText="Length of Stocktaking"
-            size="md"
-          />
-          <DatePickerInput
-            className="flex-auto"
-            id="date-picker-input-id-finish"
-            placeholder="mm/dd/yyyy"
-            labelText=" "
-            size="md"
-          />
-        </DatePicker>
-        <HeaderGlobalAction aria-label="Search">
-          <Search size={15} />
+        <Select
+          className="flex-auto"
+          id="type"
+          defaultValue=""
+          labelText="Stocktaking Type"
+          value={formValue.type}
+          onChange={onFormValueChange}
+          required
+        >
+          <SelectItem disabled hidden value="" text="Choose an option" />
+          <SelectItem value="cycle stock" text="Cycle Stock" />
+          <SelectItem value="pipeline stock" text="Pipeline Stock" />
+          <SelectItem value="mix stock" text="Mix Stock" />
+        </Select>
+        <Select
+          className="flex-auto"
+          id="status"
+          defaultValue=""
+          labelText="Status"
+          value={formValue.status}
+          onChange={onFormValueChange}
+          disabled
+          required
+        >
+          <SelectItem disabled hidden value="" text="Choose an option" />
+          <SelectItem value="Done" text="Done" />
+          <SelectItem value="Executing" text="Executing" />
+          <SelectItem value="To-do" text="To-do" />
+        </Select>
+        <HeaderGlobalAction aria-label="Search" onClick={handleSeachRows}>
+          <Search size={16} />
+        </HeaderGlobalAction>
+        <HeaderGlobalAction
+          aria-label="Remove Filters"
+          onClick={handleRemoveFilters}
+        >
+          <CloseOutline size={16} />
         </HeaderGlobalAction>
       </div>
       <div className="mt-12">
-        <StocktakingTable headers={headers} rows={rows} />
+        <StocktakingTable
+          headers={headers}
+          rows={rows}
+          setRefresh={setRefresh}
+        />
       </div>
     </div>
   );
 }
 
-export default page;
+export default Page;

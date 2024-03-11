@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   TextInput,
   Heading,
@@ -8,88 +8,70 @@ import {
   Button,
   Select,
   SelectItem,
-  DatePicker,
-  DatePickerInput,
   HeaderGlobalAction,
 } from '@carbon/react';
-import { Add, Search } from '@carbon/icons-react';
+import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import OutboundTable from '@/components/Table/OutboundTable';
+import { fetchOutbound, fetchOutboundWithFilter } from '@/actions/actions';
 
 const headers = [
-  { key: 'id', header: 'ID' },
-  { key: 'materialId', header: 'Material Id' },
-  { key: 'materialName', header: 'Material Name' },
-  { key: 'outboundTime', header: 'Outbound Time' },
-  { key: 'warehouse', header: 'Warehouse' },
-  { key: 'location', header: 'Location' },
+  // { key: 'id', header: 'ID' },
+  { key: 'ref_id', header: 'Ref ID' },
   { key: 'type', header: 'Type' },
+  { key: 'storage_location', header: 'Storage Location' },
   { key: 'operator', header: 'Operator' },
+  { key: 'source', header: 'Source' },
   { key: 'status', header: 'Status' },
-  { key: 'product', header: 'Product' },
+  { key: 'material', header: 'Material' },
+  { key: 'note', header: 'Note' },
 ];
-const rows = [
-  {
-    id: 'S#24022901',
-    type: 'Procurement',
-    warehouse: 'Warehouse01',
-    location: 'E30',
-    materialId: '01',
-    materialName: 'Apple',
-    operator: 'Mick',
-    status: 'Done',
-    outboundTime: '11/02/2024',
-    product: 'More',
-  },
-  {
-    id: 'S#24022901',
-    type: 'Procurement',
-    warehouse: 'Warehouse01',
-    location: 'E30',
-    materialId: '02',
-    materialName: 'Banana',
-    operator: 'Joy',
-    status: 'Done',
-    outboundTime: '11/02/2024',
-    product: 'More',
-  },
-  {
-    id: 'S#24022901',
-    type: 'Procurement',
-    warehouse: 'Warehouse01',
-    location: 'E30',
-    materialId: '01',
-    materialName: 'Apple',
-    operator: 'Cheery',
-    status: 'Done',
-    outboundTime: '11/02/2024',
-    product: 'More',
-  },
-  {
-    id: 'S#24022901',
-    type: 'Procurement',
-    warehouse: 'Warehouse01',
-    location: 'E30',
-    materialId: '01',
-    materialName: 'Apple',
-    operator: 'Alice',
-    status: 'Done',
-    outboundTime: '11/02/2024',
-    product: 'More',
-  },
-  {
-    id: 'S#24022901',
-    type: 'Procurement',
-    warehouse: 'Warehouse01',
-    location: 'E30',
-    materialId: '01',
-    materialName: 'Apple',
-    operator: 'Sam',
-    status: 'Done',
-    outboundTime: '11/02/2024',
-    product: 'More',
-  },
-];
-function page() {
+
+function Page() {
+  const [rows, setRows] = useState([]);
+  const [refresh, setRefresh] = useState({});
+
+  const [formValue, setFormValues] = useState({
+    // id: '',
+    ref_id: '',
+    status: '',
+    type: '',
+  });
+  const onFormValueChange = (e) => {
+    const { id, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [id]: value,
+    }));
+  };
+  const handleSeachRows = () => {
+    const filteredFormValue = Object.entries(formValue).reduce(
+      (acc, [key, value]) => {
+        if (value !== '') {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {}
+    );
+    if (Object.entries(filteredFormValue).length > 0) {
+      fetchOutboundWithFilter(filteredFormValue).then((res) => setRows(res));
+    } else {
+      fetchOutbound().then((res) => setRows(res));
+    }
+  };
+  const handleRemoveFilters = () => {
+    fetchOutbound().then((res) => setRows(res));
+    setFormValues({
+      id: '',
+      ref_id: '',
+      status: '',
+      type: '',
+    });
+  };
+  useEffect(() => {
+    fetchOutbound().then((res) => setRows(res));
+  }, [refresh]);
+  console.log(formValue);
   return (
     <div>
       <Breadcrumb>
@@ -116,65 +98,66 @@ function page() {
         </Button>
       </div>
       <div className="flex mt-20 space-x-4 items-end">
-        <TextInput
-          className="flex-auto self-stretch"
-          labelText="Outbound Id"
-          id="outbound Id"
+        {/* <TextInput
+          className="flex-auto "
+          labelText="Id"
+          id="id"
           placeholder="Id"
-        />
-        <Select
-          className="flex-auto self-stretch"
-          id="outbound type"
-          defaultValue="placeholder-item"
-          labelText="Outbound Type"
-          required
-        >
-          <SelectItem
-            disabled
-            hidden
-            value="placeholder-item"
-            text="Choose an option"
-          />
-          <SelectItem value="option-1" text="type 1" />
-          <SelectItem value="option-2" text="type 2" />
-        </Select>
-        <TextInput
-          className="flex-auto self-stretch"
-          labelText="Warehouse"
-          id="warehouse"
-          placeholder="Warehouse"
-        />
-        <DatePicker datePickerType="single" className="flex-auto self-stretch">
-          <DatePickerInput
-            className="self-stretch flex-auto"
-            id="time of outbound"
-            placeholder="mm/dd/yyyy"
-            labelText="Time of Outbound"
-          />
-        </DatePicker>
-      </div>
-      <div className="flex mt-[18px] space-x-4 items-end w-2/4">
-        <TextInput
-          className="flex-auto self-stretch"
-          labelText="Operator"
-          id="operator"
-          placeholder="Operator"
-        />
+          value={formValue.id}
+          onChange={onFormValueChange}
+        /> */}
         <TextInput
           className="flex-auto "
-          labelText="Product"
-          id="product"
-          placeholder="Product"
+          labelText="Ref Id"
+          id="ref_id"
+          placeholder="Ref Id"
+          value={formValue.ref_id}
+          onChange={onFormValueChange}
         />
-        <HeaderGlobalAction aria-label="Search">
-          <Search size={15} />
+        <Select
+          className="flex-auto"
+          id="type"
+          defaultValue=""
+          labelText="Outbound Type"
+          value={formValue.type}
+          onChange={onFormValueChange}
+          required
+        >
+          <SelectItem disabled hidden value="" text="Choose an option" />
+          <SelectItem value="material outbound" text="Material Outbound" />
+          <SelectItem value="product outbound" text="Product Outbound" />
+          <SelectItem value="mix outbound" text="Mix Outbound" />
+        </Select>
+        <Select
+          className="flex-auto"
+          id="status"
+          defaultValue=""
+          labelText="Status"
+          value={formValue.status}
+          onChange={onFormValueChange}
+          disabled
+          required
+        >
+          <SelectItem disabled hidden value="" text="Choose an option" />
+          <SelectItem value="Done" text="Done" />
+          <SelectItem value="Executing" text="Executing" />
+          <SelectItem value="To-do" text="To-do" />
+        </Select>
+        <HeaderGlobalAction aria-label="Search" onClick={handleSeachRows}>
+          <Search size={16} />
+        </HeaderGlobalAction>
+        <HeaderGlobalAction
+          aria-label="Remove Filters"
+          onClick={handleRemoveFilters}
+        >
+          <CloseOutline size={16} />
         </HeaderGlobalAction>
       </div>
       <div className="mt-12">
-        <OutboundTable headers={headers} rows={rows} />
+        <OutboundTable headers={headers} rows={rows} setRefresh={setRefresh} />
       </div>
     </div>
   );
 }
 
-export default page;
+export default Page;
