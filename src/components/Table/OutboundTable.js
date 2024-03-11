@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   HeaderGlobalAction,
   StructuredListWrapper,
@@ -8,18 +8,54 @@ import {
   StructuredListCell,
   StructuredListBody,
   Tag,
-  Link,
   Pagination,
+  Link,
 } from '@carbon/react';
 import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
 import ProductModal from '../Modal/ProductModal';
+import { deleteOutbound, fetchOutboundDetails } from '@/actions/actions';
 
-function OutboundTable({ headers, rows }) {
+function OutboundTable({ headers, rows, setRefresh }) {
   const [page, setPage] = useState(1);
   const pageSize = 10;
   const rowsToShow = rows.slice((page - 1) * pageSize, page * pageSize);
   const [isModalOpen, setModalOpen] = React.useState(false);
+  const handleDeleteRow = async (id) => {
+    deleteOutbound({ id }).then(() => setRefresh({}));
+  };
+  const [selectedMaterial, setSelectedMaterial] = useState([]);
+  const [detailRows, setDetailRows] = useState({});
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      const updatedRows = await Promise.all(
+        rows.map(async (row) => {
+          const details = await fetchOutboundDetails({
+            id: row.id,
+            ref_id: row.ref_id,
+          });
+          const storageLocations = [
+            ...new Set(details.map((detail) => detail.storage_location)),
+          ].join(', ');
+          return {
+            ...row,
+            storage_location: storageLocations,
+            material: details,
+          };
+        })
+      );
+      setDetailRows(
+        updatedRows.reduce((acc, row) => {
+          acc[row.id] = row;
+          return acc;
+        }, {})
+      );
+    };
+
+    fetchDetails();
+  }, [rows]);
+  console.log(detailRows);
   return (
     <div>
       <StructuredListWrapper isCondensed>
@@ -43,12 +79,22 @@ function OutboundTable({ headers, rows }) {
                     </StructuredListCell>
                   );
                 }
-                if (header.key === 'product') {
+                if (header.key === 'storage_location') {
+                  return (
+                    <StructuredListCell key={header.key}>
+                      {detailRows[row.id]?.storage_location || ''}
+                    </StructuredListCell>
+                  );
+                }
+                if (header.key === 'material') {
                   return (
                     <StructuredListCell key={header.key}>
                       <Link
                         onClick={() => {
                           setModalOpen(true);
+                          setSelectedMaterial(
+                            detailRows[row.id]?.material || []
+                          );
                         }}
                       >
                         More
@@ -63,10 +109,13 @@ function OutboundTable({ headers, rows }) {
                 );
               })}
               <StructuredListCell>
-                <HeaderGlobalAction aria-label="Search">
+                <HeaderGlobalAction aria-label="Edit" disabled>
                   <Edit size={15} />
                 </HeaderGlobalAction>
-                <HeaderGlobalAction aria-label="Search">
+                <HeaderGlobalAction
+                  aria-label="Delete"
+                  onClick={() => handleDeleteRow(row.id)}
+                >
                   <Delete size={15} />
                 </HeaderGlobalAction>
               </StructuredListCell>
@@ -86,6 +135,7 @@ function OutboundTable({ headers, rows }) {
         onChange={({ page }) => setPage(page)}
       />
       <ProductModal
+        material={selectedMaterial}
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
       ></ProductModal>

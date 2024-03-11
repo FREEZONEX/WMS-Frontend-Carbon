@@ -10,62 +10,30 @@ import {
   TableHeader,
   TableBody,
   TableCell,
-  TableSelectRow,
-  TableSelectAll,
-  TableToolbar,
-  TableToolbarContent,
-  TableToolbarSearch,
   Heading,
-  IconButton,
 } from '@carbon/react';
-import { Add, Subtract } from '@carbon/icons-react';
 
 const headers = [
-  { key: 'productName', header: 'Product Name' },
-  { key: 'carryingAmount', header: 'Carrying Amount' },
-  { key: 'inventoriedAmount', header: 'Inventoried Amount' },
-  { key: 'profitLossAmount', header: 'Profit and Loss Amount' },
+  { key: 'materialName', header: 'Material Name' },
+  { key: 'quantity', header: 'Quantity' },
+  { key: 'stock_quantity', header: 'Stock Quantity' },
+  { key: 'discrepancy', header: 'Discrepancy' },
+  { key: 'storage_location', header: 'Storage Location' },
 ];
 
-const rows = [
-  {
-    id: '1',
-    productName: 'Apple',
-    carryingAmount: 1300,
-    inventoriedAmount: 700,
-    profitLossAmount: -600,
-  },
-  {
-    id: '2',
-    productName: 'Banana',
-    carryingAmount: 200,
-    inventoriedAmount: 500,
-    profitLossAmount: 300,
-  },
-  {
-    id: '3',
-    productName: 'Orange',
-    carryingAmount: 300,
-    inventoriedAmount: 300,
-    profitLossAmount: 0,
-  },
-  {
-    id: '4',
-    productName: 'Watermelon',
-    carryingAmount: 500,
-    inventoriedAmount: 525,
-    profitLossAmount: 25,
-  },
-  {
-    id: '5',
-    productName: 'Pear',
-    carryingAmount: 1200,
-    inventoriedAmount: 1310,
-    profitLossAmount: 110,
-  },
-];
-
-function StocktakingResultModal({ isModalOpen, setModalOpen }) {
+function StocktakingResultModal({ isModalOpen, setModalOpen, material }) {
+  console.log(material);
+  const rows = material.flatMap((item, itemIndex) =>
+    item.inventory.map((inventory, inventoryIndex) => ({
+      id: `${itemIndex}-${inventoryIndex}`,
+      materialName: inventory.material_name,
+      quantity: inventory.quantity,
+      stock_quantity: inventory.stock_quantity,
+      discrepancy: inventory.discrepancy,
+      storage_location: item.storage_location,
+    }))
+  );
+  console.log(rows);
   return (
     <Modal
       open={isModalOpen}
@@ -75,35 +43,17 @@ function StocktakingResultModal({ isModalOpen, setModalOpen }) {
       size="lg"
     >
       <Heading className="text-sm font-normal leading-tight tracking-tight mb-3">
-        The results of this inventory task are as follows:
+        The following products entered the designated warehouse in this inbound
+        task.
       </Heading>
       <DataTable
         rows={rows}
         headers={headers}
-        render={({
-          rows,
-          headers,
-          getHeaderProps,
-          getRowProps,
-          getSelectionProps,
-          onInputChange,
-        }) => (
+        render={({ headers, getHeaderProps, getRowProps, onInputChange }) => (
           <TableContainer>
-            <TableToolbar>
-              <TableToolbarContent>
-                <TableToolbarSearch onChange={onInputChange} />
-                <IconButton className="mr-1" label="Add">
-                  <Add />
-                </IconButton>
-                <IconButton label="Remove">
-                  <Subtract />
-                </IconButton>
-              </TableToolbarContent>
-            </TableToolbar>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableSelectAll {...getSelectionProps()} />
                   {headers.map((header) => (
                     <TableHeader key={header} {...getHeaderProps({ header })}>
                       {header.header}
@@ -112,22 +62,14 @@ function StocktakingResultModal({ isModalOpen, setModalOpen }) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row, i) => {
+                {rows.map((row) => {
                   return (
-                    <TableRow
-                      key={i}
-                      {...getRowProps({
-                        row,
-                      })}
-                    >
-                      <TableSelectRow
-                        {...getSelectionProps({
-                          row,
-                        })}
-                      />
-                      {row.cells.map((cell) => {
+                    <TableRow key={row.id}>
+                      {headers.map((header) => {
                         return (
-                          <TableCell key={cell.id}>{cell.value}</TableCell>
+                          <TableCell key={header.key}>
+                            {row[header.key]}
+                          </TableCell>
                         );
                       })}
                     </TableRow>

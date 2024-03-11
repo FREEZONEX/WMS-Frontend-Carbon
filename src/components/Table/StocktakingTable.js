@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   HeaderGlobalAction,
   StructuredListWrapper,
@@ -7,23 +7,55 @@ import {
   StructuredListRow,
   StructuredListCell,
   StructuredListBody,
-  Link,
   Tag,
   Pagination,
+  Link,
 } from '@carbon/react';
 import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
+import { deleteStocktaking, fetchStocktakingDetails } from '@/actions/actions';
 import StocktakingResultModal from '../Modal/StocktakingResultModal';
 
-const TodoTag = () => <Tag type="purple">To-do</Tag>;
-const ExecutingTag = () => <Tag type="blue">Executing</Tag>;
-const DoneTag = () => <Tag type="green">Done</Tag>;
-
-function StocktakingTable({ headers, rows }) {
+function StocktakingTable({ headers, rows, setRefresh }) {
   const [page, setPage] = useState(1);
   const pageSize = 10;
   const rowsToShow = rows.slice((page - 1) * pageSize, page * pageSize);
   const [isModalOpen, setModalOpen] = React.useState(false);
+  const handleDeleteRow = async (id) => {
+    deleteStocktaking({ id }).then(() => setRefresh({}));
+  };
+  const [selectedMaterial, setSelectedMaterial] = useState([]);
+  const [detailRows, setDetailRows] = useState({});
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      const updatedRows = await Promise.all(
+        rows.map(async (row) => {
+          const details = await fetchStocktakingDetails({
+            id: row.id,
+            ref_id: row.ref_id,
+          });
+          const storageLocations = [
+            ...new Set(details.map((detail) => detail.storage_location)),
+          ].join(', ');
+          return {
+            ...row,
+            storage_location: storageLocations,
+            material: details,
+          };
+        })
+      );
+      setDetailRows(
+        updatedRows.reduce((acc, row) => {
+          acc[row.id] = row;
+          return acc;
+        }, {})
+      );
+    };
+
+    fetchDetails();
+  }, [rows]);
+  console.log(detailRows);
   return (
     <div>
       <StructuredListWrapper isCondensed>
@@ -40,29 +72,51 @@ function StocktakingTable({ headers, rows }) {
           {rowsToShow.map((row, index) => (
             <StructuredListRow key={index}>
               {headers.map((header) => {
-                if (header.key === 'details') {
+                if (header.key === 'status') {
+                  return (
+                    <StructuredListCell key={header.key}>
+                      <Tag type="blue">
+                        {row[header.key] === '' ? 'Done' : row[header.key]}
+                      </Tag>
+                    </StructuredListCell>
+                  );
+                }
+                if (header.key === 'storage_location') {
+                  return (
+                    <StructuredListCell key={header.key}>
+                      {detailRows[row.id]?.storage_location || ''}
+                    </StructuredListCell>
+                  );
+                }
+                if (header.key === 'material') {
                   return (
                     <StructuredListCell key={header.key}>
                       <Link
                         onClick={() => {
                           setModalOpen(true);
+                          setSelectedMaterial(
+                            detailRows[row.id]?.material || []
+                          );
                         }}
                       >
-                        View Detail
+                        More
                       </Link>
                     </StructuredListCell>
                   );
                 }
-                if (header.key === 'status') {
+                if (header.key === 'result') {
                   return (
                     <StructuredListCell key={header.key}>
-                      {row[header.key] === 'Done' ? (
-                        <DoneTag />
-                      ) : row[header.key] === 'Executing' ? (
-                        <ExecutingTag />
-                      ) : (
-                        <TodoTag />
-                      )}
+                      <Link
+                        onClick={() => {
+                          setModalOpen(true);
+                          setSelectedMaterial(
+                            detailRows[row.id]?.material || []
+                          );
+                        }}
+                      >
+                        view Detail
+                      </Link>
                     </StructuredListCell>
                   );
                 }
@@ -73,10 +127,13 @@ function StocktakingTable({ headers, rows }) {
                 );
               })}
               <StructuredListCell>
-                <HeaderGlobalAction aria-label="Search">
+                <HeaderGlobalAction aria-label="Edit" disabled>
                   <Edit size={15} />
                 </HeaderGlobalAction>
-                <HeaderGlobalAction aria-label="Search">
+                <HeaderGlobalAction
+                  aria-label="Delete"
+                  onClick={() => handleDeleteRow(row.id)}
+                >
                   <Delete size={15} />
                 </HeaderGlobalAction>
               </StructuredListCell>
@@ -96,9 +153,10 @@ function StocktakingTable({ headers, rows }) {
         onChange={({ page }) => setPage(page)}
       />
       <StocktakingResultModal
+        material={selectedMaterial}
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
-      />
+      ></StocktakingResultModal>
     </div>
   );
 }

@@ -11,27 +11,12 @@ import {
 } from '@carbon/react';
 import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
-import EditMaterialModal from '../Modal/EditMaterialModal';
-import { deleteMaterial } from '@/actions/actions';
 
-function MaterialTable({ headers, rows, setRefresh }) {
+function LabelingTable({ headers, rows }) {
   const [page, setPage] = useState(1);
   const pageSize = 10;
   const rowsToShow = rows.slice((page - 1) * pageSize, page * pageSize);
 
-  const [editRow, setEditRow] = useState({});
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
-
-  const handleEditModalClose = () => {
-    setEditModalOpen(false);
-  };
-  const handleEditRow = (row) => {
-    setEditRow(row);
-    setEditModalOpen(true);
-  };
-  const handleDeleteRow = async (id) => {
-    deleteMaterial({ id }).then((res) => setRefresh({}));
-  };
   return (
     <div>
       <StructuredListWrapper isCondensed>
@@ -54,17 +39,6 @@ function MaterialTable({ headers, rows, setRefresh }) {
                   </StructuredListCell>
                 );
               })}
-              <StructuredListCell>
-                <HeaderGlobalAction aria-label="Edit">
-                  <Edit size={15} onClick={() => handleEditRow(row)} />
-                </HeaderGlobalAction>
-                <HeaderGlobalAction
-                  aria-label="Delete"
-                  onClick={() => handleDeleteRow(row.id)}
-                >
-                  <Delete size={15} />
-                </HeaderGlobalAction>
-              </StructuredListCell>
             </StructuredListRow>
           ))}
         </StructuredListBody>
@@ -80,15 +54,8 @@ function MaterialTable({ headers, rows, setRefresh }) {
         totalItems={rows.length}
         onChange={({ page }) => setPage(page)}
       />
-      <EditMaterialModal
-        isOpen={isEditModalOpen}
-        onClose={handleEditModalClose}
-        materialValues={editRow}
-        setRefresh={setRefresh}
-        setMaterialValues={setEditRow}
-      />
     </div>
   );
 }
 
-export default MaterialTable;
+export default LabelingTable;
