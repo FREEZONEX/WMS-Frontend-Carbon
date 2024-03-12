@@ -122,6 +122,7 @@ function OutboundCreateForm() {
     value,
     checked
   ) => {
+    console.log(field);
     setTaskList((prevTaskList) => {
       const updatedTaskList = [...prevTaskList];
       if (checked) {
@@ -138,7 +139,7 @@ function OutboundCreateForm() {
         } else {
           updatedTaskList[taskIndex].materials.push({
             ...selectedMaterial,
-            field: value,
+            [field]: value,
           });
         }
       } else {

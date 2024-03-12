@@ -138,7 +138,7 @@ function StocktakingCreateForm() {
         } else {
           updatedTaskList[taskIndex].materials.push({
             ...selectedMaterial,
-            field: value,
+            [field]: value,
           });
         }
       } else {

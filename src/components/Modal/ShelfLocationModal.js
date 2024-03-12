@@ -19,6 +19,7 @@ import {
   IconButton,
   TextInput,
   Button,
+  Link,
 } from '@carbon/react';
 import { Add, Subtract } from '@carbon/icons-react';
 import {
@@ -26,22 +27,24 @@ import {
   deleteStorageLocation,
   fetchStorageLocationsByWId,
 } from '@/actions/actions';
+import WMSDataTable from '../Table/DataTable';
 
 const headers = [
   { key: 'name', header: 'Shelf Location' },
   { key: 'occupied', header: 'Occupied' },
-  { key: 'material', header: 'Material' },
+  { key: 'materials', header: 'Material' },
 ];
 
 function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
   const [rows, setRows] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [isCreate, setIsCreate] = useState(false);
+  const [showMaterial, setShowMaterial] = useState(false);
+  const [selectedRowMaterials, setSelectedRowMaterial] = useState([]);
   const [formValue, setFormValues] = useState({
     name: '',
   });
-
-  console.log(warehouse_info);
+  console.log(selectedRowMaterials);
   const onFormValueChange = (e) => {
     const { id, value } = e.target; // Destructure the name and value from the event target
 
@@ -53,6 +56,8 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
   useEffect(() => {
     if (isModalOpen && warehouse_info?.shelf_location) {
       setRows(warehouse_info.shelf_location);
+      setIsCreate(false);
+      setShowMaterial(false);
     }
   }, [isModalOpen, warehouse_info]);
 
@@ -96,7 +101,7 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
       onRequestClose={() => setModalOpen(false)}
       size="lg"
     >
-      {!isCreate && (
+      {!isCreate && !showMaterial && (
         <>
           <Heading className="text-sm font-normal leading-tight tracking-tight mb-3">
             All shelf location under this warehouse - {warehouse_info.id} -
@@ -179,6 +184,21 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
                               </TableCell>
                             );
                           }
+                          if (cell.id.split(':')[1] === 'materials') {
+                            console.log(cell.value);
+                            return (
+                              <TableCell key={header.key}>
+                                <Link
+                                  onClick={() => {
+                                    setShowMaterial(true);
+                                    setSelectedRowMaterial(cell.value);
+                                  }}
+                                >
+                                  More
+                                </Link>
+                              </TableCell>
+                            );
+                          }
                           return (
                             <TableCell key={header.key}>
                               {cell ? cell.value : ''}
@@ -218,6 +238,37 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
               }}
             >
               Cancel
+            </Button>
+          </div>
+        </div>
+      )}
+      {showMaterial && (
+        <div>
+          <Heading className="text-sm font-normal leading-tight tracking-tight mb-3">
+            All materials on this shelf
+          </Heading>
+          <WMSDataTable
+            headers={[
+              { key: 'material_name', header: 'material Name' },
+              { key: 'quantity', header: 'Quantity' },
+            ]}
+            rows={
+              selectedRowMaterials && selectedRowMaterials.length > 0
+                ? selectedRowMaterials.map((row) => {
+                    return { ...row, id: row.material_id };
+                  })
+                : []
+            }
+          ></WMSDataTable>
+          <div className="flex space-x-4 mt-4 justify-center ">
+            <Button
+              size="sm"
+              kind="tertiary"
+              onClick={() => {
+                setShowMaterial(false);
+              }}
+            >
+              Back
             </Button>
           </div>
         </div>
