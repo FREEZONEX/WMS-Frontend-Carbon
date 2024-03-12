@@ -8,11 +8,13 @@ import {
   StructuredListCell,
   StructuredListBody,
   Pagination,
+  Link,
 } from '@carbon/react';
 import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
 import EditMaterialModal from '../Modal/EditMaterialModal';
 import { deleteMaterial } from '@/actions/actions';
+import StorageLocationModal from '../Modal/StorageLocationModal';
 
 function MaterialTable({ headers, rows, setRefresh }) {
   const [page, setPage] = useState(1);
@@ -21,7 +23,8 @@ function MaterialTable({ headers, rows, setRefresh }) {
 
   const [editRow, setEditRow] = useState({});
   const [isEditModalOpen, setEditModalOpen] = useState(false);
-
+  const [isModalOpen, setModalOpen] = React.useState(false);
+  const [selectedMaterial, setSelectedMaterial] = useState([]);
   const handleEditModalClose = () => {
     setEditModalOpen(false);
   };
@@ -48,6 +51,21 @@ function MaterialTable({ headers, rows, setRefresh }) {
           {rowsToShow.map((row, index) => (
             <StructuredListRow key={row.id}>
               {headers.map((header) => {
+                if (header.key === 'storage_location') {
+                  return (
+                    <StructuredListCell key={header.key}>
+                      <Link
+                        onClick={() => {
+                          console.log(row);
+                          setModalOpen(true);
+                          setSelectedMaterial(row);
+                        }}
+                      >
+                        Storage location details
+                      </Link>
+                    </StructuredListCell>
+                  );
+                }
                 return (
                   <StructuredListCell key={header.key}>
                     {row[header.key]}
@@ -87,6 +105,11 @@ function MaterialTable({ headers, rows, setRefresh }) {
         setRefresh={setRefresh}
         setMaterialValues={setEditRow}
       />
+      <StorageLocationModal
+        isModalOpen={isModalOpen}
+        setModalOpen={setModalOpen}
+        material_info={selectedMaterial}
+      ></StorageLocationModal>
     </div>
   );
 }
