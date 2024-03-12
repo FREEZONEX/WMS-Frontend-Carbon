@@ -55,7 +55,7 @@ function InboundCreateForm() {
   });
   const [formValue, setFormValues] = useState({
     type: '',
-    source: '',
+    source: 'manual',
     status: '',
     note: '',
   });
@@ -236,6 +236,7 @@ function InboundCreateForm() {
               value={formValue.source}
               onChange={onFormValueChange}
               required
+              disabled
             >
               <SelectItem disabled hidden value="" text="Choose an option" />
               <SelectItem value="PDA" text="PDA" />

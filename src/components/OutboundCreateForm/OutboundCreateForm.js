@@ -55,7 +55,7 @@ function OutboundCreateForm() {
   });
   const [formValue, setFormValues] = useState({
     type: '',
-    source: '',
+    source: 'manual',
     status: '',
     note: '',
   });
@@ -237,6 +237,7 @@ function OutboundCreateForm() {
               invalidText="This field cannot be empty"
               value={formValue.source}
               onChange={onFormValueChange}
+              disabled
               required
             >
               <SelectItem disabled hidden value="" text="Choose an option" />
