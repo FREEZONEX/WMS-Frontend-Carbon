@@ -14,7 +14,7 @@ import './_table.scss';
 
 function LabelingTable({ headers, rows }) {
   const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const [pageSize, setPageSize] = useState(10);
   const rowsToShow = rows.slice((page - 1) * pageSize, page * pageSize);
 
   return (
@@ -52,7 +52,10 @@ function LabelingTable({ headers, rows }) {
         pageSize={pageSize}
         pageSizes={[5, 10, 20, 30, 40, 50]}
         totalItems={rows.length}
-        onChange={({ page }) => setPage(page)}
+        onChange={({ page, pageSize }) => {
+          setPage(page);
+          setPageSize(pageSize);
+        }}
       />
     </div>
   );

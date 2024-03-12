@@ -18,7 +18,7 @@ import { deleteOutbound, fetchOutboundDetails } from '@/actions/actions';
 
 function OutboundTable({ headers, rows, setRefresh }) {
   const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const [pageSize, setPageSize] = useState(10);
   const rowsToShow = rows.slice((page - 1) * pageSize, page * pageSize);
   const [isModalOpen, setModalOpen] = React.useState(false);
   const handleDeleteRow = async (id) => {
@@ -132,7 +132,10 @@ function OutboundTable({ headers, rows, setRefresh }) {
         pageSize={pageSize}
         pageSizes={[5, 10, 20, 30, 40, 50]}
         totalItems={rows.length}
-        onChange={({ page }) => setPage(page)}
+        onChange={({ page, pageSize }) => {
+          setPage(page);
+          setPageSize(pageSize);
+        }}
       />
       <ProductModal
         material={selectedMaterial}
