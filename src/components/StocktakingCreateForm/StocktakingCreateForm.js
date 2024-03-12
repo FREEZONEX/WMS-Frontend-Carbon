@@ -55,7 +55,7 @@ function StocktakingCreateForm() {
   });
   const [formValue, setFormValues] = useState({
     type: '',
-    source: '',
+    source: 'manual',
     status: '',
     // note: '',
   });
@@ -238,6 +238,7 @@ function StocktakingCreateForm() {
               value={formValue.source}
               onChange={onFormValueChange}
               required
+              disabled
             >
               <SelectItem disabled hidden value="" text="Choose an option" />
               <SelectItem value="PDA" text="PDA" />

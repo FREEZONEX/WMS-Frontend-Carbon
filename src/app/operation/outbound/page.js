@@ -24,6 +24,7 @@ const headers = [
   { key: 'status', header: 'Status' },
   { key: 'material', header: 'Material' },
   { key: 'note', header: 'Note' },
+  { key: 'create_time', header: 'Create Time' },
 ];
 
 function Page() {
