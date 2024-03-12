@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
+import { Heading, Breadcrumb, BreadcrumbItem, Button } from '@carbon/react';
 import { fetchMaterialRFID } from '@/actions/actions';
+import { Add } from '@carbon/icons-react';
 import LabelingTable from '@/components/Table/LabelingTable';
 
 const headers = [
@@ -14,9 +15,9 @@ function Page() {
   const [rows, setRows] = useState([]);
   const [refresh, setRefresh] = useState({});
 
-  //   useEffect(() => {
-  //     fetchMaterialRFID().then((res) => setRows(res));
-  //   }, [refresh]);
+  useEffect(() => {
+    fetchMaterialRFID().then((res) => setRows(res));
+  }, [refresh]);
   return (
     <div>
       <Breadcrumb>
@@ -34,6 +35,14 @@ function Page() {
             Description of Labeling view goes here.
           </Heading>
         </div>
+        <Button
+          href="/warehouse/material/rfid/create"
+          isExpressive
+          size="sm"
+          renderIcon={Add}
+        >
+          Create a RFID Tag
+        </Button>
       </div>
       <div className="mt-12">
         <LabelingTable headers={headers} rows={rows} />

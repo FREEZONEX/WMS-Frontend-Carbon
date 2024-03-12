@@ -31,6 +31,10 @@ function StocktakingTable({ headers, rows, setRefresh }) {
     const fetchDetails = async () => {
       const updatedRows = await Promise.all(
         rows.map(async (row) => {
+          console.log({
+            id: row.id,
+            ref_id: row.ref_id,
+          });
           const details = await fetchStocktakingDetails({
             id: row.id,
             ref_id: row.ref_id,
