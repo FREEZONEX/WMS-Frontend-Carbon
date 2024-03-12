@@ -67,7 +67,7 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
         name: '',
       });
       fetchStorageLocationsByWId({
-        warehouse_id: warehouse_info.warehouse_id,
+        warehouse_id: warehouse_info.id,
       }).then((res) => setRows(res));
     });
   };
