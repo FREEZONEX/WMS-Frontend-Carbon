@@ -25,6 +25,7 @@ import {
   Settings,
   Help,
   Analytics,
+  WatsonHealth3DCursor,
 } from '@carbon/icons-react';
 import { usePathname } from 'next/navigation';
 
@@ -99,6 +100,13 @@ export const HeaderWSideNav = () => {
                   isActive={isCurrentPath('/analysis')}
                 >
                   Analysis
+                </SideNavLink>
+                <SideNavLink
+                  renderIcon={WatsonHealth3DCursor}
+                  href="/analysis/3d"
+                  isActive={isCurrentPath('/analysis/3d')}
+                >
+                  3D-Modeling
                 </SideNavLink>
               </SideNavItems>
             </SideNav>

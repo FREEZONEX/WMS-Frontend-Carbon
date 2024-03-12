@@ -17,6 +17,7 @@ const headers = [
   { key: 'name', header: 'Material Name' },
   { key: 'product_type', header: 'Material Type' },
   { key: 'unit', header: 'Unit' },
+  { key: 'storage_location', header: 'Storage Location' },
   { key: 'note', header: 'Note' },
 ];
 

@@ -95,6 +95,13 @@ export async function fetchMaterialRFID() {
   });
 }
 
+export async function addMaterialRFID(body) {
+  return httpToBackend.post('/wms/rfidmaterial/add', body).then((res) => {
+    console.log(res);
+    return res.data.data;
+  });
+}
+
 // wms/inbound
 export async function addInboundRecord(body) {
   return httpToBackend.post('/wms/inbound/add', body).then((res) => {
