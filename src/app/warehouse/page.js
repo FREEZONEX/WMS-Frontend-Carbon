@@ -81,15 +81,13 @@ function Page() {
         <BreadcrumbItem>
           <a href="/">Home</a>
         </BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse">Warehouse Management</BreadcrumbItem>
+        <BreadcrumbItem href="/warehouse">Warehouse</BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
-          <Heading className="mt-2 text-[28px] font-normal">
-            Warehouse Structure
-          </Heading>
+          <Heading className="mt-2 text-[28px] font-normal">Warehouse</Heading>
           <Heading className="mt-1 text-sm">
-            Description of warehouse view goes here.
+            List of warehouses for your storage solutions
           </Heading>
         </div>
         <Button

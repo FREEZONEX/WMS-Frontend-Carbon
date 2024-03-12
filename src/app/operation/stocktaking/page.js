@@ -26,7 +26,7 @@ const headers = [
   { key: 'source', header: 'Source' },
   { key: 'status', header: 'Status' },
   { key: 'result', header: 'Result' },
-  { key: 'note', header: 'Note' },
+  // { key: 'note', header: 'Note' },
 ];
 
 function Page() {
@@ -92,7 +92,7 @@ function Page() {
             Stocktaking
           </Heading>
           <Heading className="mt-1 text-sm">
-            Description of inventory view goes here.
+            Verify and adjust inventory accuracy
           </Heading>
         </div>
         <Button

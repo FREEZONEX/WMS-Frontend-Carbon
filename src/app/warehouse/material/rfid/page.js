@@ -23,15 +23,15 @@ function Page() {
         <BreadcrumbItem>
           <a href="/">Home</a>
         </BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse">Warehouse Management</BreadcrumbItem>
+        <BreadcrumbItem href="/warehouse">Warehouse</BreadcrumbItem>
         <BreadcrumbItem href="/warehouse/material">Material</BreadcrumbItem>
         <BreadcrumbItem href="/warehouse/material/rfid">RFID</BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
-          <Heading className="mt-12 text-[28px] font-normal">Labeling</Heading>
+          <Heading className="mt-12 text-[28px] font-normal">RFID Tag</Heading>
           <Heading className="mt-1 text-sm">
-            Description of labeling view goes here.
+            Description of Labeling view goes here.
           </Heading>
         </div>
       </div>

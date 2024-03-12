@@ -10,7 +10,7 @@ function page() {
         <BreadcrumbItem>
           <a href="/">Home</a>
         </BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse">Warehouse Management</BreadcrumbItem>
+        <BreadcrumbItem href="/warehouse">Warehouse</BreadcrumbItem>
         <BreadcrumbItem href="/warehouse/material">Material</BreadcrumbItem>
         <BreadcrumbItem href="/warehouse/material/create">
           Create

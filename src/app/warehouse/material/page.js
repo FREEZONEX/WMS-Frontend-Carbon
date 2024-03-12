@@ -69,14 +69,14 @@ function Page() {
         <BreadcrumbItem>
           <a href="/">Home</a>
         </BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse">Warehouse Management</BreadcrumbItem>
+        <BreadcrumbItem href="/warehouse">Warehouse</BreadcrumbItem>
         <BreadcrumbItem href="/warehouse/material">Material</BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
           <Heading className="mt-2 text-[28px] font-normal">Material</Heading>
           <Heading className="mt-1 text-sm">
-            Description of material view goes here.
+            Input materials details for inventory management
           </Heading>
         </div>
         <div>
