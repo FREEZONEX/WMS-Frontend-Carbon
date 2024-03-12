@@ -13,6 +13,7 @@ import {
 } from '@carbon/react';
 
 function WMSDataTable({ headers, rows }) {
+  console.log(rows);
   return (
     <DataTable
       rows={rows}
