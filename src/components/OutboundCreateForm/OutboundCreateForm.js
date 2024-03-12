@@ -118,7 +118,8 @@ function OutboundCreateForm() {
   const handleMaterialSelection = (
     taskIndex,
     materialId,
-    quantity,
+    field,
+    value,
     checked
   ) => {
     setTaskList((prevTaskList) => {
@@ -132,12 +133,12 @@ function OutboundCreateForm() {
         ].materials.findIndex((material) => material.id === materialId);
 
         if (existingMaterialIndex !== -1) {
-          updatedTaskList[taskIndex].materials[existingMaterialIndex].quantity =
-            quantity;
+          updatedTaskList[taskIndex].materials[existingMaterialIndex][field] =
+            value;
         } else {
           updatedTaskList[taskIndex].materials.push({
             ...selectedMaterial,
-            quantity,
+            field: value,
           });
         }
       } else {
@@ -365,11 +366,17 @@ function OutboundCreateForm() {
                       <MaterialSelectionTable
                         headers={headers}
                         rows={materials}
-                        onSelectionChange={(materialId, quantity, checked) =>
+                        onSelectionChange={(
+                          materialId,
+                          field,
+                          value,
+                          checked
+                        ) =>
                           handleMaterialSelection(
                             index,
                             materialId,
-                            quantity,
+                            field,
+                            value,
                             checked
                           )
                         }

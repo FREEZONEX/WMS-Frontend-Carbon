@@ -85,7 +85,7 @@ function Page() {
         <div>
           <Heading className="mt-2 text-[28px] font-normal">Outbound</Heading>
           <Heading className="mt-1 text-sm">
-            Description of Outbound view goes here.
+            Process and track inventory dispatches
           </Heading>
         </div>
         <Button

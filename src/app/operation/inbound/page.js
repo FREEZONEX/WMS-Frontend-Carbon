@@ -85,7 +85,7 @@ function Page() {
         <div>
           <Heading className="mt-2 text-[28px] font-normal">Inbound</Heading>
           <Heading className="mt-1 text-sm">
-            Description of Inbound view goes here.
+            Log new inventory arrivals quickly
           </Heading>
         </div>
         <Button

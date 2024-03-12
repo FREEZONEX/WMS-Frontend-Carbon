@@ -57,7 +57,7 @@ function StocktakingCreateForm() {
     type: '',
     source: '',
     status: '',
-    note: '',
+    // note: '',
   });
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
@@ -260,7 +260,7 @@ function StocktakingCreateForm() {
               <SelectItem value="To-do" text="To-do" />
             </Select>
           </Column>
-          <Column sm={1} md={3} lg={4}>
+          {/* <Column sm={1} md={3} lg={4}>
             <TextArea
               className="mb-10 w-full"
               labelText="Note"
@@ -270,7 +270,7 @@ function StocktakingCreateForm() {
               onChange={onFormValueChange}
               placeholder="Note Placeholder"
             />
-          </Column>
+          </Column> */}
         </Grid>
         <SwitcherDivider className="w-full mb-10 pl-0" />
         <Grid className="pl-0">
