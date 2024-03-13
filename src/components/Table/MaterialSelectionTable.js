@@ -11,6 +11,9 @@ import {
   TableSelectRow,
   TableSelectAll,
   TextInput,
+  TableToolbar,
+  TableToolbarContent,
+  TableToolbarSearch,
 } from '@carbon/react';
 
 function MaterialSelectionTable({ headers, rows, onSelectionChange }) {
@@ -18,8 +21,19 @@ function MaterialSelectionTable({ headers, rows, onSelectionChange }) {
     <DataTable
       rows={rows}
       headers={headers}
-      render={({ rows, headers, getHeaderProps, getSelectionProps }) => (
+      render={({
+        rows,
+        headers,
+        getHeaderProps,
+        getSelectionProps,
+        onInputChange,
+      }) => (
         <TableContainer>
+          <TableToolbar>
+            <TableToolbarContent>
+              <TableToolbarSearch onChange={onInputChange} />
+            </TableToolbarContent>
+          </TableToolbar>
           <Table>
             <TableHead>
               <TableRow>
