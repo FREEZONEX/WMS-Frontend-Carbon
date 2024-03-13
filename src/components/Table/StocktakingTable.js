@@ -19,7 +19,7 @@ import StocktakingResultModal from '../Modal/StocktakingResultModal';
 function StocktakingTable({ headers, rows, setRefresh }) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const rowsToShow = rows.slice((page - 1) * pageSize, page * pageSize);
+
   const [isModalOpen, setModalOpen] = React.useState(false);
   const handleDeleteRow = async (id) => {
     deleteStocktaking({ id }).then(() => setRefresh({}));
@@ -60,14 +60,50 @@ function StocktakingTable({ headers, rows, setRefresh }) {
     fetchDetails();
   }, [rows]);
   console.log(detailRows);
+
+  const [sortKey, setSortKey] = useState('create_time');
+  const [sortDirection, setSortDirection] = useState('desc');
+  const sortedRows = React.useMemo(() => {
+    if (!sortKey) {
+      return rows;
+    }
+
+    const sortedRows = [...rows];
+    sortedRows.sort((a, b) => {
+      if (a[sortKey] < b[sortKey]) {
+        return sortDirection === 'asc' ? -1 : 1;
+      }
+      if (a[sortKey] > b[sortKey]) {
+        return sortDirection === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+    return sortedRows;
+  }, [rows, sortKey, sortDirection]);
+  const rowsToShow = sortedRows.slice((page - 1) * pageSize, page * pageSize);
+  const handleSort = (key) => {
+    if (sortKey === key) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortKey(key);
+      setSortDirection('asc');
+    }
+  };
   return (
     <div>
       <StructuredListWrapper isCondensed>
         <StructuredListHead>
           <StructuredListRow head>
             {headers.map((header, index) => (
-              <StructuredListCell head key={header.key}>
+              <StructuredListCell
+                head
+                key={header.key}
+                onClick={() => handleSort(header.key)}
+              >
                 {header.header}
+                {sortKey === header.key && (
+                  <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
+                )}
               </StructuredListCell>
             ))}
           </StructuredListRow>
