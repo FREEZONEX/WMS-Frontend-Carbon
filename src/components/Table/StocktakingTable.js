@@ -123,7 +123,14 @@ function StocktakingTable({ headers, rows, setRefresh }) {
                 }
                 if (header.key === 'storage_location') {
                   return (
-                    <StructuredListCell key={header.key}>
+                    <StructuredListCell
+                      key={header.key}
+                      className="truncate"
+                      title={row[header.key]}
+                      onClick={(e) => {
+                        e.currentTarget.classList.toggle('expanded');
+                      }}
+                    >
                       {detailRows[row.id]?.storage_location || ''}
                     </StructuredListCell>
                   );

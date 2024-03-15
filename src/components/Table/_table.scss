@@ -2,3 +2,21 @@
 .cds--structured-list.cds--structured-list--condensed .cds--structured-list-th {
   padding: 0rem;
 }
+
+.truncate {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+
+  &:hover {
+    white-space: normal;
+    overflow: visible;
+  }
+
+  &.expanded {
+    white-space: normal;
+    overflow: visible;
+  }
+}
