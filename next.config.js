@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: '/wmsbackendapi/:slug*',
-        destination: `http://localhost:8085/:slug*`,
+        destination: `http://localhost:8080/:slug*`,
       },
       //destination: `http://47.236.10.165:30085/:slug*`,
     ];

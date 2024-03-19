@@ -18,13 +18,15 @@ const EditWarehouseModal = ({
 }) => {
   const [fieldValidation, setFieldValidation] = useState({
     nameInvalid: false,
-    warehouseIdInvalid: false,
+    // warehouseIdInvalid: false,
     typeInvalid: false,
   });
   const [formValue, setFormValues] = useState(warehouseValues);
   useEffect(() => {
     setFormValues(warehouseValues);
   }, [warehouseValues]);
+
+  console.log(formValue);
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
     setFormValues((prevValues) => ({
@@ -37,7 +39,7 @@ const EditWarehouseModal = ({
     setWarehouseValues({});
     setFieldValidation({
       nameInvalid: false,
-      warehouseIdInvalid: false,
+      // warehouseIdInvalid: false,
       typeInvalid: false,
     });
     onClose();
@@ -46,8 +48,8 @@ const EditWarehouseModal = ({
   const handleSubmit = async () => {
     const newValidation = {
       nameInvalid: !formValue.name || formValue.name === '',
-      warehouseIdInvalid:
-        !formValue.warehouse_id || formValue.warehouse_id === '',
+      // warehouseIdInvalid:
+      //   !formValue.warehouse_id || formValue.warehouse_id === '',
       typeInvalid: !formValue.type || formValue.type === '',
     };
     setFieldValidation(newValidation);
