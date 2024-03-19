@@ -68,12 +68,8 @@ function Page() {
   const handleModalClose = () => {
     setCreateModalOpen(false);
   };
-  const [rows, setRows] = useState([]);
-  const [refresh, setRefresh] = useState({});
 
-  useEffect(() => {
-    fetchWarehouses().then((res) => setRows(res));
-  }, [refresh]);
+  const [refresh, setRefresh] = useState({});
 
   return (
     <div>
@@ -150,7 +146,11 @@ function Page() {
         </HeaderGlobalAction>
       </div>
       <div className="mt-12">
-        <WarehouseTable headers={headers} rows={rows} setRefresh={setRefresh} />
+        <WarehouseTable
+          headers={headers}
+          refresh={refresh}
+          setRefresh={setRefresh}
+        />
       </div>
     </div>
   );

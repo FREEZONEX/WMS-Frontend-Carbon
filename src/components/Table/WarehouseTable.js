@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   HeaderGlobalAction,
   StructuredListWrapper,
@@ -13,19 +13,30 @@ import {
 import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
 import ShelfLocationModal from '../Modal/ShelfLocationModal';
-import { deleteWarehouse, fetchStorageLocationsByWId } from '@/actions/actions';
+import {
+  fetchWarehouses,
+  deleteWarehouse,
+  fetchStorageLocationsByWId,
+} from '@/actions/actions';
 import EditWarehouseModal from '../Modal/EditWarehouseModal';
 
-function WarehouseTable({ headers, rows, setRefresh }) {
+function WarehouseTable({ headers, refresh, setRefresh }) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-
-  const rowsToShow = rows.slice((page - 1) * pageSize, page * pageSize);
+  const [total, setTotal] = useState(0);
+  //const rowsToShow = rows.slice((page - 1) * pageSize, page * pageSize);
   const [isModalOpen, setModalOpen] = useState(false);
   const [editRow, setEditRow] = useState({});
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedWarehouseInfo, setSelectedWarehouseInfo] = useState({});
-
+  const [rows, setRows] = useState([]);
+  useEffect(() => {
+    fetchWarehouses(page, pageSize).then((res) => {
+      setRows(res.list);
+      setTotal(res.total);
+    });
+  }, [page, pageSize, refresh]);
+  console.log(rows);
   const handleEditModalClose = () => {
     setEditModalOpen(false);
   };
@@ -63,7 +74,7 @@ function WarehouseTable({ headers, rows, setRefresh }) {
           </StructuredListRow>
         </StructuredListHead>
         <StructuredListBody>
-          {rowsToShow.map((row, index) => (
+          {rows.map((row, index) => (
             <StructuredListRow key={row.id}>
               {headers.map((header) => {
                 if (header.key === 'storage_location') {
@@ -82,6 +93,9 @@ function WarehouseTable({ headers, rows, setRefresh }) {
                       </Link>
                     </StructuredListCell>
                   );
+                }
+                if (header.key === 'warehouse_id') {
+                  console.log(row, row[header.key]);
                 }
                 return (
                   <StructuredListCell key={header.key}>
@@ -109,7 +123,7 @@ function WarehouseTable({ headers, rows, setRefresh }) {
         pageNumberText="Page Number"
         pageSize={pageSize}
         pageSizes={[10, 20, 30, 40, 50]}
-        totalItems={rows.length}
+        totalItems={total}
         onChange={({ page, pageSize }) => {
           setPage(page);
           setPageSize(pageSize);

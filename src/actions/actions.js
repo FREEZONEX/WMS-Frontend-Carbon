@@ -1,10 +1,12 @@
 import { httpToBackend } from '@/utils/http';
 
-export async function fetchWarehouses() {
-  return httpToBackend.post('/wms/warehouse/get').then((res) => {
-    console.log(res);
-    return res.data.data;
-  });
+export async function fetchWarehouses(pageNum, pageSize) {
+  return httpToBackend
+    .post('/wms/warehouse/get', {}, { params: { pageNum, pageSize } })
+    .then((res) => {
+      console.log(res);
+      return res.data.data;
+    });
 }
 
 export async function fetchWarehousesWithFilters(body) {
