@@ -95,12 +95,16 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
         console.error('Delete Storage Location Error:', error);
       });
   };
+
   return (
     <Modal
       open={isModalOpen}
       modalHeading="All Shelf Location"
       passiveModal
-      onRequestClose={() => setModalOpen(false)}
+      onRequestClose={() => {
+        setModalOpen(false);
+        setRows([]);
+      }}
       size="lg"
     >
       {!isCreate && !showMaterial && (
