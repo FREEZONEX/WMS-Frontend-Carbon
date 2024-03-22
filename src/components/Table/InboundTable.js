@@ -1,22 +1,33 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import {
-  HeaderGlobalAction,
   StructuredListWrapper,
   StructuredListHead,
   StructuredListRow,
   StructuredListCell,
   StructuredListBody,
-  Tag,
   Pagination,
+  Tag,
   Link,
+  Button,
 } from '@carbon/react';
 import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
 import ProductModal from '../Modal/ProductModal';
-import { deleteInbound, fetchInboundDetails } from '@/actions/actions';
+import {
+  deleteInbound,
+  fetchInbound,
+  fetchInboundDetails,
+  fetchInboundWithFilter,
+} from '@/actions/actions';
 
-function InboundTable({ headers, rows, setRefresh }) {
+function InboundTable({
+  headers,
+  refresh,
+  setRefresh,
+  filters,
+  isSearchClicked,
+}) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [isModalOpen, setModalOpen] = React.useState(false);
@@ -24,77 +35,69 @@ function InboundTable({ headers, rows, setRefresh }) {
     deleteInbound({ id }).then(() => setRefresh({}));
   };
   const [selectedMaterial, setSelectedMaterial] = useState([]);
+  const [rows, setRows] = useState([]);
   const [detailRows, setDetailRows] = useState({});
-
   useEffect(() => {
-    const fetchDetails = async () => {
-      const updatedRows = await Promise.all(
-        rows.map(async (row) => {
-          const details = await fetchInboundDetails({
-            id: row.id,
-            ref_id: row.ref_id,
-          });
-          const storageLocations = [
-            ...new Set(details.map((detail) => detail.storage_location)),
-          ].join(', ');
-          return {
-            ...row,
-            storage_location: storageLocations,
-            material: details,
-          };
-        })
-      );
-      setDetailRows(
-        updatedRows.reduce((acc, row) => {
-          acc[row.id] = row;
+    if (isSearchClicked) {
+      const filteredFormValue = Object.entries(filters).reduce(
+        (acc, [key, value]) => {
+          if (value !== '') {
+            acc[key] = value;
+          }
           return acc;
-        }, {})
+        },
+        {}
       );
-    };
-
-    fetchDetails();
-  }, [rows]);
-  console.log(detailRows);
-
-  const [sortKey, setSortKey] = useState('create_time');
-  const [sortDirection, setSortDirection] = useState('desc');
-  const sortedRows = React.useMemo(() => {
-    if (!sortKey) {
-      return rows;
-    }
-
-    const sortedRows = [...rows];
-    sortedRows.sort((a, b) => {
-      if (a[sortKey] < b[sortKey]) {
-        return sortDirection === 'asc' ? -1 : 1;
+      if (Object.entries(filteredFormValue).length > 0) {
+        fetchInboundWithFilter(filteredFormValue, {
+          pageNum: page,
+          pageSize,
+        }).then((res) => {
+          setRows(res.list);
+        });
       }
-      if (a[sortKey] > b[sortKey]) {
-        return sortDirection === 'asc' ? 1 : -1;
-      }
-      return 0;
-    });
-    return sortedRows;
-  }, [rows, sortKey, sortDirection]);
-  const rowsToShow = sortedRows.slice((page - 1) * pageSize, page * pageSize);
-  const handleSort = (key) => {
-    if (sortKey === key) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
-      setSortKey(key);
-      setSortDirection('asc');
+      fetchInbound({ pageNum: page, pageSize }).then((res) =>
+        setRows(res.list)
+      );
     }
-  };
+  }, [page, pageSize, refresh, filters, isSearchClicked]);
+
+  const [sortKey, setSortKey] = useState('');
+  const [sortDirection, setSortDirection] = useState('desc');
+  // const sortedRows = React.useMemo(() => {
+  //   if (!sortKey) {
+  //     return rows;
+  //   }
+
+  //   const sortedRows = [...rows];
+  //   sortedRows.sort((a, b) => {
+  //     if (a[sortKey] < b[sortKey]) {
+  //       return sortDirection === 'asc' ? -1 : 1;
+  //     }
+  //     if (a[sortKey] > b[sortKey]) {
+  //       return sortDirection === 'asc' ? 1 : -1;
+  //     }
+  //     return 0;
+  //   });
+  //   return sortedRows;
+  // }, [rows, sortKey, sortDirection]);
+  // const rowsToShow = sortedRows.slice((page - 1) * pageSize, page * pageSize);
+  // const handleSort = (key) => {
+  //   if (sortKey === key) {
+  //     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+  //   } else {
+  //     setSortKey(key);
+  //     setSortDirection('asc');
+  //   }
+  // };
   return (
     <div>
       <StructuredListWrapper isCondensed>
         <StructuredListHead>
-          <StructuredListRow head>
+          <StructuredListRow head className="headerRow">
             {headers.map((header, index) => (
-              <StructuredListCell
-                head
-                key={header.key}
-                onClick={() => handleSort(header.key)}
-              >
+              <StructuredListCell head key={header.key} onClick={() => {}}>
                 {header.header}
                 {sortKey === header.key && (
                   <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
@@ -104,13 +107,18 @@ function InboundTable({ headers, rows, setRefresh }) {
           </StructuredListRow>
         </StructuredListHead>
         <StructuredListBody>
-          {rowsToShow.map((row, index) => (
+          {rows.map((row, index) => (
             <StructuredListRow key={index}>
               {headers.map((header) => {
-                if (header.key === 'status') {
+                if (header.key === 'inbound_status') {
+                  console.log(row['inbound_status']);
                   return (
                     <StructuredListCell key={header.key}>
-                      <Tag type="blue">{row[header.key]}</Tag>
+                      <Tag
+                        type={row[header.key] === 'Pending' ? 'red' : 'blue'}
+                      >
+                        {row[header.key] === null ? '' : row[header.key]}
+                      </Tag>
                     </StructuredListCell>
                   );
                 }
@@ -144,23 +152,33 @@ function InboundTable({ headers, rows, setRefresh }) {
                     </StructuredListCell>
                   );
                 }
+                if (header.key === 'operate') {
+                  return (
+                    <StructuredListCell key={header.key}>
+                      <Button
+                        size="sm"
+                        kind="secondary"
+                        disabled={
+                          row['inbound_status'] === 'Pending' ? false : true
+                        }
+                        onClick={() => {
+                          setModalOpen(true);
+                          setSelectedMaterial(
+                            detailRows[row.id]?.material || []
+                          );
+                        }}
+                      >
+                        Inbound
+                      </Button>
+                    </StructuredListCell>
+                  );
+                }
                 return (
                   <StructuredListCell key={header.key}>
                     {row[header.key]}
                   </StructuredListCell>
                 );
               })}
-              <StructuredListCell>
-                <HeaderGlobalAction aria-label="Edit" disabled>
-                  <Edit size={15} />
-                </HeaderGlobalAction>
-                <HeaderGlobalAction
-                  aria-label="Delete"
-                  onClick={() => handleDeleteRow(row.id)}
-                >
-                  <Delete size={15} />
-                </HeaderGlobalAction>
-              </StructuredListCell>
             </StructuredListRow>
           ))}
         </StructuredListBody>

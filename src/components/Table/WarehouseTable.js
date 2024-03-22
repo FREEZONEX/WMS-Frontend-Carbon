@@ -14,13 +14,20 @@ import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
 import ShelfLocationModal from '../Modal/ShelfLocationModal';
 import {
-  fetchWarehouses,
   deleteWarehouse,
   fetchStorageLocationsByWId,
+  fetchWarehouses,
+  fetchWarehousesWithFilters,
 } from '@/actions/actions';
 import EditWarehouseModal from '../Modal/EditWarehouseModal';
 
-function WarehouseTable({ headers, refresh, setRefresh }) {
+function WarehouseTable({
+  headers,
+  refresh,
+  setRefresh,
+  filters,
+  isSearchClicked,
+}) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
@@ -31,12 +38,33 @@ function WarehouseTable({ headers, refresh, setRefresh }) {
   const [selectedWarehouseInfo, setSelectedWarehouseInfo] = useState({});
   const [rows, setRows] = useState([]);
   useEffect(() => {
-    fetchWarehouses(page, pageSize).then((res) => {
-      setRows(res.list);
-      setTotal(res.total);
-    });
-  }, [page, pageSize, refresh]);
-  console.log(rows);
+    if (isSearchClicked) {
+      const filteredFormValue = Object.entries(filters).reduce(
+        (acc, [key, value]) => {
+          if (value !== '') {
+            acc[key] = value;
+          }
+          return acc;
+        },
+        {}
+      );
+      if (Object.entries(filteredFormValue).length > 0) {
+        fetchWarehousesWithFilters(filteredFormValue, {
+          pageNum: page,
+          pageSize,
+        }).then((res) => {
+          setRows(res.list);
+          setTotal(res.total);
+        });
+      }
+    } else {
+      fetchWarehouses({ pageNum: page, pageSize }).then((res) => {
+        setRows(res.list);
+        setTotal(res.total);
+      });
+    }
+  }, [page, pageSize, refresh, isSearchClicked]);
+
   const handleEditModalClose = () => {
     setEditModalOpen(false);
   };
@@ -50,16 +78,17 @@ function WarehouseTable({ headers, refresh, setRefresh }) {
   };
   const handleShowShelves = (id, warehouse_id, name) => {
     fetchStorageLocationsByWId({ warehouse_id: id })
-      .then((res) =>
+      .then((res) => {
+        console.log(res);
         setSelectedWarehouseInfo({
           id: id,
           warehouse_id: warehouse_id,
           warehouse_name: name,
-          shelf_location: res,
-        })
-      )
+        });
+      })
       .then(setModalOpen(true));
   };
+  console.log(selectedWarehouseInfo);
 
   return (
     <div>
@@ -93,9 +122,6 @@ function WarehouseTable({ headers, refresh, setRefresh }) {
                       </Link>
                     </StructuredListCell>
                   );
-                }
-                if (header.key === 'warehouse_id') {
-                  console.log(row, row[header.key]);
                 }
                 return (
                   <StructuredListCell key={header.key}>

@@ -11,6 +11,7 @@ export function Providers({ children }) {
   }
   const contentStyle = {
     marginTop: '2rem',
+
     transition: isSideNavExpanded
       ? 'margin-left 0.11s cubic-bezier(0.4, 0, 0.2, 1) 0s'
       : 'margin-left 0.11s cubic-bezier(0.4, 0, 0.2, 1) 0s',

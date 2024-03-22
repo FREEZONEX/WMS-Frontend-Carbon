@@ -12,7 +12,6 @@ import {
   SideNavItems,
   SideNavLink,
   SwitcherDivider,
-  IconButton,
 } from '@carbon/react';
 
 import {
@@ -27,7 +26,6 @@ import {
   Help,
   Analytics,
   WatsonHealth3DCursor,
-  Menu,
 } from '@carbon/icons-react';
 import { usePathname } from 'next/navigation';
 
@@ -37,7 +35,7 @@ export const HeaderWSideNav = ({
 }) => {
   const pathname = usePathname();
   const isCurrentPath = (path) => {
-    return path === pathname;
+    return path === process.env.PATH_PREFIX + pathname;
   };
   return (
     <Header aria-label="SUPCON WMS">
@@ -48,7 +46,7 @@ export const HeaderWSideNav = ({
         isActive={isSideNavExpanded}
         aria-expanded={isSideNavExpanded}
       />
-      <HeaderName href="/" prefix="SUPCON">
+      <HeaderName href={`${process.env.PATH_PREFIX}/`} prefix="SUPCON">
         WMS
       </HeaderName>
       <SideNav
@@ -59,15 +57,15 @@ export const HeaderWSideNav = ({
       >
         <SideNavItems>
           <SideNavLink
-            renderIcon={IbmDb2Warehouse}
-            href="/warehouse"
+            href={`${process.env.PATH_PREFIX}/warehouse`}
             isActive={isCurrentPath('/warehouse')}
           >
-            Warehouse
+            <IbmDb2Warehouse className="mr-[1.5rem]" />
+            <span>Warehouse</span>
           </SideNavLink>
           <SideNavLink
             renderIcon={Product}
-            href="/warehouse/material"
+            href={`${process.env.PATH_PREFIX}/warehouse/material`}
             isActive={isCurrentPath('/warehouse/material')}
           >
             Material
@@ -75,21 +73,21 @@ export const HeaderWSideNav = ({
           <SwitcherDivider />
           <SideNavLink
             renderIcon={PortInput}
-            href="/operation/inbound"
+            href={`${process.env.PATH_PREFIX}/operation/inbound`}
             isActive={isCurrentPath('/operation/inbound')}
           >
             Inbound
           </SideNavLink>
           <SideNavLink
             renderIcon={PortOutput}
-            href="/operation/outbound"
+            href={`${process.env.PATH_PREFIX}/operation/outbound`}
             isActive={isCurrentPath('/operation/outbound')}
           >
             Outbound
           </SideNavLink>
           <SideNavLink
             renderIcon={InventoryManagement}
-            href="/operation/stocktaking"
+            href={`${process.env.PATH_PREFIX}/operation/stocktaking`}
             isActive={isCurrentPath('/operation/stocktaking')}
           >
             Stocktaking
@@ -97,14 +95,14 @@ export const HeaderWSideNav = ({
           <SwitcherDivider />
           <SideNavLink
             renderIcon={Analytics}
-            href="/analysis"
+            href={`${process.env.PATH_PREFIX}/analysis`}
             isActive={isCurrentPath('/analysis')}
           >
             Analysis
           </SideNavLink>
           <SideNavLink
             renderIcon={WatsonHealth3DCursor}
-            href="/analysis/3d"
+            href={`${process.env.PATH_PREFIX}/analysis/3d`}
             isActive={isCurrentPath('/analysis/3d')}
           >
             3D-Modeling
@@ -126,8 +124,5 @@ export const HeaderWSideNav = ({
         </HeaderGlobalAction>
       </HeaderGlobalBar>
     </Header>
-    //     </>
-    //   )}
-    // />
   );
 };

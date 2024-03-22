@@ -54,8 +54,10 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
     }));
   };
   useEffect(() => {
-    if (isModalOpen && warehouse_info?.shelf_location) {
-      setRows(warehouse_info.shelf_location);
+    if (isModalOpen && warehouse_info) {
+      fetchStorageLocationsByWId({
+        warehouse_id: warehouse_info.id,
+      }).then((res) => setRows(res.list));
       setIsCreate(false);
       setShowMaterial(false);
     }
@@ -73,7 +75,7 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
       });
       fetchStorageLocationsByWId({
         warehouse_id: warehouse_info.id,
-      }).then((res) => setRows(res));
+      }).then((res) => setRows(res.list));
     });
   };
   const handleDeleteSelectedRows = () => {
@@ -85,9 +87,9 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
     Promise.all(deletePromises)
       .then(() => {
         setSelectedRows([]);
-        fetchStorageLocationsByWId({ warehouse_id: warehouse_info.id }).then(
-          (res) => setRows(res)
-        );
+        fetchStorageLocationsByWId({
+          warehouse_id: warehouse_info.id,
+        }).then((res) => setRows(res.list));
       })
       .catch((error) => {
         console.error('Delete Storage Location Error:', error);
@@ -104,8 +106,8 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
       {!isCreate && !showMaterial && (
         <>
           <Heading className="text-sm font-normal leading-tight tracking-tight mb-3">
-            All shelf location under this warehouse - {warehouse_info.id} -
-            {warehouse_info.warehouse_name}.
+            All shelf location under this warehouse -{' '}
+            {warehouse_info.warehouse_id} -{warehouse_info.warehouse_name}.
           </Heading>
           <DataTable
             rows={rows}

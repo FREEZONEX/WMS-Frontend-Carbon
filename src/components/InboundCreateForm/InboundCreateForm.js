@@ -9,17 +9,14 @@ import {
   TextArea,
   SwitcherDivider,
   IconButton,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel,
-  Tag,
+  TextInput,
   InlineNotification,
+  DatePicker,
+  DatePickerInput,
 } from '@carbon/react';
 import { Add, Close } from '@carbon/icons-react';
 import '@/components/MaterialCreateForm/_materialcreateform.scss';
-import InboundMaterialDataTable from '../Table/MaterialSelectionTable';
+import TaskListTable from '../Table/TaskListTable';
 import {
   fetchWarehouses,
   fetchStorageLocationsByWId,
@@ -28,23 +25,14 @@ import {
 } from '@/actions/actions';
 import { useRouter } from 'next/navigation';
 
-const tagColors = [
-  'red',
-  'magenta',
-  'purple',
-  'blue',
-  'cyan',
-  'teal',
-  'green',
-  'gray',
-  'cool-gray',
-  'outline',
-];
 const headers = [
   { key: 'name', header: 'Material Name' },
   { key: 'product_code', header: 'Material Code' },
-  { key: 'unit', header: 'Unit' },
+  { key: 'specification', header: 'Specification' },
   { key: 'quantity', header: 'Quantity' },
+  { key: 'unit', header: 'Unit' },
+  { key: 'expect_wh', header: 'WH' },
+  { key: 'expect_storage_location', header: 'Shelf' },
 ];
 
 function InboundCreateForm() {
@@ -183,7 +171,7 @@ function InboundCreateForm() {
       setFieldValidation({ sourceInvalid: false, typeInvalid: false });
       setFormValues({ type: '', source: '', status: '', note: '' });
       setTaskList([]);
-      router.push('/operation/inbound');
+      router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
     });
   };
 
@@ -205,189 +193,65 @@ function InboundCreateForm() {
 
   return (
     <div>
-      <div className=" mt-12">
-        <Grid className="pl-0">
-          <Column sm={1} md={3} lg={5}>
-            <Select
-              className="mb-10"
-              id="type"
-              defaultValue=""
-              labelText="Inbound Type"
-              invalid={fieldValidation.typeInvalid}
-              invalidText="This field cannot be empty"
-              value={formValue.type}
-              onChange={onFormValueChange}
-              required
-            >
-              <SelectItem disabled hidden value="" text="Choose an option" />
-              <SelectItem value="material inbound" text="Material Inbound" />
-              <SelectItem value="product inbound" text="Product Inbound" />
-              <SelectItem value="mix inbound" text="Mix Inbound" />
-            </Select>
-          </Column>
-          <Column sm={1} md={3} lg={5}>
-            <Select
-              className="mb-10"
-              id="source"
-              defaultValue=""
-              labelText="Source"
-              invalid={fieldValidation.sourceInvalid}
-              invalidText="This field cannot be empty"
-              value={formValue.source}
-              onChange={onFormValueChange}
-              required
-              disabled
-            >
-              <SelectItem disabled hidden value="" text="Choose an option" />
-              <SelectItem value="PDA" text="PDA" />
-              <SelectItem value="manual" text="Manual" />
-            </Select>
-          </Column>
-          <Column sm={1} md={3} lg={5}>
-            <Select
-              className="mb-10"
-              id="status"
-              defaultValue=""
-              labelText="Status"
-              value={formValue.status}
-              onChange={onFormValueChange}
-              required
-            >
-              <SelectItem disabled hidden value="" text="Choose an option" />
-              <SelectItem value="Done" text="Done" />
-              <SelectItem value="Executing" text="Executing" />
-              <SelectItem value="To-do" text="To-do" />
-            </Select>
-          </Column>
-          <Column sm={1} md={3} lg={4}>
-            <TextArea
-              className="mb-10 w-full"
-              labelText="Note"
-              rows={4}
-              id="note"
-              value={formValue.note}
-              onChange={onFormValueChange}
-              placeholder="Note Placeholder"
+      <Grid className="p-0 mt-[50px] gap-[9px]">
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="Creator"
+            id="creator"
+            placeholder="Creator"
+            value={formValue.creator}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="Purchase order No."
+            id="purchase_order_no"
+            placeholder="Purchase order No."
+            value={formValue.purchase_order_no}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="Supplier"
+            id="supplier"
+            placeholder="Supplier"
+            value={formValue.supplier}
+            onChange={onFormValueChange}
+          />
+        </Column>
+
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <DatePicker>
+            <DatePickerInput
+              placeholder="mm/dd/yyyy"
+              labelText="Delivery Date"
+              id="delivery_date"
             />
-          </Column>
-        </Grid>
-        <SwitcherDivider className="w-full mb-10 pl-0" />
-        <Grid className="pl-0">
-          <Column sm={4} md={3} lg={4}>
-            <Select
-              className="mb-10"
-              id="warehouse"
-              defaultValue=""
-              labelText="Warehouse"
-              value={selectedWarehouse}
-              onChange={(e) => {
-                setSelectedWarehouse(e.target.value);
-              }}
-              required
-            >
-              <SelectItem disabled hidden value="" text="Choose an option" />
-              {warehouseOptions.map((warehouse) => {
-                return (
-                  <SelectItem
-                    key={warehouse.id}
-                    value={warehouse.id}
-                    text={warehouse.name}
-                  />
-                );
-              })}
-            </Select>
-          </Column>
-          <Column sm={4} md={3} lg={4}>
-            <Select
-              className="mb-10"
-              id="shelf_location"
-              defaultValue=""
-              labelText="Shelf Location"
-              value={selectedStorageLocation}
-              onChange={(e) => {
-                setSelectedStorageLocation(e.target.value);
-              }}
-              required
-            >
-              <SelectItem disabled hidden value="" text="Choose an option" />
-              {storageLocationOptions.map((location) => {
-                return (
-                  <SelectItem
-                    key={location.id}
-                    value={location.id}
-                    text={location.name}
-                  />
-                );
-              })}
-            </Select>
-          </Column>
-          <Column sm={1} md={1} lg={2}>
-            <IconButton className="mb-10 " size="md" onClick={handleAddTask}>
-              <Add />
-            </IconButton>
-          </Column>
-        </Grid>
-        <div className="mb-10">
-          {taskList.map((task, index) => {
-            return (
-              <Tag key={index} type={tagColors[index % tagColors.length]}>
-                <div className="flex ">
-                  {task.warehouse.name}-{task.shelf_location.name}
-                  <Close
-                    className="ml-1"
-                    size={16}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemoveTask(index);
-                    }}
-                  />
-                </div>
-              </Tag>
-            );
-          })}
-        </div>
-        {taskList && taskList.length > 0 ? (
-          <>
-            <Tabs>
-              <TabList aria-label="List of tabs" contained>
-                {taskList.map((task, index) => {
-                  return (
-                    <Tab key={index}>
-                      {task.warehouse.name}-{task.shelf_location.name}
-                    </Tab>
-                  );
-                })}
-              </TabList>
-              <TabPanels>
-                {taskList.map((task, index) => {
-                  return (
-                    <TabPanel key={index}>
-                      <InboundMaterialDataTable
-                        headers={headers}
-                        rows={materials}
-                        onSelectionChange={(
-                          materialId,
-                          field,
-                          value,
-                          checked
-                        ) =>
-                          handleMaterialSelection(
-                            index,
-                            materialId,
-                            field,
-                            value,
-                            checked
-                          )
-                        }
-                      />
-                    </TabPanel>
-                  );
-                })}
-              </TabPanels>
-            </Tabs>
-          </>
-        ) : null}
+          </DatePicker>
+        </Column>
+        <Column sm={2} md={4} lg={4}>
+          <TextInput
+            readOnly
+            className="flex-auto "
+            labelText="Status"
+            id="status"
+            placeholder="Status"
+            value="Pending"
+            color="red"
+          />
+        </Column>
+      </Grid>
+      <SwitcherDivider className="w-full mt-10 mb-10 pl-0" />
+
+      <div className="mb-10">
+        <TaskListTable headers={headers} />
       </div>
+
       {isAlert && (
         <InlineNotification
           className="w-full"

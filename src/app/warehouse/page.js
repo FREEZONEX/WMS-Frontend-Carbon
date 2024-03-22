@@ -11,7 +11,6 @@ import {
 import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import WarehouseTable from '@/components/Table/WarehouseTable';
 import CreateWarehouseModal from '@/components/Modal/CreateWarehouseModal';
-import { fetchWarehouses, fetchWarehousesWithFilters } from '@/actions/actions';
 
 const headers = [
   { key: 'name', header: 'Name' },
@@ -25,59 +24,38 @@ const headers = [
 ];
 
 function Page() {
-  const [formValue, setFormValues] = useState({
+  const defaultFormValue = {
     name: '',
     warehouse_id: '',
     type: '',
     manager: '',
-  });
+  };
+  const [formValue, setFormValue] = useState(defaultFormValue);
   const onFormValueChange = (e) => {
     const { id, value } = e.target; // Destructure the name and value from the event target
 
-    setFormValues((prevValues) => ({
+    setFormValue((prevValues) => ({
       ...prevValues,
       [id]: value, // Use the name to update the correct property
     }));
   };
-  const handleSeachRows = () => {
-    const filteredFormValue = Object.entries(formValue).reduce(
-      (acc, [key, value]) => {
-        if (value !== '') {
-          acc[key] = value;
-        }
-        return acc;
-      },
-      {}
-    );
-    if (Object.entries(filteredFormValue).length > 0) {
-      fetchWarehousesWithFilters(filteredFormValue).then((res) => setRows(res));
-    } else {
-      fetchWarehouses().then((res) => setRows(res));
-    }
-  };
-  const handleRemoveFilters = () => {
-    fetchWarehouses().then((res) => setRows(res));
-    setFormValues({
-      name: '',
-      warehouse_id: '',
-      type: '',
-      manager: '',
-    });
-  };
+
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const handleModalClose = () => {
     setCreateModalOpen(false);
   };
 
   const [refresh, setRefresh] = useState({});
-
+  const [isSearchClicked, setIsSearchClicked] = useState(false);
   return (
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href="/">Home</a>
+          <a href={`${process.env.PATH_PREFIX}/`}>Home</a>
         </BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse">Warehouse</BreadcrumbItem>
+        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/warehouse`}>
+          Warehouse
+        </BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
@@ -135,12 +113,18 @@ function Page() {
           value={formValue.manager}
           onChange={onFormValueChange}
         />
-        <HeaderGlobalAction aria-label="Search" onClick={handleSeachRows}>
+        <HeaderGlobalAction
+          aria-label="Search"
+          onClick={() => setIsSearchClicked(true)}
+        >
           <Search size={16} />
         </HeaderGlobalAction>
         <HeaderGlobalAction
           aria-label="Remove Filters"
-          onClick={handleRemoveFilters}
+          onClick={() => {
+            setIsSearchClicked(false);
+            setFormValue(defaultFormValue);
+          }}
         >
           <CloseOutline size={16} />
         </HeaderGlobalAction>
@@ -150,6 +134,8 @@ function Page() {
           headers={headers}
           refresh={refresh}
           setRefresh={setRefresh}
+          filters={formValue}
+          isSearchClicked={isSearchClicked}
         />
       </div>
     </div>
