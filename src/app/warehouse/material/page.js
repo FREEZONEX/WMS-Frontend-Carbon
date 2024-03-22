@@ -10,23 +10,26 @@ import {
 } from '@carbon/react';
 import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import MaterialTable from '@/components/Table/MaterialTable';
-import { fetchMaterial, fetchMaterialWithFilters } from '@/actions/actions';
 
 const headers = [
+  { key: 'id', header: 'ID' },
   { key: 'product_code', header: 'Material Code' },
   { key: 'name', header: 'Material Name' },
   { key: 'product_type', header: 'Material Type' },
   { key: 'unit', header: 'Unit' },
-  { key: 'storage_location', header: 'Storage Location' },
+  { key: 'max', header: 'Max Stock' },
+  { key: 'min', header: 'Min Stock' },
+  { key: 'status', header: 'Status' },
   { key: 'note', header: 'Note' },
 ];
 
 function Page() {
-  const [formValue, setFormValues] = useState({
+  const defaultFormValue = {
     product_code: '',
     name: '',
     product_type: '',
-  });
+  };
+  const [formValue, setFormValues] = useState(defaultFormValue);
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
     setFormValues((prevValues) => ({
@@ -34,44 +37,21 @@ function Page() {
       [id]: value,
     }));
   };
-  const handleSeachRows = () => {
-    const filteredFormValue = Object.entries(formValue).reduce(
-      (acc, [key, value]) => {
-        if (value !== '') {
-          acc[key] = value;
-        }
-        return acc;
-      },
-      {}
-    );
-    if (Object.entries(filteredFormValue).length > 0) {
-      fetchMaterialWithFilters(filteredFormValue).then((res) => setRows(res));
-    } else {
-      fetchMaterial().then((res) => setRows(res));
-    }
-  };
-  const handleRemoveFilters = () => {
-    fetchMaterial().then((res) => setRows(res));
-    setFormValues({
-      product_code: '',
-      name: '',
-      product_type: '',
-    });
-  };
-  const [rows, setRows] = useState([]);
-  const [refresh, setRefresh] = useState({});
 
-  useEffect(() => {
-    fetchMaterial().then((res) => setRows(res));
-  }, [refresh]);
+  const [refresh, setRefresh] = useState({});
+  const [isSearchClicked, setIsSearchClicked] = useState(false);
   return (
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href="/">Home</a>
+          <a href={`${process.env.PATH_PREFIX}/`}>Home</a>
         </BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse">Warehouse</BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse/material">Material</BreadcrumbItem>
+        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/warehouse`}>
+          Warehouse
+        </BreadcrumbItem>
+        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/warehouse/material`}>
+          Material
+        </BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
@@ -82,7 +62,7 @@ function Page() {
         </div>
         <div>
           <Button
-            href="/warehouse/material/rfid"
+            href={`${process.env.PATH_PREFIX}/warehouse/material/rfid`}
             className="mr-2 bg-[#6929C4]"
             isExpressive
             size="sm"
@@ -91,7 +71,7 @@ function Page() {
             RFID Tag
           </Button>
           <Button
-            href="/warehouse/material/create"
+            href={`${process.env.PATH_PREFIX}/warehouse/material/create`}
             isExpressive
             size="sm"
             renderIcon={Add}
@@ -125,18 +105,30 @@ function Page() {
           value={formValue.product_type}
           onChange={onFormValueChange}
         />
-        <HeaderGlobalAction aria-label="Search" onClick={handleSeachRows}>
+        <HeaderGlobalAction
+          aria-label="Search"
+          onClick={() => setIsSearchClicked(true)}
+        >
           <Search size={16} />
         </HeaderGlobalAction>
         <HeaderGlobalAction
           aria-label="Remove Filters"
-          onClick={handleRemoveFilters}
+          onClick={() => {
+            setIsSearchClicked(false);
+            setFormValues(defaultFormValue);
+          }}
         >
           <CloseOutline size={16} />
         </HeaderGlobalAction>
       </div>
       <div className="mt-12">
-        <MaterialTable headers={headers} rows={rows} setRefresh={setRefresh} />
+        <MaterialTable
+          headers={headers}
+          refresh={refresh}
+          setRefresh={setRefresh}
+          filters={formValue}
+          isSearchClicked={isSearchClicked}
+        />
       </div>
     </div>
   );

@@ -1,30 +1,69 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  HeaderGlobalAction,
   StructuredListWrapper,
   StructuredListHead,
   StructuredListRow,
   StructuredListCell,
   StructuredListBody,
   Pagination,
-  Link,
+  Tag,
+  IconButton,
 } from '@carbon/react';
 import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
 import EditMaterialModal from '../Modal/EditMaterialModal';
-import { deleteMaterial } from '@/actions/actions';
-import StorageLocationModal from '../Modal/StorageLocationModal';
+import {
+  deleteMaterial,
+  fetchMaterial,
+  fetchMaterialWithFilters,
+} from '@/actions/actions';
+import './_table.scss';
 
-function MaterialTable({ headers, rows, setRefresh }) {
+function MaterialTable({
+  headers,
+  refresh,
+  setRefresh,
+  filters,
+  isSearchClicked,
+}) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const rowsToShow = rows.slice((page - 1) * pageSize, page * pageSize);
+  const [total, setTotal] = useState(0);
 
   const [editRow, setEditRow] = useState({});
   const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const [isModalOpen, setModalOpen] = React.useState(false);
-  const [selectedMaterial, setSelectedMaterial] = useState([]);
+  // const [isModalOpen, setModalOpen] = useState(false);
+  // const [selectedMaterial, setSelectedMaterial] = useState([]);
+  const [rows, setRows] = useState([]);
+  useEffect(() => {
+    if (isSearchClicked) {
+      const filteredFormValue = Object.entries(filters).reduce(
+        (acc, [key, value]) => {
+          if (value !== '') {
+            acc[key] = value;
+          }
+          return acc;
+        },
+        {}
+      );
+      if (Object.entries(filteredFormValue).length > 0) {
+        fetchMaterialWithFilters(filteredFormValue, {
+          pageNum: page,
+          pageSize,
+        }).then((res) => {
+          setRows(res.list);
+          setTotal(res.total);
+        });
+      }
+    } else {
+      fetchMaterial({ pageNum: page, pageSize }).then((res) => {
+        setRows(res.list);
+        setTotal(res.total);
+      });
+    }
+  }, [page, pageSize, refresh, isSearchClicked]);
+
   const handleEditModalClose = () => {
     setEditModalOpen(false);
   };
@@ -39,7 +78,7 @@ function MaterialTable({ headers, rows, setRefresh }) {
     <div>
       <StructuredListWrapper isCondensed>
         <StructuredListHead>
-          <StructuredListRow head>
+          <StructuredListRow head className="headerRow">
             {headers.map((header, index) => (
               <StructuredListCell head key={header.key}>
                 {header.header}
@@ -48,21 +87,17 @@ function MaterialTable({ headers, rows, setRefresh }) {
           </StructuredListRow>
         </StructuredListHead>
         <StructuredListBody>
-          {rowsToShow.map((row, index) => (
+          {rows.map((row, index) => (
             <StructuredListRow key={row.id}>
               {headers.map((header) => {
-                if (header.key === 'storage_location') {
+                if (header.key === 'status') {
                   return (
                     <StructuredListCell key={header.key}>
-                      <Link
-                        onClick={() => {
-                          console.log(row);
-                          setModalOpen(true);
-                          setSelectedMaterial(row);
-                        }}
+                      <Tag
+                        type={row[header.key] === 'Inactive' ? 'red' : 'blue'}
                       >
-                        Storage location details
-                      </Link>
+                        {row[header.key] === null ? '' : row[header.key]}{' '}
+                      </Tag>
                     </StructuredListCell>
                   );
                 }
@@ -73,15 +108,16 @@ function MaterialTable({ headers, rows, setRefresh }) {
                 );
               })}
               <StructuredListCell>
-                <HeaderGlobalAction aria-label="Edit">
+                <IconButton size="xs" kind="ghost" className="mr-[0.5rem]">
                   <Edit size={15} onClick={() => handleEditRow(row)} />
-                </HeaderGlobalAction>
-                <HeaderGlobalAction
-                  aria-label="Delete"
+                </IconButton>
+                <IconButton
+                  size="xs"
+                  kind="ghost"
                   onClick={() => handleDeleteRow(row.id)}
                 >
                   <Delete size={15} />
-                </HeaderGlobalAction>
+                </IconButton>
               </StructuredListCell>
             </StructuredListRow>
           ))}
@@ -95,7 +131,7 @@ function MaterialTable({ headers, rows, setRefresh }) {
         pageNumberText="Page Number"
         pageSize={pageSize}
         pageSizes={[5, 10, 20, 30, 40, 50]}
-        totalItems={rows.length}
+        totalItems={total}
         onChange={({ page, pageSize }) => {
           setPage(page);
           setPageSize(pageSize);
@@ -108,11 +144,10 @@ function MaterialTable({ headers, rows, setRefresh }) {
         setRefresh={setRefresh}
         setMaterialValues={setEditRow}
       />
-      <StorageLocationModal
+      {/* <StorageLocationModal
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
-        material_info={selectedMaterial}
-      ></StorageLocationModal>
+        material_info={selectedMaterial}></StorageLocationModal> */}
     </div>
   );
 }

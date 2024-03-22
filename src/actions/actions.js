@@ -1,19 +1,22 @@
 import { httpToBackend } from '@/utils/http';
 
-export async function fetchWarehouses(pageNum, pageSize) {
+export async function fetchWarehouses(params) {
   return httpToBackend
-    .post('/wms/warehouse/get', {}, { params: { pageNum, pageSize } })
+    .post('/wms/warehouse/get', {}, { params })
     .then((res) => {
       console.log(res);
       return res.data.data;
     });
 }
 
-export async function fetchWarehousesWithFilters(body) {
-  return httpToBackend.post('/wms/warehouse/get', body).then((res) => {
-    console.log(res);
-    return res.data.data;
-  });
+export async function fetchWarehousesWithFilters(body, params) {
+  return httpToBackend
+    .post('/wms/warehouse/get', body, { params })
+    .then((res) => {
+      console.log(res);
+
+      return res.data.data;
+    });
 }
 
 export async function AddWarehouses(body) {
@@ -55,8 +58,8 @@ export async function deleteStorageLocation(body) {
   });
 }
 // wms/material
-export async function fetchMaterial() {
-  return httpToBackend.post('/wms/material/get').then((res) => {
+export async function fetchMaterial(params) {
+  return httpToBackend.post('/wms/material/get', {}, { params }).then((res) => {
     console.log(res);
     return res.data.data;
   });
@@ -112,8 +115,8 @@ export async function addInboundRecord(body) {
   });
 }
 
-export async function fetchInbound() {
-  return httpToBackend.post('/wms/inbound/get').then((res) => {
+export async function fetchInbound(params) {
+  return httpToBackend.post('/wms/inbound/get', {}, { params }).then((res) => {
     console.log(res);
     return res.data.data;
   });
@@ -211,3 +214,25 @@ export async function fetchStocktakingDetails(body) {
     return res.data.data;
   });
 }
+
+// export async function fetchWarehouses(params) {
+//   try {
+//     let res;
+//     res = await fetch('/api/warehouse', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(params),
+//     });
+
+//     if (!res.ok) {
+//       throw new Error('Failed to fetch warehouses');
+//     }
+
+//     const response = await res.json();
+//     return response;
+//   } catch (error) {
+//     console.error('Error fetching warehouses:', error);
+//   }
+// }

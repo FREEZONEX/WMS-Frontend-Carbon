@@ -10,8 +10,13 @@
   }
 }
 
-.cds--date-picker--range .cds--date-picker-container,
-.cds--date-picker--range .cds--date-picker__input {
+.cds--date-picker-container,
+.cds--date-picker-input__wrapper,
+.cds--date-picker__input {
+  width: inherit;
+}
+
+.cds--date-picker {
   width: 100%;
 }
 
