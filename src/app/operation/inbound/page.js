@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   TextInput,
   Heading,
@@ -16,15 +16,16 @@ import {
 } from '@carbon/react';
 import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import InboundTable from '@/components/Table/InboundTable';
+import { fetchSLNameMap, fetchWHNameMap } from '@/actions/actions';
 
 const headers = [
   { key: 'inbound_id', header: 'ID' },
   { key: 'inbound_purchase_order_no', header: 'Purchase Order No.' },
-
   { key: 'inbound_supplier', header: 'Supplier' },
   { key: 'inbound_status', header: 'Status' },
   { key: 'operator', header: 'Inbounder' },
   { key: 'material', header: 'Material' },
+  { key: 'inbound_delivery_date', header: 'Delivery Date' },
   { key: 'create_time', header: 'Create Time' },
   { key: 'operate', header: 'Operate' },
   { key: 'note', header: 'Note' },
@@ -33,15 +34,15 @@ const headers = [
 function Page() {
   const [refresh, setRefresh] = useState({});
   const defaultFormValue = {
-    id: '',
-    status: '',
-    type: '',
+    inbound_id: '',
+    inbound_status: '',
+    inbound_type: '',
     operator: '',
-    time: '',
-    purchase_order_no: '',
+    inbound_delivery_date: '',
+    inbound_purchase_order_no: '',
     inbound_supplier: '',
     material_code: '',
-    material_name: '',
+    name: '',
   };
   const [formValue, setFormValues] = useState(defaultFormValue);
   const onFormValueChange = (e) => {
@@ -52,7 +53,32 @@ function Page() {
     }));
   };
   const [isSearchClicked, setIsSearchClicked] = useState(false);
+  useEffect(() => {
+    fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const map = res.list.reduce((acc, curr) => {
+          acc[curr.id] = curr.name;
+          return acc;
+        }, {});
 
+        localStorage.setItem('whNameMap', JSON.stringify(map));
+      })
+      .catch((error) => {
+        console.error('Failed to fetch WH name map:', error);
+      });
+    fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const map = res.list.reduce((acc, curr) => {
+          acc[curr.id] = curr.name;
+          return acc;
+        }, {});
+
+        localStorage.setItem('slNameMap', JSON.stringify(map));
+      })
+      .catch((error) => {
+        console.error('Failed to fetch SL name map:', error);
+      });
+  }, []);
   return (
     <div>
       <Breadcrumb>
@@ -87,18 +113,20 @@ function Page() {
           <TextInput
             className="flex-auto "
             labelText="Inbound Id"
-            id="id"
+            id="inbound_id"
             placeholder="Id"
-            value={formValue.id}
+            value={formValue.inbound_id}
             onChange={onFormValueChange}
           />
         </Column>
         <Column className="ml-0" sm={2} md={4} lg={4}>
-          <DatePicker>
+          <DatePicker datePickerType="single">
             <DatePickerInput
               placeholder="mm/dd/yyyy"
-              labelText="Time Period"
-              id="time"
+              labelText="Delivery date"
+              id="inbound_delivery_date"
+              value={formValue.inbound_delivery_date}
+              onChange={onFormValueChange}
             />
           </DatePicker>
         </Column>
@@ -107,9 +135,9 @@ function Page() {
           <TextInput
             className="flex-auto "
             labelText="Purchase order No."
-            id="purchase_order_no"
+            id="inbound_purchase_order_no"
             placeholder="Purchase order No."
-            value={formValue.purchase_order_no}
+            value={formValue.inbound_purchase_order_no}
             onChange={onFormValueChange}
           />
         </Column>
@@ -117,26 +145,25 @@ function Page() {
           <TextInput
             className="flex-auto "
             labelText="Supplier"
-            id="supplier"
+            id="inbound_supplier"
             placeholder="Supplier"
-            value={formValue.supplier}
+            value={formValue.inbound_supplier}
             onChange={onFormValueChange}
           />
         </Column>
         <Column className="ml-0" sm={2} md={4} lg={4}>
           <Select
             className="flex-auto"
-            id="status"
+            id="inbound_status"
             defaultValue=""
             labelText="Status"
-            value={formValue.status}
+            value={formValue.inbound_status}
             onChange={onFormValueChange}
             required
           >
             <SelectItem disabled hidden value="" text="Choose an option" />
             <SelectItem value="Done" text="Done" />
-            <SelectItem value="Executing" text="Executing" />
-            <SelectItem value="To-do" text="To-do" />
+            <SelectItem value="Pending" text="Pending" />
           </Select>
         </Column>
         <Column className="ml-0" sm={2} md={4} lg={4}>
@@ -163,9 +190,9 @@ function Page() {
           <TextInput
             className="flex-auto "
             labelText="Material Name"
-            id="material_name"
+            id="name"
             placeholder="Material Name"
-            value={formValue.material_name}
+            value={formValue.name}
             onChange={onFormValueChange}
           />
         </Column>
@@ -173,6 +200,7 @@ function Page() {
           <Select
             className="flex-auto"
             id="type"
+            disabled
             defaultValue=""
             labelText="Inbound Type"
             value={formValue.type}

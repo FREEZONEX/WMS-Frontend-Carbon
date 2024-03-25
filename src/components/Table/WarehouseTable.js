@@ -77,16 +77,11 @@ function WarehouseTable({
     deleteWarehouse(id).then((res) => setRefresh({}));
   };
   const handleShowShelves = (id, warehouse_id, name) => {
-    // fetchStorageLocationsByWId({ warehouse_id: id })
-    //   .then((res) => {
-    //     console.log(res);
     setSelectedWarehouseInfo({
       id: id,
       warehouse_id: warehouse_id,
       warehouse_name: name,
     });
-    //   })
-    //   .then(setModalOpen(true));
     setModalOpen(true);
   };
   console.log(selectedWarehouseInfo);

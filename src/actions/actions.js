@@ -58,11 +58,13 @@ export async function deleteStorageLocation(body) {
   });
 }
 // wms/material
-export async function fetchMaterial(params) {
-  return httpToBackend.post('/wms/material/get', {}, { params }).then((res) => {
-    console.log(res);
-    return res.data.data;
-  });
+export async function fetchMaterial(params, body) {
+  return httpToBackend
+    .post('/wms/material/get', body, { params })
+    .then((res) => {
+      console.log(res);
+      return res.data.data;
+    });
 }
 
 export async function fetchMaterialWithFilters(body) {
@@ -115,6 +117,13 @@ export async function addInboundRecord(body) {
   });
 }
 
+export async function updateInboundRecord(body) {
+  return httpToBackend.post('/wms/inbound/update', body).then((res) => {
+    console.log(res);
+    return res.data.data;
+  });
+}
+
 export async function fetchInbound(params) {
   return httpToBackend.post('/wms/inbound/get', {}, { params }).then((res) => {
     console.log(res);
@@ -137,7 +146,7 @@ export async function deleteInbound(body) {
 }
 
 export async function fetchInboundDetails(body) {
-  return httpToBackend.post('/wms/inbound/detail/get', body).then((res) => {
+  return httpToBackend.post('/wms/inbound/detail', body).then((res) => {
     console.log(res);
     return res.data.data;
   });
@@ -236,3 +245,22 @@ export async function fetchStocktakingDetails(body) {
 //     console.error('Error fetching warehouses:', error);
 //   }
 // }
+
+//maps
+export async function fetchWHNameMap(params) {
+  return httpToBackend
+    .post('/wms/warehouse/namemap', {}, { params })
+    .then((res) => {
+      console.log(res);
+      return res.data.data;
+    });
+}
+
+export async function fetchSLNameMap(params) {
+  return httpToBackend
+    .post('/wms/storagelocation/namemap', {}, { params })
+    .then((res) => {
+      console.log(res);
+      return res.data.data;
+    });
+}
