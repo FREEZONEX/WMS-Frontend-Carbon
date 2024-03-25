@@ -11,13 +11,11 @@ import {
   Link,
   Button,
 } from '@carbon/react';
-import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
 import ProductModal from '../Modal/ProductModal';
 import {
   deleteInbound,
   fetchInbound,
-  fetchInboundDetails,
   fetchInboundWithFilter,
 } from '@/actions/actions';
 import { useRouter, useSearchParams } from 'next/navigation';
