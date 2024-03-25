@@ -131,8 +131,8 @@ export async function fetchInbound(params) {
   });
 }
 
-export async function fetchInboundWithFilter(body) {
-  return httpToBackend.post('/wms/inbound/get', body).then((res) => {
+export async function fetchInboundWithFilter(body, params) {
+  return httpToBackend.post('/wms/inbound/get', body, params).then((res) => {
     console.log(res);
     return res.data.data;
   });
@@ -160,8 +160,8 @@ export async function addOutboundRecord(body) {
   });
 }
 
-export async function fetchOutbound() {
-  return httpToBackend.post('/wms/outbound/get').then((res) => {
+export async function fetchOutbound(params) {
+  return httpToBackend.post('/wms/outbound/get', {}, { params }).then((res) => {
     console.log(res);
     return res.data.data;
   });
@@ -182,7 +182,7 @@ export async function deleteOutbound(body) {
 }
 
 export async function fetchOutboundDetails(body) {
-  return httpToBackend.post('/wms/outbound/detail/get', body).then((res) => {
+  return httpToBackend.post('/wms/outbound/detail', body).then((res) => {
     console.log(res);
     return res.data.data;
   });

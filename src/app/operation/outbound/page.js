@@ -9,34 +9,42 @@ import {
   Select,
   SelectItem,
   HeaderGlobalAction,
+  DatePicker,
+  DatePickerInput,
+  Grid,
+  Column,
 } from '@carbon/react';
 import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import OutboundTable from '@/components/Table/OutboundTable';
-import { fetchOutbound, fetchOutboundWithFilter } from '@/actions/actions';
+import { fetchWHNameMap, fetchSLNameMap } from '@/actions/actions';
 
 const headers = [
-  // { key: 'id', header: 'ID' },
-  { key: 'ref_id', header: 'Ref ID' },
-  { key: 'type', header: 'Type' },
-  { key: 'storage_location', header: 'Storage Location' },
-  { key: 'operator', header: 'Operator' },
-  { key: 'source', header: 'Source' },
-  { key: 'status', header: 'Status' },
+  { key: 'outbound_id', header: 'ID' },
+  { key: 'outbound_purchase_order_no', header: 'Purchase Order No.' },
+  { key: 'outbound_supplier', header: 'Supplier' },
+  { key: 'outbound_status', header: 'Status' },
+  { key: 'operator', header: 'Inbounder' },
   { key: 'material', header: 'Material' },
-  { key: 'note', header: 'Note' },
+  { key: 'outbound_delivery_date', header: 'Delivery Date' },
   { key: 'create_time', header: 'Create Time' },
+  { key: 'operate', header: 'Operate' },
+  { key: 'note', header: 'Note' },
 ];
 
 function Page() {
-  const [rows, setRows] = useState([]);
   const [refresh, setRefresh] = useState({});
-
-  const [formValue, setFormValues] = useState({
-    // id: '',
-    ref_id: '',
-    status: '',
-    type: '',
-  });
+  const defaultFormValue = {
+    outbound_id: '',
+    outbound_status: '',
+    outbound_type: '',
+    operator: '',
+    outbound_delivery_date: '',
+    outbound_purchase_order_no: '',
+    outbound_supplier: '',
+    material_code: '',
+    name: '',
+  };
+  const [formValue, setFormValues] = useState(defaultFormValue);
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
     setFormValues((prevValues) => ({
@@ -44,35 +52,33 @@ function Page() {
       [id]: value,
     }));
   };
-  const handleSeachRows = () => {
-    const filteredFormValue = Object.entries(formValue).reduce(
-      (acc, [key, value]) => {
-        if (value !== '') {
-          acc[key] = value;
-        }
-        return acc;
-      },
-      {}
-    );
-    if (Object.entries(filteredFormValue).length > 0) {
-      fetchOutboundWithFilter(filteredFormValue).then((res) => setRows(res));
-    } else {
-      fetchOutbound().then((res) => setRows(res));
-    }
-  };
-  const handleRemoveFilters = () => {
-    fetchOutbound().then((res) => setRows(res));
-    setFormValues({
-      id: '',
-      ref_id: '',
-      status: '',
-      type: '',
-    });
-  };
+  const [isSearchClicked, setIsSearchClicked] = useState(false);
   useEffect(() => {
-    fetchOutbound().then((res) => setRows(res));
-  }, [refresh]);
-  console.log(formValue);
+    fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const map = res.list.reduce((acc, curr) => {
+          acc[curr.id] = curr.name;
+          return acc;
+        }, {});
+
+        localStorage.setItem('whNameMap', JSON.stringify(map));
+      })
+      .catch((error) => {
+        console.error('Failed to fetch WH name map:', error);
+      });
+    fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const map = res.list.reduce((acc, curr) => {
+          acc[curr.id] = curr.name;
+          return acc;
+        }, {});
+
+        localStorage.setItem('slNameMap', JSON.stringify(map));
+      })
+      .catch((error) => {
+        console.error('Failed to fetch SL name map:', error);
+      });
+  }, []);
   return (
     <div>
       <Breadcrumb>
@@ -98,64 +104,139 @@ function Page() {
           Create an Outbound List
         </Button>
       </div>
-      <div className="flex mt-20 space-x-4 items-end">
-        {/* <TextInput
-          className="flex-auto "
-          labelText="Id"
-          id="id"
-          placeholder="Id"
-          value={formValue.id}
-          onChange={onFormValueChange}
-        /> */}
-        <TextInput
-          className="flex-auto "
-          labelText="Ref Id"
-          id="ref_id"
-          placeholder="Ref Id"
-          value={formValue.ref_id}
-          onChange={onFormValueChange}
+      <Grid className="p-0 mt-[50px] gap-[9px]">
+        <Column className="ml-0 " sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="Outbound Id"
+            id="outbound_id"
+            placeholder="Id"
+            value={formValue.outbound_id}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <DatePicker datePickerType="single">
+            <DatePickerInput
+              placeholder="mm/dd/yyyy"
+              labelText="Delivery date"
+              id="outbound_delivery_date"
+              value={formValue.outbound_delivery_date}
+              onChange={onFormValueChange}
+            />
+          </DatePicker>
+        </Column>
+
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="Purchase order No."
+            id="outbound_purchase_order_no"
+            placeholder="Purchase order No."
+            value={formValue.outbound_purchase_order_no}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="Supplier"
+            id="outbound_supplier"
+            placeholder="Supplier"
+            value={formValue.outbound_supplier}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <Select
+            className="flex-auto"
+            id="outbound_status"
+            defaultValue=""
+            labelText="Status"
+            value={formValue.outbound_status}
+            onChange={onFormValueChange}
+            required
+          >
+            <SelectItem disabled hidden value="" text="Choose an option" />
+            <SelectItem value="Done" text="Done" />
+            <SelectItem value="Pending" text="Pending" />
+          </Select>
+        </Column>
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="Outbounder"
+            id="operator"
+            placeholder="Ref Id"
+            value={formValue.operator}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="Material Code"
+            id="material_code"
+            placeholder="Material Code"
+            value={formValue.material_code}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="Material Name"
+            id="name"
+            placeholder="Material Name"
+            value={formValue.name}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <Select
+            className="flex-auto"
+            id="type"
+            disabled
+            defaultValue=""
+            labelText="Outbound Type"
+            value={formValue.type}
+            onChange={onFormValueChange}
+            required
+          >
+            <SelectItem disabled hidden value="" text="Choose an option" />
+            <SelectItem value="material inbound" text="Material Inbound" />
+            <SelectItem value="product inbound" text="Product Inbound" />
+            <SelectItem value="mix inbound" text="Mix Inbound" />
+          </Select>
+        </Column>
+        <Column className="ml-0" sm={1} md={1} lg={1}>
+          <HeaderGlobalAction
+            aria-label="Search"
+            onClick={() => setIsSearchClicked(true)}
+          >
+            <Search size={16} />
+          </HeaderGlobalAction>
+        </Column>
+        <Column className="ml-0" sm={1} md={1} lg={1}>
+          <HeaderGlobalAction
+            aria-label="Remove Filters"
+            onClick={() => {
+              setIsSearchClicked(false);
+              setFormValues(defaultFormValue);
+            }}
+          >
+            <CloseOutline size={16} />
+          </HeaderGlobalAction>
+        </Column>
+      </Grid>
+      <div className="mt-[38px]">
+        <OutboundTable
+          headers={headers}
+          refresh={refresh}
+          setRefresh={setRefresh}
+          filters={formValue}
+          isSearchClicked={isSearchClicked}
         />
-        <Select
-          className="flex-auto"
-          id="type"
-          defaultValue=""
-          labelText="Outbound Type"
-          value={formValue.type}
-          onChange={onFormValueChange}
-          required
-        >
-          <SelectItem disabled hidden value="" text="Choose an option" />
-          <SelectItem value="material outbound" text="Material Outbound" />
-          <SelectItem value="product outbound" text="Product Outbound" />
-          <SelectItem value="mix outbound" text="Mix Outbound" />
-        </Select>
-        <Select
-          className="flex-auto"
-          id="status"
-          defaultValue=""
-          labelText="Status"
-          value={formValue.status}
-          onChange={onFormValueChange}
-          disabled
-          required
-        >
-          <SelectItem disabled hidden value="" text="Choose an option" />
-          <SelectItem value="Done" text="Done" />
-          <SelectItem value="Executing" text="Executing" />
-          <SelectItem value="To-do" text="To-do" />
-        </Select>
-        <HeaderGlobalAction aria-label="Search" onClick={handleSeachRows}>
-          <Search size={16} />
-        </HeaderGlobalAction>
-        <HeaderGlobalAction
-          aria-label="Remove Filters"
-          onClick={handleRemoveFilters}
-        >
-          <CloseOutline size={16} />
-        </HeaderGlobalAction>
-      </div>
-      <div className="mt-12">
-        <OutboundTable headers={headers} rows={rows} setRefresh={setRefresh} />
       </div>
     </div>
   );

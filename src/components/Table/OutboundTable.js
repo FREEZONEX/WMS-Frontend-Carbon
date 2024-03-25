@@ -1,100 +1,110 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
-  HeaderGlobalAction,
   StructuredListWrapper,
   StructuredListHead,
   StructuredListRow,
   StructuredListCell,
   StructuredListBody,
-  Tag,
   Pagination,
+  Tag,
   Link,
+  Button,
 } from '@carbon/react';
-import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
 import ProductModal from '../Modal/ProductModal';
-import { deleteOutbound, fetchOutboundDetails } from '@/actions/actions';
+import { fetchOutbound, fetchOutboundWithFilter } from '@/actions/actions';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-function OutboundTable({ headers, rows, setRefresh }) {
+function OutboundTable({
+  headers,
+  refresh,
+  setRefresh,
+  filters,
+  isSearchClicked,
+}) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [isModalOpen, setModalOpen] = React.useState(false);
-  const handleDeleteRow = async (id) => {
-    deleteOutbound({ id }).then(() => setRefresh({}));
-  };
-  const [selectedMaterial, setSelectedMaterial] = useState([]);
-  const [detailRows, setDetailRows] = useState({});
+  const [total, setTotal] = useState(0);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
+  const [selectedId, setSelectedId] = useState('');
+  const [rows, setRows] = useState([]);
+  console.log(rows);
   useEffect(() => {
-    const fetchDetails = async () => {
-      const updatedRows = await Promise.all(
-        rows.map(async (row) => {
-          const details = await fetchOutboundDetails({
-            id: row.id,
-            ref_id: row.ref_id,
-          });
-          const storageLocations = [
-            ...new Set(details.map((detail) => detail.storage_location)),
-          ].join(', ');
-          return {
-            ...row,
-            storage_location: storageLocations,
-            material: details,
-          };
-        })
-      );
-      setDetailRows(
-        updatedRows.reduce((acc, row) => {
-          acc[row.id] = row;
+    if (isSearchClicked) {
+      const filteredFormValue = Object.entries(filters).reduce(
+        (acc, [key, value]) => {
+          if (value !== '') {
+            acc[key] = value;
+          }
           return acc;
-        }, {})
+        },
+        {}
       );
-    };
-
-    fetchDetails();
-  }, [rows]);
-  console.log(detailRows);
-
-  const [sortKey, setSortKey] = useState('create_time');
-  const [sortDirection, setSortDirection] = useState('desc');
-  const sortedRows = React.useMemo(() => {
-    if (!sortKey) {
-      return rows;
-    }
-
-    const sortedRows = [...rows];
-    sortedRows.sort((a, b) => {
-      if (a[sortKey] < b[sortKey]) {
-        return sortDirection === 'asc' ? -1 : 1;
+      if (Object.entries(filteredFormValue).length > 0) {
+        console.log(filteredFormValue);
+        fetchOutboundWithFilter(filteredFormValue, {
+          pageNum: page,
+          pageSize,
+        }).then((res) => {
+          setRows(res.list);
+          setTotal(res.total);
+        });
       }
-      if (a[sortKey] > b[sortKey]) {
-        return sortDirection === 'asc' ? 1 : -1;
-      }
-      return 0;
-    });
-    return sortedRows;
-  }, [rows, sortKey, sortDirection]);
-  const rowsToShow = sortedRows.slice((page - 1) * pageSize, page * pageSize);
-  const handleSort = (key) => {
-    if (sortKey === key) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
-      setSortKey(key);
-      setSortDirection('asc');
+      fetchOutbound({ pageNum: page, pageSize }).then((res) => {
+        setRows(res.list);
+        setTotal(res.total);
+      });
     }
-  };
+  }, [page, pageSize, refresh, filters, isSearchClicked]);
+  const createQueryString = useCallback(
+    (name, value) => {
+      const params = new URLSearchParams(searchParams);
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+  const [sortKey, setSortKey] = useState('');
+  const [sortDirection, setSortDirection] = useState('desc');
+  // const sortedRows = React.useMemo(() => {
+  //   if (!sortKey) {
+  //     return rows;
+  //   }
+
+  //   const sortedRows = [...rows];
+  //   sortedRows.sort((a, b) => {
+  //     if (a[sortKey] < b[sortKey]) {
+  //       return sortDirection === 'asc' ? -1 : 1;
+  //     }
+  //     if (a[sortKey] > b[sortKey]) {
+  //       return sortDirection === 'asc' ? 1 : -1;
+  //     }
+  //     return 0;
+  //   });
+  //   return sortedRows;
+  // }, [rows, sortKey, sortDirection]);
+  // const rowsToShow = sortedRows.slice((page - 1) * pageSize, page * pageSize);
+  // const handleSort = (key) => {
+  //   if (sortKey === key) {
+  //     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+  //   } else {
+  //     setSortKey(key);
+  //     setSortDirection('asc');
+  //   }
+  // };
   return (
     <div>
       <StructuredListWrapper isCondensed>
         <StructuredListHead>
-          <StructuredListRow head>
+          <StructuredListRow head className="headerRow">
             {headers.map((header, index) => (
-              <StructuredListCell
-                head
-                key={header.key}
-                onClick={() => handleSort(header.key)}
-              >
+              <StructuredListCell head key={header.key} onClick={() => {}}>
                 {header.header}
                 {sortKey === header.key && (
                   <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
@@ -104,13 +114,21 @@ function OutboundTable({ headers, rows, setRefresh }) {
           </StructuredListRow>
         </StructuredListHead>
         <StructuredListBody>
-          {rowsToShow.map((row, index) => (
+          {rows.map((row, index) => (
             <StructuredListRow key={index}>
               {headers.map((header) => {
-                if (header.key === 'status') {
+                if (header.key === 'outbound_status') {
                   return (
                     <StructuredListCell key={header.key}>
-                      <Tag type="blue">{row[header.key]}</Tag>
+                      <Tag
+                        type={
+                          row[header.key].toLowerCase() === 'pending'
+                            ? 'red'
+                            : 'blue'
+                        }
+                      >
+                        {row[header.key] === null ? '' : row[header.key]}
+                      </Tag>
                     </StructuredListCell>
                   );
                 }
@@ -134,13 +152,35 @@ function OutboundTable({ headers, rows, setRefresh }) {
                       <Link
                         onClick={() => {
                           setModalOpen(true);
-                          setSelectedMaterial(
-                            detailRows[row.id]?.material || []
-                          );
+                          setSelectedId(row['outbound_id']);
                         }}
                       >
                         More
                       </Link>
+                    </StructuredListCell>
+                  );
+                }
+                if (header.key === 'operate') {
+                  return (
+                    <StructuredListCell key={header.key}>
+                      <Button
+                        size="sm"
+                        kind="secondary"
+                        disabled={
+                          row['outbound_status'].toLowerCase() === 'pending'
+                            ? false
+                            : true
+                        }
+                        onClick={() => {
+                          router.push(
+                            `${process.env.PATH_PREFIX}/operation/outbound/operate` +
+                              '?' +
+                              createQueryString('id', row.outbound_id)
+                          );
+                        }}
+                      >
+                        Outbound
+                      </Button>
                     </StructuredListCell>
                   );
                 }
@@ -150,17 +190,6 @@ function OutboundTable({ headers, rows, setRefresh }) {
                   </StructuredListCell>
                 );
               })}
-              <StructuredListCell>
-                <HeaderGlobalAction aria-label="Edit" disabled>
-                  <Edit size={15} />
-                </HeaderGlobalAction>
-                <HeaderGlobalAction
-                  aria-label="Delete"
-                  onClick={() => handleDeleteRow(row.id)}
-                >
-                  <Delete size={15} />
-                </HeaderGlobalAction>
-              </StructuredListCell>
             </StructuredListRow>
           ))}
         </StructuredListBody>
@@ -173,14 +202,14 @@ function OutboundTable({ headers, rows, setRefresh }) {
         pageNumberText="Page Number"
         pageSize={pageSize}
         pageSizes={[5, 10, 20, 30, 40, 50]}
-        totalItems={rows.length}
+        totalItems={total}
         onChange={({ page, pageSize }) => {
           setPage(page);
           setPageSize(pageSize);
         }}
       />
       <ProductModal
-        material={selectedMaterial}
+        id={selectedId}
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
       ></ProductModal>
