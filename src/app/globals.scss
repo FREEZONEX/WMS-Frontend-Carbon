@@ -12,7 +12,8 @@
 
 .cds--date-picker-container,
 .cds--date-picker-input__wrapper,
-.cds--date-picker__input {
+.cds--date-picker__input,
+.cds--date-picker.cds--date-picker--single .cds--date-picker__input {
   width: inherit;
 }
 

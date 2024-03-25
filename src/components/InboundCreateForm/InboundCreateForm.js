@@ -8,22 +8,21 @@ import {
   Button,
   TextArea,
   SwitcherDivider,
-  IconButton,
   TextInput,
   InlineNotification,
   DatePicker,
   DatePickerInput,
+  FormLabel,
 } from '@carbon/react';
 import { Add, Close } from '@carbon/icons-react';
 import '@/components/MaterialCreateForm/_materialcreateform.scss';
 import TaskListTable from '../Table/TaskListTable';
 import {
-  fetchWarehouses,
-  fetchStorageLocationsByWId,
-  fetchMaterial,
   addInboundRecord,
+  fetchInboundDetails,
+  updateInboundRecord,
 } from '@/actions/actions';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 const headers = [
   { key: 'name', header: 'Material Name' },
@@ -31,160 +30,132 @@ const headers = [
   { key: 'specification', header: 'Specification' },
   { key: 'quantity', header: 'Quantity' },
   { key: 'unit', header: 'Unit' },
-  { key: 'expect_wh', header: 'WH' },
-  { key: 'expect_storage_location', header: 'Shelf' },
+  { key: 'expect_wh_id', header: 'WH' },
+  { key: 'expact_stock_location_id', header: 'Shelf' },
 ];
 
-function InboundCreateForm() {
+function InboundCreateForm({ id }) {
   const router = useRouter();
-  const [fieldValidation, setFieldValidation] = useState({
-    sourceInvalid: false,
-    typeInvalid: false,
-  });
+  // const [fieldValidation, setFieldValidation] = useState({
+  //   purchase_order_noInvalid: false,
+  //   creatorInvalid: false,
+  //   deliveryDateInvalid: false,
+  // });
+  const pathName = usePathname();
+  console.log(pathName);
+  const [taskList, setTaskList] = useState([]);
+  const [isAlert, setIsAlert] = useState(false);
   const [formValue, setFormValues] = useState({
-    type: '',
-    source: 'manual',
-    status: '',
-    note: '',
+    creator: '',
+    purchase_order_no: '',
+    supplier: '',
+    delivery_date: '',
   });
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
-
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [id]: value,
-    }));
+    if (id === 'delivery_date') {
+      const formattedDate = new Date(value).toISOString();
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [id]: formattedDate,
+      }));
+    } else {
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [id]: value,
+      }));
+    }
   };
-  const [taskList, setTaskList] = useState([]);
-  const [warehouseOptions, setWarehouseOptions] = useState([]);
-  const [storageLocationOptions, setStorageLocationOptions] = useState([]);
-  const [selectedWarehouse, setSelectedWarehouse] = useState('');
-  const [selectedStorageLocation, setSelectedStorageLocation] = useState('');
-  const [materials, setMaterials] = useState([]);
-  const [isAlert, setIsAlert] = useState(false);
+  console.log(formValue, taskList, 'id', id);
+
   useEffect(() => {
-    fetchWarehouses().then((res) => {
-      setWarehouseOptions(res);
-    });
-    fetchMaterial().then((res) => {
-      setMaterials(res);
-    });
-  }, []);
-  console.log(formValue, taskList);
-  useEffect(() => {
-    console.log(selectedWarehouse);
-    if (selectedWarehouse != '') {
-      fetchStorageLocationsByWId({ warehouse_id: selectedWarehouse }).then(
-        (res) => setStorageLocationOptions(res)
-      );
-    }
-  }, [selectedWarehouse]);
-
-  function handleAddTask() {
-    if (selectedWarehouse && selectedStorageLocation) {
-      const newTask = findInfoById(selectedWarehouse, selectedStorageLocation);
-      setTaskList([...taskList, newTask]);
-      setSelectedWarehouse('');
-      setSelectedStorageLocation('');
-    }
-  }
-  function findInfoById(wid, slid) {
-    const selectedWarehouse = warehouseOptions.find(
-      (warehouse) => warehouse.id === wid
-    );
-
-    const selectedStorageLocation = storageLocationOptions.find(
-      (location) => location.id === slid
-    );
-
-    return {
-      warehouse: selectedWarehouse,
-      shelf_location: selectedStorageLocation,
-      materials: [],
-    };
-  }
-  const handleMaterialSelection = (
-    taskIndex,
-    materialId,
-    field,
-    value,
-    checked
-  ) => {
-    setTaskList((prevTaskList) => {
-      const updatedTaskList = [...prevTaskList];
-      if (checked) {
-        const selectedMaterial = materials.find(
-          (material) => material.id === materialId
-        );
-        const existingMaterialIndex = updatedTaskList[
-          taskIndex
-        ].materials.findIndex((material) => material.id === materialId);
-
-        if (existingMaterialIndex !== -1) {
-          updatedTaskList[taskIndex].materials[existingMaterialIndex][field] =
-            value;
-        } else {
-          updatedTaskList[taskIndex].materials.push({
-            ...selectedMaterial,
-            [field]: value,
+    if (id) {
+      fetchInboundDetails({ id })
+        .then((data) => {
+          console.log(data);
+          setFormValues({
+            creator: data.list[0].inbound_creator,
+            purchase_order_no: data.list[0].inbound_purchase_order_no,
+            supplier: data.list[0].inbound_supplier,
+            delivery_date: data.list[0].inbound_delivery_date,
           });
-        }
-      } else {
-        updatedTaskList[taskIndex].materials = updatedTaskList[
-          taskIndex
-        ].materials.filter((material) => material.id !== materialId);
-      }
-
-      return updatedTaskList;
-    });
-  };
-  const handleRemoveTask = (taskIndex) => {
-    setTaskList((prevTaskList) => {
-      const updatedTaskList = [...prevTaskList];
-      updatedTaskList.splice(taskIndex, 1);
-      return updatedTaskList;
-    });
-  };
+          const taskList = data.list.map((item) => ({
+            name: item.name,
+            product_code: item.product_code,
+            specification: item.specification,
+            quantity: item.quantity,
+            unit: item.unit,
+            expect_wh_id: item.warehouse_id,
+            expact_stock_location_id: item.stock_location_id,
+          }));
+          setTaskList(taskList);
+        })
+        .catch((error) => {
+          console.error('Failed to fetch inbound details:', error);
+        });
+    }
+  }, [id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newValidation = {
-      sourceInvalid: !formValue.source || formValue.source === '',
-      typeInvalid: !formValue.type || formValue.type === '',
-    };
-    setFieldValidation(newValidation);
+    // const newValidation = {
+    //   sourceInvalid: !formValue.source || formValue.source === '',
+    //   typeInvalid: !formValue.type || formValue.type === '',
+    // };
+    // setFieldValidation(newValidation);
 
-    if (Object.values(newValidation).some((v) => v)) {
-      setFieldValidation(newValidation);
-      return;
-    }
+    // if (Object.values(newValidation).some((v) => v)) {
+    //   setFieldValidation(newValidation);
+    //   return;
+    // }
     if (taskList.length === 0) {
       setIsAlert(true);
       return;
     }
-    const body = {
-      ...formValue,
-      shelf_records: convertTaskListToFormat(taskList),
-    };
-    console.log(body);
-    addInboundRecord(body).then(() => {
-      setFieldValidation({ sourceInvalid: false, typeInvalid: false });
-      setFormValues({ type: '', source: '', status: '', note: '' });
-      setTaskList([]);
-      router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
-    });
+    if (pathName === `${process.env.PATH_PREFIX}/operation/inbound/create`) {
+      let body = {
+        ...formValue,
+        source: 'manual',
+        request_detail: convertTaskListToFormat(taskList),
+      };
+      addInboundRecord(body).then(() => {
+        setFormValues({
+          creator: '',
+          purchase_order_no: '',
+          supplier: '',
+          delivery_date: '',
+        });
+        setTaskList([]);
+        router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+      });
+    } else {
+      let body = {
+        ...formValue,
+        source: 'manual',
+        status: 'done',
+        id,
+      };
+      console.log(body);
+      updateInboundRecord(body).then(() => {
+        setFormValues({
+          creator: '',
+          purchase_order_no: '',
+          supplier: '',
+          delivery_date: '',
+        });
+        setTaskList([]);
+        router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+      });
+    }
   };
 
   function convertTaskListToFormat(taskList) {
     const shelfRecords = taskList.map((task) => {
-      const inventory = task.materials.map((material) => ({
-        material_id: material.id,
-        quantity: parseInt(material.quantity),
-      }));
-
       return {
-        storage_location_id: task.shelf_location.id,
-        inventory,
+        material_code: task.product_code,
+        quantity: task.quantity,
+        stock_location_id: task.expact_stock_location_id,
+        wh_id: task.expect_wh_id,
       };
     });
 
@@ -226,30 +197,40 @@ function InboundCreateForm() {
         </Column>
 
         <Column className="ml-0" sm={2} md={4} lg={4}>
-          <DatePicker>
+          <DatePicker datePickerType="single">
             <DatePickerInput
               placeholder="mm/dd/yyyy"
               labelText="Delivery Date"
               id="delivery_date"
+              value={formValue.delivery_date}
+              onChange={onFormValueChange}
             />
           </DatePicker>
         </Column>
         <Column sm={2} md={4} lg={4}>
           <TextInput
             readOnly
-            className="flex-auto "
+            className="flex-auto"
             labelText="Status"
             id="status"
             placeholder="Status"
-            value="Pending"
-            color="red"
+            value={
+              pathName === `${process.env.PATH_PREFIX}/operation/inbound/create`
+                ? 'Pending'
+                : 'Inbound'
+            }
           />
         </Column>
       </Grid>
       <SwitcherDivider className="w-full mt-10 mb-10 pl-0" />
 
       <div className="mb-10">
-        <TaskListTable headers={headers} />
+        <FormLabel className="mb-2">Material List</FormLabel>
+        <TaskListTable
+          headers={headers}
+          rows={taskList}
+          setRows={setTaskList}
+        />
       </div>
 
       {isAlert && (

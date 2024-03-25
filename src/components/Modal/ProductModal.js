@@ -1,41 +1,46 @@
 'use client';
-import React, { useState } from 'react';
-import {
-  Modal,
-  DataTable,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableHeader,
-  TableBody,
-  TableCell,
-  Heading,
-  Tabs,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-} from '@carbon/react';
+import React, { useEffect, useState } from 'react';
+import { Modal, Heading } from '@carbon/react';
+import WMSDataTable from '../Table/DataTable';
+import { fetchInboundDetails } from '@/actions/actions';
 
 const headers = [
-  { key: 'material_name', header: 'Material Name' },
+  { key: 'name', header: 'Name' },
+  { key: 'product_code', header: 'Code' },
+  { key: 'specification', header: 'Specification' },
   { key: 'quantity', header: 'Quantity' },
+  { key: 'unit', header: 'Unit' },
+  { key: 'warehouse_id', header: 'WH' },
+  { key: 'stock_location_id', header: 'Shelf' },
+  { key: 'rfid', header: 'RFID' },
 ];
 
-function ProductModal({ isModalOpen, setModalOpen, material }) {
-  console.log(material);
-
-  const locationGroups = material.reduce((groups, item) => {
-    const { storage_location } = item;
-    if (!groups[storage_location]) {
-      groups[storage_location] = [];
+function ProductModal({ isModalOpen, setModalOpen, id }) {
+  const [details, setDetails] = useState([]);
+  useEffect(() => {
+    if (id) {
+      fetchInboundDetails({ id })
+        .then((data) => {
+          console.log(data);
+          const whNameMap = JSON.parse(localStorage.getItem('whNameMap'));
+          const slNameMap = JSON.parse(localStorage.getItem('slNameMap'));
+          const formattedRows = data.list.map((item) => ({
+            name: item.name,
+            product_code: item.product_code,
+            specification: item.specification,
+            quantity: item.quantity,
+            unit: item.unit,
+            warehouse_id: whNameMap[item.warehouse_id],
+            stock_location_id: slNameMap[item.stock_location_id],
+          }));
+          setDetails(formattedRows);
+        })
+        .catch((error) => {
+          console.error('Failed to fetch inbound details:', error);
+        });
     }
-    groups[storage_location].push(...item.inventory);
-    return groups;
-  }, {});
-  const locations = Object.keys(locationGroups);
-  console.log(locationGroups);
+  }, [id]);
+  console.log(id, details);
   return (
     <Modal
       open={isModalOpen}
@@ -47,58 +52,7 @@ function ProductModal({ isModalOpen, setModalOpen, material }) {
       <Heading className="text-sm font-normal leading-tight tracking-tight mb-3">
         The following meterils entered the designated warehouse in this task.
       </Heading>
-      {locations.length !== 0 && (
-        <Tabs>
-          <TabList aria-label="List of tabs" contained>
-            {locations.map((location, index) => (
-              <Tab key={index}>{location}</Tab>
-            ))}
-          </TabList>
-          <TabPanels>
-            {locations.map((location, index) => (
-              <TabPanel key={index}>
-                <DataTable
-                  rows={locationGroups[location]}
-                  headers={headers}
-                  render={({ headers, getHeaderProps }) => (
-                    <TableContainer>
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            {headers.map((header) => (
-                              <TableHeader
-                                key={header}
-                                {...getHeaderProps({ header })}
-                              >
-                                {header.header}
-                              </TableHeader>
-                            ))}
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {locationGroups[location].map((row, index) => {
-                            return (
-                              <TableRow key={index}>
-                                {headers.map((header) => {
-                                  return (
-                                    <TableCell key={header.key}>
-                                      {row[header.key.toLowerCase()]}
-                                    </TableCell>
-                                  );
-                                })}
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  )}
-                />
-              </TabPanel>
-            ))}
-          </TabPanels>
-        </Tabs>
-      )}
+      <WMSDataTable headers={headers} rows={details} />
     </Modal>
   );
 }

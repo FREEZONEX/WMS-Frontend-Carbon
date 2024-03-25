@@ -57,7 +57,7 @@ function MaterialTable({
         });
       }
     } else {
-      fetchMaterial({ pageNum: page, pageSize }).then((res) => {
+      fetchMaterial({ pageNum: page, pageSize }, {}).then((res) => {
         setRows(res.list);
         setTotal(res.total);
       });

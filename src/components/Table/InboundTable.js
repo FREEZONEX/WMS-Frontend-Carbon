@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   StructuredListWrapper,
   StructuredListHead,
@@ -20,6 +20,7 @@ import {
   fetchInboundDetails,
   fetchInboundWithFilter,
 } from '@/actions/actions';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 function InboundTable({
   headers,
@@ -31,12 +32,16 @@ function InboundTable({
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [isModalOpen, setModalOpen] = React.useState(false);
+  const [total, setTotal] = useState(0);
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const handleDeleteRow = async (id) => {
     deleteInbound({ id }).then(() => setRefresh({}));
   };
-  const [selectedMaterial, setSelectedMaterial] = useState([]);
+  const [selectedId, setSelectedId] = useState('');
   const [rows, setRows] = useState([]);
   const [detailRows, setDetailRows] = useState({});
+  console.log(filters);
   useEffect(() => {
     if (isSearchClicked) {
       const filteredFormValue = Object.entries(filters).reduce(
@@ -49,20 +54,31 @@ function InboundTable({
         {}
       );
       if (Object.entries(filteredFormValue).length > 0) {
+        console.log(filteredFormValue);
         fetchInboundWithFilter(filteredFormValue, {
           pageNum: page,
           pageSize,
         }).then((res) => {
           setRows(res.list);
+          setTotal(res.total);
         });
       }
     } else {
-      fetchInbound({ pageNum: page, pageSize }).then((res) =>
-        setRows(res.list)
-      );
+      fetchInbound({ pageNum: page, pageSize }).then((res) => {
+        setRows(res.list);
+        setTotal(res.total);
+      });
     }
   }, [page, pageSize, refresh, filters, isSearchClicked]);
+  const createQueryString = useCallback(
+    (name, value) => {
+      const params = new URLSearchParams(searchParams);
+      params.set(name, value);
 
+      return params.toString();
+    },
+    [searchParams]
+  );
   const [sortKey, setSortKey] = useState('');
   const [sortDirection, setSortDirection] = useState('desc');
   // const sortedRows = React.useMemo(() => {
@@ -111,11 +127,14 @@ function InboundTable({
             <StructuredListRow key={index}>
               {headers.map((header) => {
                 if (header.key === 'inbound_status') {
-                  console.log(row['inbound_status']);
                   return (
                     <StructuredListCell key={header.key}>
                       <Tag
-                        type={row[header.key] === 'Pending' ? 'red' : 'blue'}
+                        type={
+                          row[header.key].toLowerCase() === 'pending'
+                            ? 'red'
+                            : 'blue'
+                        }
                       >
                         {row[header.key] === null ? '' : row[header.key]}
                       </Tag>
@@ -142,9 +161,7 @@ function InboundTable({
                       <Link
                         onClick={() => {
                           setModalOpen(true);
-                          setSelectedMaterial(
-                            detailRows[row.id]?.material || []
-                          );
+                          setSelectedId(row['inbound_id']);
                         }}
                       >
                         More
@@ -159,12 +176,15 @@ function InboundTable({
                         size="sm"
                         kind="secondary"
                         disabled={
-                          row['inbound_status'] === 'Pending' ? false : true
+                          row['inbound_status'].toLowerCase() === 'pending'
+                            ? false
+                            : true
                         }
                         onClick={() => {
-                          setModalOpen(true);
-                          setSelectedMaterial(
-                            detailRows[row.id]?.material || []
+                          router.push(
+                            `${process.env.PATH_PREFIX}/operation/inbound/operate` +
+                              '?' +
+                              createQueryString('id', row.inbound_id)
                           );
                         }}
                       >
@@ -191,14 +211,14 @@ function InboundTable({
         pageNumberText="Page Number"
         pageSize={pageSize}
         pageSizes={[5, 10, 20, 30, 40, 50]}
-        totalItems={rows.length}
+        totalItems={total}
         onChange={({ page, pageSize }) => {
           setPage(page);
           setPageSize(pageSize);
         }}
       />
       <ProductModal
-        material={selectedMaterial}
+        id={selectedId}
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
       ></ProductModal>

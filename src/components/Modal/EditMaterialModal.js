@@ -31,28 +31,30 @@ const EditMaterialModal = ({
   const [selectedWarehouseInfo, setSelectedWarehouseInfo] = useState({});
   const [selectedStorageLocation, setSelectedStorageLocation] = useState({});
   useEffect(() => {
-    fetchWarehouses({ pageNum: 1, pageSize: 99999999 }).then((res) => {
-      setWarehouseOptions(res.list);
-      if (materialValues.expect_wh_id) {
-        const selectedWarehouse = res.list.find(
-          (wh) => wh.id === materialValues.expect_wh_id
-        );
-        setSelectedWarehouseInfo(selectedWarehouse || {});
-      }
-    });
-    if (materialValues.expect_wh_id) {
-      fetchStorageLocationsByWId(
-        { warehouse_id: materialValues.expect_wh_id },
-        { pageNum: 1, pageSize: 99999999 }
-      ).then((res) => {
-        setStorageLocationOptions(res.list);
-        const selectedStorageLocation = res.list.find(
-          (sl) => sl.id === materialValues.expact_stock_location_id
-        );
-        setSelectedStorageLocation(selectedStorageLocation || {});
+    if (isOpen) {
+      fetchWarehouses({ pageNum: 1, pageSize: 99999999 }).then((res) => {
+        setWarehouseOptions(res.list);
+        if (materialValues.expect_wh_id) {
+          const selectedWarehouse = res.list.find(
+            (wh) => wh.id === materialValues.expect_wh_id
+          );
+          setSelectedWarehouseInfo(selectedWarehouse || {});
+        }
       });
+      if (materialValues.expect_wh_id) {
+        fetchStorageLocationsByWId(
+          { warehouse_id: materialValues.expect_wh_id },
+          { pageNum: 1, pageSize: 99999999 }
+        ).then((res) => {
+          setStorageLocationOptions(res.list);
+          const selectedStorageLocation = res.list.find(
+            (sl) => sl.id === materialValues.expact_stock_location_id
+          );
+          setSelectedStorageLocation(selectedStorageLocation || {});
+        });
+      }
     }
-  }, [materialValues]);
+  }, [materialValues, isOpen]);
 
   useEffect(() => {
     setFormValues(materialValues);
@@ -60,22 +62,24 @@ const EditMaterialModal = ({
 
   const prevWarehouseInfoRef = useRef(null);
   useEffect(() => {
-    const currentWarehouseInfo = selectedWarehouseInfo;
+    if (isOpen) {
+      const currentWarehouseInfo = selectedWarehouseInfo;
 
-    if (
-      currentWarehouseInfo?.id &&
-      prevWarehouseInfoRef.current?.id !== currentWarehouseInfo.id
-    ) {
-      fetchStorageLocationsByWId(
-        { warehouse_id: currentWarehouseInfo.id },
-        { pageNum: 1, pageSize: 99999999 }
-      ).then((res) => {
-        setStorageLocationOptions(res.list);
-      });
+      if (
+        currentWarehouseInfo?.id &&
+        prevWarehouseInfoRef.current?.id !== currentWarehouseInfo.id
+      ) {
+        fetchStorageLocationsByWId(
+          { warehouse_id: currentWarehouseInfo.id },
+          { pageNum: 1, pageSize: 99999999 }
+        ).then((res) => {
+          setStorageLocationOptions(res.list);
+        });
+      }
+
+      prevWarehouseInfoRef.current = currentWarehouseInfo;
     }
-
-    prevWarehouseInfoRef.current = currentWarehouseInfo;
-  }, [selectedWarehouseInfo]);
+  }, [selectedWarehouseInfo, isOpen]);
 
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
