@@ -36,7 +36,9 @@ function TaskListTable({ headers, rows, setRows }) {
   const [selectedRows, setSelectedRows] = useState([0]);
   const whNameMap = JSON.parse(localStorage.getItem('whNameMap'));
   const slNameMap = JSON.parse(localStorage.getItem('slNameMap'));
+  const whslMap = JSON.parse(localStorage.getItem('location'));
   const pathName = usePathname();
+  console.log(whslMap);
   const checkIsEdit = () => {
     console.log(
       pathName,
@@ -108,15 +110,23 @@ function TaskListTable({ headers, rows, setRows }) {
     setRows((prevRows) =>
       prevRows.map((prevRow, i) => {
         if (i === rowId) {
-          if (field === 'expect_wh_id') {
-            const whName = whNameMap[e.target.value] || '';
-            return {
-              ...prevRow,
-              [field]: e.target.value,
-              expect_wh_name: whName,
-            };
-          } else if (field === 'expact_stock_location_id') {
+          if (field === 'expact_stock_location_id') {
             const slName = slNameMap[e.target.value] || '';
+            if (slName !== '') {
+              const locationMap = new Map(whslMap);
+              const getWarehouseId = (locationId) =>
+                locationMap.get(locationId);
+              const wh_id = getWarehouseId(e.target.value);
+              const wh_name = whNameMap[wh_id];
+              console.log(wh_id, wh_name);
+              return {
+                ...prevRow,
+                expect_wh_id: wh_id,
+                expect_wh_name: wh_name,
+                [field]: e.target.value,
+                expact_stock_location_name: slName,
+              };
+            }
             return {
               ...prevRow,
               [field]: e.target.value,
@@ -339,21 +349,7 @@ function TaskListTable({ headers, rows, setRows }) {
                 if (header.key === 'expect_wh_id') {
                   return (
                     <TableCell key={header.key}>
-                      {checkIsEdit() ? (
-                        whNameMap[row[header.key]]
-                      ) : (
-                        <TextInput
-                          className="w-40"
-                          id={`expact-wh-id-${i}`}
-                          value={row.expect_wh_name || ''}
-                          onChange={(e) => {
-                            handleInputChange(i, header.key, e);
-                          }}
-                          onBlur={(e) => {
-                            handleBlurFetch(i, header.key, e.target.value);
-                          }}
-                        />
-                      )}
+                      {whNameMap[row[header.key]]}
                     </TableCell>
                   );
                 }
