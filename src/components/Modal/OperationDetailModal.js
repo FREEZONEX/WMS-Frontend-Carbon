@@ -16,9 +16,10 @@ const headers = [
   { key: 'rfid', header: 'RFID' },
 ];
 
-function ProductModal({ isModalOpen, setModalOpen, id }) {
+function OperationDetailModal({ isModalOpen, setModalOpen, id }) {
   const [details, setDetails] = useState([]);
   const pathName = usePathname();
+
   useEffect(() => {
     if (id) {
       const whNameMap = JSON.parse(localStorage.getItem('whNameMap'));
@@ -81,4 +82,4 @@ function ProductModal({ isModalOpen, setModalOpen, id }) {
   );
 }
 
-export default ProductModal;
+export default OperationDetailModal;

@@ -16,7 +16,11 @@ import {
 } from '@carbon/react';
 import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import OutboundTable from '@/components/Table/OutboundTable';
-import { fetchWHNameMap, fetchSLNameMap } from '@/actions/actions';
+import {
+  fetchWHNameMap,
+  fetchSLNameMap,
+  fetchWHSLNameMap,
+} from '@/actions/actions';
 
 const headers = [
   { key: 'outbound_id', header: 'ID' },
@@ -77,6 +81,24 @@ function Page() {
       })
       .catch((error) => {
         console.error('Failed to fetch SL name map:', error);
+      });
+    fetchWHSLNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const locationMap = new Map();
+
+        res.list.forEach((warehouse) => {
+          warehouse.warehouseNamemap.forEach((location) => {
+            locationMap.set(location.id, warehouse.id);
+          });
+        });
+
+        const locationMapString = JSON.stringify(
+          Array.from(locationMap.entries())
+        );
+        localStorage.setItem('location', locationMapString);
+      })
+      .catch((error) => {
+        console.error('Error fetching warehouse data:', error);
       });
   }, []);
   return (
@@ -167,7 +189,7 @@ function Page() {
             className="flex-auto "
             labelText="Outbounder"
             id="operator"
-            placeholder="Ref Id"
+            placeholder="Outbounder"
             value={formValue.operator}
             onChange={onFormValueChange}
           />
