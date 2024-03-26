@@ -20,6 +20,7 @@ import {
   TextInput,
   Button,
   Link,
+  Pagination,
 } from '@carbon/react';
 import { Add, Subtract } from '@carbon/icons-react';
 import {
@@ -37,6 +38,9 @@ const headers = [
 
 function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
   const [rows, setRows] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
   const [selectedRows, setSelectedRows] = useState([]);
   const [isCreate, setIsCreate] = useState(false);
   const [showMaterial, setShowMaterial] = useState(false);
@@ -55,13 +59,19 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
   };
   useEffect(() => {
     if (isModalOpen && warehouse_info) {
-      fetchStorageLocationsByWId({
-        warehouse_id: warehouse_info.id,
-      }).then((res) => setRows(res.list));
+      fetchStorageLocationsByWId(
+        {
+          warehouse_id: warehouse_info.id,
+        },
+        { pageNum: page, pageSize }
+      ).then((res) => {
+        setRows(res.list);
+        setTotal(res.total);
+      });
       setIsCreate(false);
       setShowMaterial(false);
     }
-  }, [isModalOpen, warehouse_info]);
+  }, [isModalOpen, warehouse_info, page, pageSize]);
 
   const handleAddShelfLocation = () => {
     console.log();
@@ -73,9 +83,12 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
       setFormValues({
         name: '',
       });
-      fetchStorageLocationsByWId({
-        warehouse_id: warehouse_info.id,
-      }).then((res) => setRows(res.list));
+      fetchStorageLocationsByWId(
+        {
+          warehouse_id: warehouse_info.id,
+        },
+        { pageNum: page, pageSize }
+      ).then((res) => setRows(res.list));
     });
   };
   const handleDeleteSelectedRows = () => {
@@ -215,6 +228,20 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
                     ))}
                   </TableBody>
                 </Table>
+                <Pagination
+                  backwardText="Previous page"
+                  forwardText="Next page"
+                  itemsPerPageText="Items per page:"
+                  page={page}
+                  pageNumberText="Page Number"
+                  pageSize={pageSize}
+                  pageSizes={[5, 10, 20, 30, 40, 50]}
+                  totalItems={total}
+                  onChange={({ page, pageSize }) => {
+                    setPage(page);
+                    setPageSize(pageSize);
+                  }}
+                />
               </TableContainer>
             )}
           />

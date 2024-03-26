@@ -37,11 +37,13 @@ export async function updateWarehouse(body) {
     .then((res) => console.log(res));
 }
 
-export async function fetchStorageLocationsByWId(body) {
-  return httpToBackend.post('/wms/storagelocation/get', body).then((res) => {
-    console.log(res);
-    return res.data.data;
-  });
+export async function fetchStorageLocationsByWId(body, params) {
+  return httpToBackend
+    .post('/wms/storagelocation/get', body, { params })
+    .then((res) => {
+      console.log(res);
+      return res.data.data;
+    });
 }
 
 export async function addStorageLocation(body) {
@@ -259,6 +261,15 @@ export async function fetchWHNameMap(params) {
 export async function fetchSLNameMap(params) {
   return httpToBackend
     .post('/wms/storagelocation/namemap', {}, { params })
+    .then((res) => {
+      console.log(res);
+      return res.data.data;
+    });
+}
+
+export async function fetchWHSLNameMap(params) {
+  return httpToBackend
+    .post('/wms/warehousestoragelocation/idmap', {}, { params })
     .then((res) => {
       console.log(res);
       return res.data.data;
