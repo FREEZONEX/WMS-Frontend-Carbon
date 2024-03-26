@@ -12,7 +12,7 @@ import {
   Button,
 } from '@carbon/react';
 import './_table.scss';
-import ProductModal from '../Modal/ProductModal';
+import OperationDetailModal from '../Modal/OperationDetailModal';
 import {
   deleteInbound,
   fetchInbound,
@@ -139,20 +139,20 @@ function InboundTable({
                     </StructuredListCell>
                   );
                 }
-                if (header.key === 'storage_location') {
-                  return (
-                    <StructuredListCell
-                      key={header.key}
-                      className="truncate"
-                      title={row[header.key]}
-                      onClick={(e) => {
-                        e.currentTarget.classList.toggle('expanded');
-                      }}
-                    >
-                      {detailRows[row.id]?.storage_location || ''}
-                    </StructuredListCell>
-                  );
-                }
+                // if (header.key === 'storage_location') {
+                //   return (
+                //     <StructuredListCell
+                //       key={header.key}
+                //       className="truncate"
+                //       title={row[header.key]}
+                //       onClick={(e) => {
+                //         e.currentTarget.classList.toggle('expanded');
+                //       }}
+                //     >
+                //       {detailRows[row.id]?.storage_location || ''}
+                //     </StructuredListCell>
+                //   );
+                // }
                 if (header.key === 'material') {
                   return (
                     <StructuredListCell key={header.key}>
@@ -191,6 +191,17 @@ function InboundTable({
                     </StructuredListCell>
                   );
                 }
+                if (
+                  header.key === 'create_time' ||
+                  header.key === 'inbound_delivery_date'
+                ) {
+                  return (
+                    <StructuredListCell key={header.key}>
+                      {row[header.key]?.split('T')[0]}
+                    </StructuredListCell>
+                  );
+                }
+
                 return (
                   <StructuredListCell key={header.key}>
                     {row[header.key]}
@@ -215,11 +226,11 @@ function InboundTable({
           setPageSize(pageSize);
         }}
       />
-      <ProductModal
+      <OperationDetailModal
         id={selectedId}
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
-      ></ProductModal>
+      ></OperationDetailModal>
     </div>
   );
 }

@@ -7,8 +7,6 @@ import {
   TableBody,
   TableContainer,
   TableCell,
-  TableSelectRow,
-  TableSelectAll,
   TextInput,
   TableToolbar,
   TableToolbarContent,
@@ -38,13 +36,12 @@ function TaskListTable({ headers, rows, setRows }) {
   const slNameMap = JSON.parse(localStorage.getItem('slNameMap'));
   const whslMap = JSON.parse(localStorage.getItem('location'));
   const pathName = usePathname();
-  console.log(whslMap);
   const checkIsEdit = () => {
-    console.log(
-      pathName,
-      pathName === `${process.env.PATH_PREFIX}/operation/inbound/create`
-    );
-    if (pathName === `${process.env.PATH_PREFIX}/operation/inbound/create`) {
+    if (
+      pathName === `${process.env.PATH_PREFIX}/operation/inbound/create` ||
+      pathName === `${process.env.PATH_PREFIX}/operation/outbound/create` ||
+      pathName === `${process.env.PATH_PREFIX}/operation/stocktaking/create`
+    ) {
       return false;
     }
     return true;
@@ -159,7 +156,7 @@ function TaskListTable({ headers, rows, setRows }) {
       );
     }
   };
-
+  console.log(rows);
   const checkQuantity = (value) => {
     console.log('parse int check', parseInt(value), isNaN(value));
     if (value === '' || isNaN(value)) {

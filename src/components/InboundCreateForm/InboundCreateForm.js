@@ -38,7 +38,6 @@ function InboundCreateForm({ id }) {
   //   deliveryDateInvalid: false,
   // });
   const pathName = usePathname();
-  console.log(pathName);
   const [taskList, setTaskList] = useState([]);
   const [isAlert, setIsAlert] = useState(false);
   const [formValue, setFormValues] = useState({

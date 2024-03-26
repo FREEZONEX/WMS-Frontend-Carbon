@@ -12,7 +12,7 @@ import {
   Button,
 } from '@carbon/react';
 import './_table.scss';
-import ProductModal from '../Modal/ProductModal';
+import OperationDetailModal from '../Modal/OperationDetailModal';
 import { fetchOutbound, fetchOutboundWithFilter } from '@/actions/actions';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -184,6 +184,16 @@ function OutboundTable({
                     </StructuredListCell>
                   );
                 }
+                if (
+                  header.key === 'create_time' ||
+                  header.key === 'outbound_delivery_date'
+                ) {
+                  return (
+                    <StructuredListCell key={header.key}>
+                      {row[header.key]?.split('T')[0]}
+                    </StructuredListCell>
+                  );
+                }
                 return (
                   <StructuredListCell key={header.key}>
                     {row[header.key]}
@@ -208,11 +218,11 @@ function OutboundTable({
           setPageSize(pageSize);
         }}
       />
-      <ProductModal
+      <OperationDetailModal
         id={selectedId}
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
-      ></ProductModal>
+      ></OperationDetailModal>
     </div>
   );
 }
