@@ -46,20 +46,26 @@ function InboundCreateForm({ id }) {
     supplier: '',
     delivery_date: '',
   });
+  const onDateChange = (e) => {
+    const dateString = new Date(e[0]);
+    const formattedDate = `${dateString.getFullYear()}-${(
+      dateString.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, '0')}-${dateString.getDate().toString().padStart(2, '0')}`;
+    console.log(formattedDate);
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      delivery_date: dateString,
+    }));
+  };
+
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
-    if (id === 'delivery_date') {
-      const formattedDate = new Date(value).toISOString();
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        [id]: formattedDate,
-      }));
-    } else {
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        [id]: value,
-      }));
-    }
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [id]: value,
+    }));
   };
   console.log(formValue, taskList, 'id', id);
 
@@ -192,13 +198,15 @@ function InboundCreateForm({ id }) {
         </Column>
 
         <Column className="ml-0" sm={2} md={4} lg={4}>
-          <DatePicker datePickerType="single">
+          <DatePicker
+            datePickerType="single"
+            id="delivery_date"
+            onChange={onDateChange}
+          >
             <DatePickerInput
               placeholder="mm/dd/yyyy"
               labelText="Delivery Date"
-              id="delivery_date"
-              value={formValue.delivery_date}
-              onChange={onFormValueChange}
+              // value={formValue.delivery_date}
             />
           </DatePicker>
         </Column>

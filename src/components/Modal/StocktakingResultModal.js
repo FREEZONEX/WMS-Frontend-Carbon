@@ -27,12 +27,12 @@ const headers = [
   { key: 'discrepancy', header: 'Discrepancy' },
 ];
 
-function StocktakingResultModal({ isModalOpen, setModalOpen, ref_id }) {
+function StocktakingResultModal({ isModalOpen, setModalOpen, id }) {
   const [locationGroups, setlocationGroups] = useState([]);
   const [locations, setLocations] = useState([]);
   useEffect(() => {
-    if (ref_id) {
-      fetchStocktakingDetails({ ref_id })
+    if (id) {
+      fetchStocktakingDetails({ id })
         .then((data) => {
           console.log(data);
           const locationGroups = data.list.reduce((groups, item) => {
@@ -52,8 +52,8 @@ function StocktakingResultModal({ isModalOpen, setModalOpen, ref_id }) {
           console.error('Failed to fetch stocktaking details:', error);
         });
     }
-  }, [ref_id]);
-  console.log(ref_id, locationGroups);
+  }, [id]);
+  console.log(id, locationGroups);
   return (
     <Modal
       open={isModalOpen}
@@ -80,58 +80,6 @@ function StocktakingResultModal({ isModalOpen, setModalOpen, ref_id }) {
                   headers={headers}
                   rows={locationGroups[location]}
                 />
-                {/* <DataTable
-                  rows={locationGroups[location]}
-                  headers={headers}
-                  render={({ headers, getHeaderProps }) => (
-                    <TableContainer>
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            {headers.map((header) => (
-                              <TableHeader
-                                key={header}
-                                {...getHeaderProps({ header })}>
-                                {header.header}
-                              </TableHeader>
-                            ))}
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {locationGroups[location].map((row, index) => {
-                            return (
-                              <TableRow key={index}>
-                                {headers.map((header) => {
-                                  if (header.key === 'discrepancy') {
-                                    return (
-                                      <TableCell key={header.key}>
-                                        <Tag
-                                          type={
-                                            parseInt(row[header.key]) < 0
-                                              ? 'red'
-                                              : parseInt(row[header.key]) === 0
-                                              ? 'blue'
-                                              : 'green'
-                                          }>
-                                          {row[header.key]}
-                                        </Tag>
-                                      </TableCell>
-                                    );
-                                  }
-                                  return (
-                                    <TableCell key={header.key}>
-                                      {row[header.key]}
-                                    </TableCell>
-                                  );
-                                })}
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  )}
-                /> */}
               </TabPanel>
             ))}
           </TabPanels>

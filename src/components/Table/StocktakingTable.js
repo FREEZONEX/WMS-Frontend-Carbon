@@ -111,7 +111,7 @@ function StocktakingTable({
                       <Link
                         onClick={() => {
                           setModalOpen(true);
-                          setSelectedId(row['ref_id']);
+                          setSelectedId(row['id']);
                         }}
                       >
                         View Detail
@@ -151,7 +151,7 @@ function StocktakingTable({
         }}
       />
       <StocktakingResultModal
-        ref_id={selectedId}
+        id={selectedId}
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
       ></StocktakingResultModal>
