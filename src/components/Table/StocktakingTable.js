@@ -125,7 +125,9 @@ function StocktakingTable({
                   return (
                     <StructuredListCell key={header.key}>
                       {row[header.key] &&
-                        moment().format(DateTimeFormat.shortDate)}
+                        moment(row[header.key]).format(
+                          DateTimeFormat.shortDate
+                        )}
                     </StructuredListCell>
                   );
                 }

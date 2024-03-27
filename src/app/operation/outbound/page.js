@@ -22,14 +22,13 @@ import {
   fetchWHSLNameMap,
 } from '@/actions/actions';
 import moment from 'moment';
-import { DateTimeFormat } from '@/utils/constants';
 
 const headers = [
   { key: 'outbound_id', header: 'ID' },
   { key: 'outbound_purchase_order_no', header: 'Purchase Order No.' },
   { key: 'outbound_supplier', header: 'Supplier' },
   { key: 'outbound_status', header: 'Status' },
-  { key: 'operator', header: 'Inbounder' },
+  { key: 'operator', header: 'Outbounder' },
   { key: 'material', header: 'Material' },
   { key: 'outbound_delivery_date', header: 'Delivery Date' },
   { key: 'create_time', header: 'Create Time' },
@@ -64,7 +63,7 @@ function Page() {
     }
     setFormValues((prevValues) => ({
       ...prevValues,
-      outbound_delivery_date: moment(e[0]).format(DateTimeFormat.shortDate),
+      outbound_delivery_date: moment(e[0]).format(),
     }));
   };
   const [isSearchClicked, setIsSearchClicked] = useState(false);
@@ -112,6 +111,7 @@ function Page() {
         console.error('Error fetching warehouse data:', error);
       });
   }, []);
+  console.log(formValue);
   return (
     <div>
       <Breadcrumb>
@@ -132,7 +132,8 @@ function Page() {
           href="/operation/outbound/create"
           isExpressive
           size="sm"
-          renderIcon={Add}>
+          renderIcon={Add}
+        >
           Create an Outbound List
         </Button>
       </div>
@@ -150,10 +151,9 @@ function Page() {
         <Column className="ml-0" sm={2} md={4} lg={4}>
           <DatePicker datePickerType="single" onChange={onDateChange}>
             <DatePickerInput
-              placeholder="mm/dd/yyyy"
+              placeholder="dd/mm/yyyy"
               labelText="Delivery date"
               id="outbound_delivery_date"
-              value={formValue.outbound_delivery_date}
             />
           </DatePicker>
         </Column>
@@ -186,7 +186,8 @@ function Page() {
             labelText="Status"
             value={formValue.outbound_status}
             onChange={onFormValueChange}
-            required>
+            required
+          >
             <SelectItem disabled hidden value="" text="Choose an option" />
             <SelectItem value="Done" text="Done" />
             <SelectItem value="Pending" text="Pending" />
@@ -231,7 +232,8 @@ function Page() {
             labelText="Outbound Type"
             value={formValue.type}
             onChange={onFormValueChange}
-            required>
+            required
+          >
             <SelectItem disabled hidden value="" text="Choose an option" />
             <SelectItem value="material inbound" text="Material Inbound" />
             <SelectItem value="product inbound" text="Product Inbound" />
@@ -241,7 +243,8 @@ function Page() {
         <Column className="ml-0" sm={1} md={1} lg={1}>
           <HeaderGlobalAction
             aria-label="Search"
-            onClick={() => setIsSearchClicked(true)}>
+            onClick={() => setIsSearchClicked(true)}
+          >
             <Search size={16} />
           </HeaderGlobalAction>
         </Column>
@@ -251,7 +254,8 @@ function Page() {
             onClick={() => {
               setIsSearchClicked(false);
               setFormValues(defaultFormValue);
-            }}>
+            }}
+          >
             <CloseOutline size={16} />
           </HeaderGlobalAction>
         </Column>

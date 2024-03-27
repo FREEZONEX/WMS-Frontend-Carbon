@@ -15,6 +15,8 @@ import './_table.scss';
 import OperationDetailModal from '../Modal/OperationDetailModal';
 import { fetchOutbound, fetchOutboundWithFilter } from '@/actions/actions';
 import { useRouter, useSearchParams } from 'next/navigation';
+import moment from 'moment';
+import { DateTimeFormat } from '@/utils/constants';
 
 function OutboundTable({
   headers,
@@ -190,7 +192,10 @@ function OutboundTable({
                 ) {
                   return (
                     <StructuredListCell key={header.key}>
-                      {row[header.key]?.split('T')[0]}
+                      {row[header.key] &&
+                        moment(row[header.key]).format(
+                          DateTimeFormat.shortDate
+                        )}
                     </StructuredListCell>
                   );
                 }

@@ -19,6 +19,8 @@ import {
   updateInboundRecord,
 } from '@/actions/actions';
 import { useRouter, usePathname } from 'next/navigation';
+import moment from 'moment';
+import { DateTimeFormat } from '@/utils/constants';
 
 const headers = [
   { key: 'name', header: 'Material Name' },
@@ -45,19 +47,18 @@ function InboundCreateForm({ id }) {
     purchase_order_no: '',
     supplier: '',
     delivery_date: '',
+    delivery_date_show: '',
   });
+  const [dateShow, setDateShow] = useState('');
   const onDateChange = (e) => {
-    const dateString = new Date(e[0]);
-    const formattedDate = `${dateString.getFullYear()}-${(
-      dateString.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, '0')}-${dateString.getDate().toString().padStart(2, '0')}`;
-    console.log(formattedDate);
+    if (!e) {
+      return;
+    }
     setFormValues((prevValues) => ({
       ...prevValues,
-      delivery_date: dateString,
+      delivery_date: moment(e[0]).format(),
     }));
+    setDateShow(moment(e[0]).format(DateTimeFormat.shortDate));
   };
 
   const onFormValueChange = (e) => {
@@ -80,6 +81,11 @@ function InboundCreateForm({ id }) {
             supplier: data.list[0].inbound_supplier,
             delivery_date: data.list[0].inbound_delivery_date,
           });
+          setDateShow(
+            moment(data.list[0].inbound_delivery_date).format(
+              DateTimeFormat.shortDate
+            )
+          );
           const taskList = data.list.map((item) => ({
             name: item.name,
             product_code: item.product_code,
@@ -204,9 +210,9 @@ function InboundCreateForm({ id }) {
             onChange={onDateChange}
           >
             <DatePickerInput
-              placeholder="mm/dd/yyyy"
+              placeholder="dd/mm/yyyy"
               labelText="Delivery Date"
-              // value={formValue.delivery_date}
+              value={dateShow}
             />
           </DatePicker>
         </Column>

@@ -19,6 +19,8 @@ import {
   fetchInboundWithFilter,
 } from '@/actions/actions';
 import { useRouter, useSearchParams } from 'next/navigation';
+import moment from 'moment';
+import { DateTimeFormat } from '@/utils/constants';
 
 function InboundTable({
   headers,
@@ -197,7 +199,10 @@ function InboundTable({
                 ) {
                   return (
                     <StructuredListCell key={header.key}>
-                      {row[header.key]?.split('T')[0]}
+                      {row[header.key] &&
+                        moment(row[header.key]).format(
+                          DateTimeFormat.shortDate
+                        )}
                     </StructuredListCell>
                   );
                 }
