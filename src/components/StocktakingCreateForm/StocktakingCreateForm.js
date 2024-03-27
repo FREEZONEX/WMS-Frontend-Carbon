@@ -20,14 +20,8 @@ import {
 import { Add, Close } from '@carbon/icons-react';
 import '@/components/MaterialCreateForm/_materialcreateform.scss';
 import MaterialSelectionTable from '../Table/MaterialSelectionTable';
-import {
-  fetchWarehouses,
-  fetchStorageLocationsByWId,
-  fetchMaterial,
-  addStocktakingRecord,
-} from '@/actions/actions';
+import { addStocktakingRecord } from '@/actions/actions';
 import { useRouter } from 'next/navigation';
-import TaskListTable from '../Table/TaskListTable';
 
 const tagColors = [
   'red',

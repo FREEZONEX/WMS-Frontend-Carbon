@@ -67,7 +67,7 @@ function StocktakingTable({
   }, [page, pageSize, refresh, filters, isSearchClicked]);
   const [sortKey, setSortKey] = useState('');
   const [sortDirection, setSortDirection] = useState('desc');
-  console.log(rows);
+
   return (
     <div>
       <StructuredListWrapper isCondensed>

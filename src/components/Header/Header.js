@@ -12,6 +12,7 @@ import {
   SideNavItems,
   SideNavLink,
   SwitcherDivider,
+  Toggle,
 } from '@carbon/react';
 
 import {
@@ -30,6 +31,7 @@ import {
 import { usePathname } from 'next/navigation';
 
 export const HeaderWSideNav = ({
+  setTheme,
   isSideNavExpanded,
   toggleSideNavExpanded,
 }) => {
@@ -109,7 +111,21 @@ export const HeaderWSideNav = ({
           </SideNavLink>
         </SideNavItems>
       </SideNav>
-      <HeaderGlobalBar>
+      <HeaderGlobalBar className="flex items-center">
+        <Toggle
+          labelA="Light"
+          labelB="Dark"
+          className="mr-[2rem]"
+          size="sm"
+          onToggle={(e) => {
+            console.log(e);
+            if (e) {
+              setTheme({ headerTheme: 'g100', contentTheme: 'g10' });
+            } else {
+              setTheme({ headerTheme: 'white', contentTheme: 'white' });
+            }
+          }}
+        />
         <HeaderGlobalAction aria-label="Settings">
           <Settings size={20} />
         </HeaderGlobalAction>
@@ -119,9 +135,10 @@ export const HeaderWSideNav = ({
         <HeaderGlobalAction aria-label="Info" tooltipAlignment="end">
           <Information size={20} />
         </HeaderGlobalAction>
-        <HeaderGlobalAction aria-label="Info" tooltipAlignment="end">
-          <Help size={20} />
-        </HeaderGlobalAction>
+        <HeaderGlobalAction
+          aria-label="Info"
+          tooltipAlignment="end"
+        ></HeaderGlobalAction>
       </HeaderGlobalBar>
     </Header>
   );

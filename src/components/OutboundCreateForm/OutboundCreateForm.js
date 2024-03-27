@@ -171,7 +171,6 @@ function OutboundCreateForm({ id }) {
 
     return shelfRecords;
   }
-  console.log(formValue);
   return (
     <div>
       <Grid className="p-0 mt-[50px] gap-[9px]">

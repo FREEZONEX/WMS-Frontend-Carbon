@@ -1,29 +1,40 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HeaderWSideNav } from '@/components/Header/Header';
-import { Content } from '@carbon/react';
+import { Content, Theme } from '@carbon/react';
 
 export function Providers({ children }) {
   const [isSideNavExpanded, setIsSideNavExpanded] = useState(true);
   function toggleSideNavExpanded() {
     setIsSideNavExpanded(!isSideNavExpanded);
   }
-  const contentStyle = {
-    marginTop: '2rem',
+  const [theme, setTheme] = useState({
+    headerTheme: 'g100',
+    contentTheme: 'g10',
+  });
+  useEffect(() => {
+    document.documentElement.dataset.carbonTheme = theme;
+  }, [theme]);
 
-    transition: isSideNavExpanded
-      ? 'margin-left 0.11s cubic-bezier(0.4, 0, 0.2, 1) 0s'
-      : 'margin-left 0.11s cubic-bezier(0.4, 0, 0.2, 1) 0s',
-    marginLeft: isSideNavExpanded ? '13rem' : '0',
-  };
   return (
-    <div>
-      <HeaderWSideNav
-        isSideNavExpanded={isSideNavExpanded}
-        toggleSideNavExpanded={toggleSideNavExpanded}
-      />
-      <Content style={contentStyle}>{children}</Content>
-    </div>
+    <>
+      <Theme theme={theme.headerTheme}>
+        <HeaderWSideNav
+          setTheme={setTheme}
+          isSideNavExpanded={isSideNavExpanded}
+          toggleSideNavExpanded={toggleSideNavExpanded}
+        />
+      </Theme>
+      <Theme theme={theme.contentTheme}>
+        <Content
+          className={`pt-20 h-screen transition-[margin-left] duration-110 ease-in-out ${
+            isSideNavExpanded ? 'ml-52' : 'ml-0'
+          }`}
+        >
+          {children}
+        </Content>
+      </Theme>
+    </>
   );
 }
