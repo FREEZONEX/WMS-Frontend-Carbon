@@ -19,8 +19,8 @@ import {
 } from '@/actions/actions';
 
 const headers = [
-  // { key: 'id', header: 'ID' },
-  { key: 'ref_id', header: 'Ref ID' },
+  { key: 'id', header: 'ID' },
+  // { key: 'ref_id', header: 'Ref ID' },
   { key: 'type', header: 'Type' },
   { key: 'operator', header: 'Operator' },
   { key: 'source', header: 'Source' },

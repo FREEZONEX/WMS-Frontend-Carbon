@@ -11,7 +11,7 @@ import {
 } from '@carbon/react';
 
 function WMSDataTable({ headers, rows }) {
-  console.log(rows);
+  console.log(rows, headers);
   return (
     <TableContainer>
       <Table>
@@ -46,9 +46,7 @@ function WMSDataTable({ headers, rows }) {
                   );
                 }
                 return (
-                  <TableCell key={header.key}>
-                    {row[header.key] ? row[header.key] : ''}
-                  </TableCell>
+                  <TableCell key={header.key}>{row[header.key]}</TableCell>
                 );
               })}
             </TableRow>
