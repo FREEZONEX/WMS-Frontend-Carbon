@@ -14,13 +14,15 @@ import {
   Grid,
   Column,
 } from '@carbon/react';
-import { Add, Search, CloseOutline } from '@carbon/icons-react';
+import { Add, Search, CloseOutline, Cost } from '@carbon/icons-react';
 import OutboundTable from '@/components/Table/OutboundTable';
 import {
   fetchWHNameMap,
   fetchSLNameMap,
   fetchWHSLNameMap,
 } from '@/actions/actions';
+import moment from 'moment';
+import { DateTimeFormat } from '@/utils/constants';
 
 const headers = [
   { key: 'outbound_id', header: 'ID' },
@@ -54,6 +56,15 @@ function Page() {
     setFormValues((prevValues) => ({
       ...prevValues,
       [id]: value,
+    }));
+  };
+  const onDateChange = (e) => {
+    if (!e) {
+      return;
+    }
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      outbound_delivery_date: moment(e[0]).format(DateTimeFormat.shortDate),
     }));
   };
   const [isSearchClicked, setIsSearchClicked] = useState(false);
@@ -121,8 +132,7 @@ function Page() {
           href="/operation/outbound/create"
           isExpressive
           size="sm"
-          renderIcon={Add}
-        >
+          renderIcon={Add}>
           Create an Outbound List
         </Button>
       </div>
@@ -138,13 +148,12 @@ function Page() {
           />
         </Column>
         <Column className="ml-0" sm={2} md={4} lg={4}>
-          <DatePicker datePickerType="single">
+          <DatePicker datePickerType="single" onChange={onDateChange}>
             <DatePickerInput
               placeholder="mm/dd/yyyy"
               labelText="Delivery date"
               id="outbound_delivery_date"
               value={formValue.outbound_delivery_date}
-              onChange={onFormValueChange}
             />
           </DatePicker>
         </Column>
@@ -177,8 +186,7 @@ function Page() {
             labelText="Status"
             value={formValue.outbound_status}
             onChange={onFormValueChange}
-            required
-          >
+            required>
             <SelectItem disabled hidden value="" text="Choose an option" />
             <SelectItem value="Done" text="Done" />
             <SelectItem value="Pending" text="Pending" />
@@ -223,8 +231,7 @@ function Page() {
             labelText="Outbound Type"
             value={formValue.type}
             onChange={onFormValueChange}
-            required
-          >
+            required>
             <SelectItem disabled hidden value="" text="Choose an option" />
             <SelectItem value="material inbound" text="Material Inbound" />
             <SelectItem value="product inbound" text="Product Inbound" />
@@ -234,8 +241,7 @@ function Page() {
         <Column className="ml-0" sm={1} md={1} lg={1}>
           <HeaderGlobalAction
             aria-label="Search"
-            onClick={() => setIsSearchClicked(true)}
-          >
+            onClick={() => setIsSearchClicked(true)}>
             <Search size={16} />
           </HeaderGlobalAction>
         </Column>
@@ -245,8 +251,7 @@ function Page() {
             onClick={() => {
               setIsSearchClicked(false);
               setFormValues(defaultFormValue);
-            }}
-          >
+            }}>
             <CloseOutline size={16} />
           </HeaderGlobalAction>
         </Column>
