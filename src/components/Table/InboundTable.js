@@ -41,7 +41,7 @@ function InboundTable({
   const [selectedId, setSelectedId] = useState('');
   const [rows, setRows] = useState([]);
   const [detailRows, setDetailRows] = useState({});
-  console.log(filters);
+
   useEffect(() => {
     if (isSearchClicked) {
       const filteredFormValue = Object.entries(filters).reduce(

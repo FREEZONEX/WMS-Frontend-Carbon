@@ -34,7 +34,7 @@ function OutboundTable({
 
   const [selectedId, setSelectedId] = useState('');
   const [rows, setRows] = useState([]);
-  console.log(rows);
+
   useEffect(() => {
     if (isSearchClicked) {
       const filteredFormValue = Object.entries(filters).reduce(
