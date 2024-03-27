@@ -21,6 +21,8 @@ import {
   addOutboundRecord,
 } from '@/actions/actions';
 import { useRouter, usePathname } from 'next/navigation';
+import moment from 'moment';
+import { DateTimeFormat } from '@/utils/constants';
 
 const headers = [
   { key: 'name', header: 'Material Name' },
@@ -45,22 +47,24 @@ function OutboundCreateForm({ id }) {
     supplier: '',
     delivery_date: '',
   });
+  const [dateShow, setDateShow] = useState('');
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
-    if (id === 'delivery_date') {
-      console.log('Original value:', value);
-      const formattedDate = new Date(value).toISOString();
-      console.log('Formatted date:', formattedDate);
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        [id]: formattedDate,
-      }));
-    } else {
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        [id]: value,
-      }));
+
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [id]: value,
+    }));
+  };
+  const onDateChange = (e) => {
+    if (!e) {
+      return;
     }
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      delivery_date: moment(e[0]).format(),
+    }));
+    setDateShow(moment(e[0]).format(DateTimeFormat.shortDate));
   };
   const [taskList, setTaskList] = useState([]);
 
@@ -77,6 +81,11 @@ function OutboundCreateForm({ id }) {
             supplier: data.list[0].outbound_supplier,
             delivery_date: data.list[0].outbound_delivery_date,
           });
+          setDateShow(
+            moment(data.list[0].outbound_delivery_date).format(
+              DateTimeFormat.shortDate
+            )
+          );
           const taskList = data.list.map((item) => ({
             name: item.name,
             product_code: item.product_code,
@@ -198,15 +207,13 @@ function OutboundCreateForm({ id }) {
         </Column>
 
         <Column className="ml-0" sm={2} md={4} lg={4}>
-          <DatePicker datePickerType="single">
+          <DatePicker datePickerType="single" onChange={onDateChange}>
             <DatePickerInput
-              placeholder="mm/dd/yyyy"
+              placeholder="dd/mm/yyyy"
               labelText="Delivery Date"
               id="delivery_date"
-              onChange={onFormValueChange}
-              value={formValue.delivery_date}
+              value={dateShow}
             />
-            {console.log('Delivery date in render:', formValue.delivery_date)}
           </DatePicker>
         </Column>
         <Column sm={2} md={4} lg={4}>

@@ -21,6 +21,7 @@ import {
   fetchWHNameMap,
   fetchWHSLNameMap,
 } from '@/actions/actions';
+import moment from 'moment';
 
 const headers = [
   { key: 'inbound_id', header: 'ID' },
@@ -54,6 +55,15 @@ function Page() {
     setFormValues((prevValues) => ({
       ...prevValues,
       [id]: value,
+    }));
+  };
+  const onDateChange = (e) => {
+    if (!e) {
+      return;
+    }
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      inbound_delivery_date: moment(e[0]).format(),
     }));
   };
   const [isSearchClicked, setIsSearchClicked] = useState(false);
@@ -142,13 +152,11 @@ function Page() {
           />
         </Column>
         <Column className="ml-0" sm={2} md={4} lg={4}>
-          <DatePicker datePickerType="single">
+          <DatePicker datePickerType="single" onChange={onDateChange}>
             <DatePickerInput
-              placeholder="mm/dd/yyyy"
+              placeholder="dd/mm/yyyy"
               labelText="Delivery date"
               id="inbound_delivery_date"
-              value={formValue.inbound_delivery_date}
-              onChange={onFormValueChange}
             />
           </DatePicker>
         </Column>
