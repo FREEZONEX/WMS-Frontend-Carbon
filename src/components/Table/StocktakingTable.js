@@ -21,6 +21,8 @@ import {
   fetchStocktakingWithFilter,
 } from '@/actions/actions';
 import StocktakingResultModal from '../Modal/StocktakingResultModal';
+import moment from 'moment';
+import { DateTimeFormat } from '@/utils/constants';
 function StocktakingTable({
   headers,
   refresh,
@@ -122,7 +124,8 @@ function StocktakingTable({
                 if (header.key === 'create_time') {
                   return (
                     <StructuredListCell key={header.key}>
-                      {row[header.key]?.split('T')[0]}
+                      {row[header.key] &&
+                        moment().format(DateTimeFormat.shortDate)}
                     </StructuredListCell>
                   );
                 }
