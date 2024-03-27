@@ -10,8 +10,8 @@ export function Providers({ children }) {
     setIsSideNavExpanded(!isSideNavExpanded);
   }
   const [theme, setTheme] = useState({
-    headerTheme: 'g100',
-    contentTheme: 'g10',
+    headerTheme: 'white',
+    contentTheme: 'white',
   });
   useEffect(() => {
     document.documentElement.dataset.carbonTheme = theme;
