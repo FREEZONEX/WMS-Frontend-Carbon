@@ -22,7 +22,7 @@ import {
 } from '@/actions/actions';
 import StocktakingResultModal from '../Modal/StocktakingResultModal';
 import moment from 'moment';
-import { DateTimeFomart } from '@/utils/constants';
+import { DateTimeFormat } from '@/utils/constants';
 function StocktakingTable({
   headers,
   refresh,
@@ -125,7 +125,7 @@ function StocktakingTable({
                   return (
                     <StructuredListCell key={header.key}>
                       {row[header.key] &&
-                        moment().format(DateTimeFomart.shortDate)}
+                        moment().format(DateTimeFormat.shortDate)}
                     </StructuredListCell>
                   );
                 }
