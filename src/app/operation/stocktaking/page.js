@@ -98,10 +98,14 @@ function Page() {
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href="/">Home</a>
+          <a href={`${process.env.PATH_PREFIX}/`}>Home</a>
         </BreadcrumbItem>
-        <BreadcrumbItem href="/operation/inbound">Operation</BreadcrumbItem>
-        <BreadcrumbItem href="/operation/stocktaking">
+        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/operation/inbound`}>
+          Operation
+        </BreadcrumbItem>
+        <BreadcrumbItem
+          href={`${process.env.PATH_PREFIX}/operation/stocktaking`}
+        >
           Stocktaking
         </BreadcrumbItem>
       </Breadcrumb>
@@ -115,7 +119,7 @@ function Page() {
           </Heading>
         </div>
         <Button
-          href="/operation/stocktaking/create"
+          href={`${process.env.PATH_PREFIX}/operation/stocktaking/create`}
           isExpressive
           size="sm"
           renderIcon={Add}

@@ -8,13 +8,19 @@ function page() {
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href="/">Home</a>
+          <a href={`${process.env.PATH_PREFIX}/`}>Home</a>
         </BreadcrumbItem>
-        <BreadcrumbItem href="/operation/inbound">Operation</BreadcrumbItem>
-        <BreadcrumbItem href="/operation/stocktaking">
+        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/operation/inbound`}>
+          Operation
+        </BreadcrumbItem>
+        <BreadcrumbItem
+          href={`${process.env.PATH_PREFIX}/operation/stocktaking`}
+        >
           Stocktaking
         </BreadcrumbItem>
-        <BreadcrumbItem href="/operation/stocktaking/create">
+        <BreadcrumbItem
+          href={`${process.env.PATH_PREFIX}/operation/stocktaking/create`}
+        >
           Create
         </BreadcrumbItem>
       </Breadcrumb>

@@ -37,7 +37,7 @@ export const HeaderWSideNav = ({
 }) => {
   const pathname = usePathname();
   const isCurrentPath = (path) => {
-    return path === process.env.PATH_PREFIX + pathname;
+    return process.env.PATH_PREFIX + path === pathname;
   };
   return (
     <Header aria-label="SUPCON WMS">
