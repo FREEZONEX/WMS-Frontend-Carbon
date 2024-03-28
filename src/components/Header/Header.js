@@ -31,6 +31,7 @@ import {
 import { usePathname } from 'next/navigation';
 
 export const HeaderWSideNav = ({
+  theme,
   setTheme,
   isSideNavExpanded,
   toggleSideNavExpanded,
@@ -117,6 +118,7 @@ export const HeaderWSideNav = ({
           labelB="Dark"
           className="mr-[2rem]"
           size="sm"
+          toggled={theme.headerTheme === 'g100'}
           onToggle={(e) => {
             console.log(e);
             if (e) {

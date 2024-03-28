@@ -9,11 +9,15 @@ export function Providers({ children }) {
   function toggleSideNavExpanded() {
     setIsSideNavExpanded(!isSideNavExpanded);
   }
-  const [theme, setTheme] = useState({
-    headerTheme: 'white',
-    contentTheme: 'white',
+  const [theme, setTheme] = useState(() => {
+    const storedTheme = localStorage.getItem('theme');
+    return storedTheme
+      ? JSON.parse(storedTheme)
+      : { headerTheme: 'white', contentTheme: 'white' };
   });
+
   useEffect(() => {
+    localStorage.setItem('theme', JSON.stringify(theme));
     document.documentElement.dataset.carbonTheme = theme;
   }, [theme]);
 
@@ -21,6 +25,7 @@ export function Providers({ children }) {
     <>
       <Theme theme={theme.headerTheme}>
         <HeaderWSideNav
+          theme={theme}
           setTheme={setTheme}
           isSideNavExpanded={isSideNavExpanded}
           toggleSideNavExpanded={toggleSideNavExpanded}
