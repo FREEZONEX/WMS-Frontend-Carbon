@@ -5,7 +5,7 @@ import StocktakingCreateForm from '@/components/StocktakingCreateForm/Stocktakin
 import { useRouter } from 'next/navigation';
 
 function Page() {
-  router = useRouter();
+  const router = useRouter();
   return (
     <div>
       <Breadcrumb>
