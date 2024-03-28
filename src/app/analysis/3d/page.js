@@ -1,16 +1,35 @@
 'use client';
 import React from 'react';
 import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
-
-function page() {
+import { useRouter } from 'next/navigation';
+function Page() {
+  const router = useRouter();
   return (
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href="/">Home</a>
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
-        <BreadcrumbItem href="/analysis">Analysis</BreadcrumbItem>
-        <BreadcrumbItem href="/analysis/3d">3D-Modeling</BreadcrumbItem>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/analysis`);
+          }}
+        >
+          Analysis
+        </BreadcrumbItem>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/analysis/3d`);
+          }}
+        >
+          3D-Modeling
+        </BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
@@ -36,4 +55,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

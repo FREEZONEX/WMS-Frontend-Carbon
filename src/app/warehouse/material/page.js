@@ -10,6 +10,7 @@ import {
 } from '@carbon/react';
 import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import MaterialTable from '@/components/Table/MaterialTable';
+import { useRouter } from 'next/navigation';
 
 const headers = [
   { key: 'id', header: 'ID' },
@@ -24,6 +25,7 @@ const headers = [
 ];
 
 function Page() {
+  const router = useRouter();
   const defaultFormValue = {
     product_code: '',
     name: '',
@@ -44,12 +46,26 @@ function Page() {
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href={`${process.env.PATH_PREFIX}/`}>Home</a>
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
-        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/warehouse`}>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/warehouse`);
+          }}
+        >
           Warehouse
         </BreadcrumbItem>
-        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/warehouse/material`}>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/warehouse/material`);
+          }}
+        >
           Material
         </BreadcrumbItem>
       </Breadcrumb>
@@ -62,7 +78,9 @@ function Page() {
         </div>
         <div>
           <Button
-            href={`${process.env.PATH_PREFIX}/warehouse/material/rfid`}
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/warehouse/material/rfid`);
+            }}
             className="mr-2 bg-[#6929C4]"
             isExpressive
             size="sm"
@@ -71,7 +89,11 @@ function Page() {
             RFID Tag
           </Button>
           <Button
-            href={`${process.env.PATH_PREFIX}/warehouse/material/create`}
+            onClick={() => {
+              router.push(
+                `${process.env.PATH_PREFIX}/warehouse/material/create`
+              );
+            }}
             isExpressive
             size="sm"
             renderIcon={Add}

@@ -16,11 +16,7 @@ import {
 } from '@carbon/react';
 import { Add, Search, CloseOutline, Cost } from '@carbon/icons-react';
 import OutboundTable from '@/components/Table/OutboundTable';
-import {
-  fetchWHNameMap,
-  fetchSLNameMap,
-  fetchWHSLNameMap,
-} from '@/actions/actions';
+import { useRouter } from 'next/navigation';
 import moment from 'moment';
 
 const headers = [
@@ -37,6 +33,7 @@ const headers = [
 ];
 
 function Page() {
+  const router = useRouter();
   const [refresh, setRefresh] = useState({});
   const defaultFormValue = {
     outbound_id: '',
@@ -73,12 +70,26 @@ function Page() {
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href={`${process.env.PATH_PREFIX}/`}>Home</a>
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
-        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/operation/inbound`}>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+          }}
+        >
           Operation
         </BreadcrumbItem>
-        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/operation/outbound`}>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/outbound`);
+          }}
+        >
           Outbound
         </BreadcrumbItem>
       </Breadcrumb>
@@ -90,7 +101,9 @@ function Page() {
           </Heading>
         </div>
         <Button
-          href={`${process.env.PATH_PREFIX}/operation/outbound/create`}
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/outbound/create`);
+          }}
           isExpressive
           size="sm"
           renderIcon={Add}

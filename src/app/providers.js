@@ -1,28 +1,21 @@
 'use client';
 
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { HeaderWSideNav } from '@/components/Header/Header';
 import { Content, Theme } from '@carbon/react';
-import { getInitialTheme, setThemeCookie } from '../utils/theme';
+import { ThemeContext } from '@/utils/ThemeContext';
 
 export default function Providers({ children }) {
   const [isSideNavExpanded, setIsSideNavExpanded] = useState(true);
   function toggleSideNavExpanded() {
     setIsSideNavExpanded(!isSideNavExpanded);
   }
-  const [theme, setTheme] = useState(getInitialTheme());
-
-  useLayoutEffect(() => {
-    setThemeCookie(theme);
-    document.documentElement.dataset.carbonTheme = theme;
-  }, [theme]);
+  const { theme, setTheme } = useContext(ThemeContext);
 
   return (
     <>
       <Theme theme={theme.headerTheme}>
         <HeaderWSideNav
-          theme={theme}
-          setTheme={setTheme}
           isSideNavExpanded={isSideNavExpanded}
           toggleSideNavExpanded={toggleSideNavExpanded}
         />

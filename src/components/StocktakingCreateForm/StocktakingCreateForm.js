@@ -440,7 +440,9 @@ function StocktakingCreateForm() {
         <Button
           size="sm"
           kind="tertiary"
-          href={`${process.env.PATH_PREFIX}/operation/stocktaking`}
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/stocktaking`);
+          }}
         >
           Cancel
         </Button>

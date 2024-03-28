@@ -16,11 +16,7 @@ import {
 } from '@carbon/react';
 import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import InboundTable from '@/components/Table/InboundTable';
-import {
-  fetchSLNameMap,
-  fetchWHNameMap,
-  fetchWHSLNameMap,
-} from '@/actions/actions';
+import { useRouter } from 'next/navigation';
 import moment from 'moment';
 
 const headers = [
@@ -37,6 +33,7 @@ const headers = [
 ];
 
 function Page() {
+  const router = useRouter();
   const [refresh, setRefresh] = useState({});
   const defaultFormValue = {
     inbound_id: '',
@@ -117,12 +114,26 @@ function Page() {
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href={`${process.env.PATH_PREFIX}/`}>Home</a>
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
-        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/operation/inbound`}>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+          }}
+        >
           Operation
         </BreadcrumbItem>
-        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/operation/inbound`}>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+          }}
+        >
           Inbound
         </BreadcrumbItem>
       </Breadcrumb>
@@ -134,7 +145,10 @@ function Page() {
           </Heading>
         </div>
         <Button
-          href={`${process.env.PATH_PREFIX}/operation/inbound/create`}
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/inbound/create`);
+          }}
+          className="cursor-pointer"
           isExpressive
           size="sm"
           renderIcon={Add}
