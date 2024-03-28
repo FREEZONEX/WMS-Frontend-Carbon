@@ -47,52 +47,54 @@ function Page() {
       [id]: value,
     }));
   };
-  useEffect(() => {
-    fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
-      .then((res) => {
-        const map = res.list.reduce((acc, curr) => {
-          acc[curr.id] = curr.name;
-          return acc;
-        }, {});
+  // useEffect(() => {
+  //   if (typeof window !== undefined) {
+  //     fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
+  //       .then((res) => {
+  //         const map = res.list.reduce((acc, curr) => {
+  //           acc[curr.id] = curr.name;
+  //           return acc;
+  //         }, {});
 
-        localStorage.setItem('whNameMap', JSON.stringify(map));
-      })
-      .catch((error) => {
-        console.error('Failed to fetch WH name map:', error);
-      });
-    fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
-      .then((res) => {
-        const map = res.list.reduce((acc, curr) => {
-          acc[curr.id] = curr.name;
-          return acc;
-        }, {});
+  //         localStorage.setItem('whNameMap', JSON.stringify(map));
+  //       })
+  //       .catch((error) => {
+  //         console.error('Failed to fetch WH name map:', error);
+  //       });
+  //     fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
+  //       .then((res) => {
+  //         const map = res.list.reduce((acc, curr) => {
+  //           acc[curr.id] = curr.name;
+  //           return acc;
+  //         }, {});
 
-        localStorage.setItem('slNameMap', JSON.stringify(map));
-      })
-      .catch((error) => {
-        console.error('Failed to fetch SL name map:', error);
-      });
-    fetchWHSLNameMap({ pageNum: 1, pageSize: 999999 })
-      .then((res) => {
-        const warehouseListString = JSON.stringify(res.list);
-        localStorage.setItem('whslNameMap', warehouseListString);
-        const locationMap = new Map();
+  //         localStorage.setItem('slNameMap', JSON.stringify(map));
+  //       })
+  //       .catch((error) => {
+  //         console.error('Failed to fetch SL name map:', error);
+  //       });
+  //     fetchWHSLNameMap({ pageNum: 1, pageSize: 999999 })
+  //       .then((res) => {
+  //         const warehouseListString = JSON.stringify(res.list);
+  //         localStorage.setItem('whslNameMap', warehouseListString);
+  //         const locationMap = new Map();
 
-        res.list.forEach((warehouse) => {
-          warehouse.warehouseNamemap.forEach((location) => {
-            locationMap.set(location.id, warehouse.id);
-          });
-        });
+  //         res.list.forEach((warehouse) => {
+  //           warehouse.warehouseNamemap.forEach((location) => {
+  //             locationMap.set(location.id, warehouse.id);
+  //           });
+  //         });
 
-        const locationMapString = JSON.stringify(
-          Array.from(locationMap.entries())
-        );
-        localStorage.setItem('location', locationMapString);
-      })
-      .catch((error) => {
-        console.error('Error fetching warehouse data:', error);
-      });
-  }, []);
+  //         const locationMapString = JSON.stringify(
+  //           Array.from(locationMap.entries())
+  //         );
+  //         localStorage.setItem('location', locationMapString);
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error fetching warehouse data:', error);
+  //       });
+  //   }
+  // }, []);
 
   return (
     <div>

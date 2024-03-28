@@ -118,6 +118,7 @@ export const HeaderWSideNav = ({
           labelB="Dark"
           className="mr-[2rem]"
           size="sm"
+          id="theme-toggle"
           toggled={theme.headerTheme === 'g100'}
           onToggle={(e) => {
             console.log(e);

@@ -67,50 +67,7 @@ function Page() {
     }));
   };
   const [isSearchClicked, setIsSearchClicked] = useState(false);
-  useEffect(() => {
-    fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
-      .then((res) => {
-        const map = res.list.reduce((acc, curr) => {
-          acc[curr.id] = curr.name;
-          return acc;
-        }, {});
 
-        localStorage.setItem('whNameMap', JSON.stringify(map));
-      })
-      .catch((error) => {
-        console.error('Failed to fetch WH name map:', error);
-      });
-    fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
-      .then((res) => {
-        const map = res.list.reduce((acc, curr) => {
-          acc[curr.id] = curr.name;
-          return acc;
-        }, {});
-
-        localStorage.setItem('slNameMap', JSON.stringify(map));
-      })
-      .catch((error) => {
-        console.error('Failed to fetch SL name map:', error);
-      });
-    fetchWHSLNameMap({ pageNum: 1, pageSize: 999999 })
-      .then((res) => {
-        const locationMap = new Map();
-
-        res.list.forEach((warehouse) => {
-          warehouse.warehouseNamemap.forEach((location) => {
-            locationMap.set(location.id, warehouse.id);
-          });
-        });
-
-        const locationMapString = JSON.stringify(
-          Array.from(locationMap.entries())
-        );
-        localStorage.setItem('location', locationMapString);
-      })
-      .catch((error) => {
-        console.error('Error fetching warehouse data:', error);
-      });
-  }, []);
   console.log(formValue);
   return (
     <div>

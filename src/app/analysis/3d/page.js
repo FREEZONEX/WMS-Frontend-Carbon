@@ -29,7 +29,7 @@ function page() {
           height="1120.5"
           src="https://app.powerbi.com/view?r=eyJrIjoiMzM1MjM5MmUtODY2OC00MzZiLWIyZDQtOTdiYmEwMzdlNTQwIiwidCI6ImFhNGU1ODM1LWU3YjctNDQ3NC1hZTE1LWQ3OTA0OTYwZDY2NCIsImMiOjEwfQ%3D%3D"
           frameborder="0"
-          allowFullScreen="true"
+          allowFullScreen={true}
         ></iframe>
       </div>
     </div>

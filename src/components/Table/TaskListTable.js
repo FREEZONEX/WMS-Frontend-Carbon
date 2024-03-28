@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableHead,
@@ -15,7 +15,12 @@ import {
   Checkbox,
 } from '@carbon/react';
 import { Add, Subtract, CheckmarkFilled } from '@carbon/icons-react';
-import { fetchMaterial } from '@/actions/actions';
+import {
+  fetchMaterial,
+  fetchWHNameMap,
+  fetchSLNameMap,
+  fetchWHSLNameMap,
+} from '@/actions/actions';
 import './_table.scss';
 import { usePathname } from 'next/navigation';
 
@@ -32,9 +37,52 @@ function TaskListTable({ headers, rows, setRows }) {
   const [loadingRows, setLoadingRows] = useState([]);
   const [successRows, setSuccessRows] = useState([]);
   const [selectedRows, setSelectedRows] = useState([0]);
-  const whNameMap = JSON.parse(localStorage.getItem('whNameMap'));
-  const slNameMap = JSON.parse(localStorage.getItem('slNameMap'));
-  const whslMap = JSON.parse(localStorage.getItem('location'));
+
+  const [whNameMap, setWhNameMap] = useState({});
+  const [slNameMap, setSlNameMap] = useState({});
+  const [whslMap, setWhslMap] = useState({});
+  useEffect(() => {
+    fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const map = res.list.reduce((acc, curr) => {
+          acc[curr.id] = curr.name;
+          return acc;
+        }, {});
+
+        setWhNameMap(map);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch WH name map:', error);
+      });
+    fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const map = res.list.reduce((acc, curr) => {
+          acc[curr.id] = curr.name;
+          return acc;
+        }, {});
+
+        setSlNameMap(map);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch SL name map:', error);
+      });
+    fetchWHSLNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const locationMap = new Map();
+
+        res.list.forEach((warehouse) => {
+          warehouse.warehouseNamemap.forEach((location) => {
+            locationMap.set(location.id, warehouse.id);
+          });
+        });
+
+        setWhslMap(locationMap);
+      })
+      .catch((error) => {
+        console.error('Error fetching warehouse data:', error);
+      });
+  }, []);
+
   const pathName = usePathname();
   const checkIsEdit = () => {
     if (
@@ -110,9 +158,7 @@ function TaskListTable({ headers, rows, setRows }) {
           if (field === 'expact_stock_location_id') {
             const slName = slNameMap[e.target.value] || '';
             if (slName !== '') {
-              const locationMap = new Map(whslMap);
-              const getWarehouseId = (locationId) =>
-                locationMap.get(locationId);
+              const getWarehouseId = (locationId) => whslMap.get(locationId);
               const wh_id = getWarehouseId(e.target.value);
               const wh_name = whNameMap[wh_id];
               console.log(wh_id, wh_name);
@@ -166,6 +212,9 @@ function TaskListTable({ headers, rows, setRows }) {
     }
   };
   console.log(rows);
+  if (!whNameMap || !slNameMap || !whslMap) {
+    return <div>Loading...</div>;
+  }
   return (
     <TableContainer>
       <TableToolbar>
@@ -214,6 +263,7 @@ function TaskListTable({ headers, rows, setRows }) {
                     selectedRows.length === rows.length &&
                     selectedRows.length != 0
                   }
+                  labelText=""
                   onChange={(checked) =>
                     setSelectedRows(checked ? rows.map((row, i) => i) : [])
                   }
@@ -241,6 +291,7 @@ function TaskListTable({ headers, rows, setRows }) {
                 <TableCell>
                   <Checkbox
                     checked={selectedRows.includes(i)}
+                    labelText=""
                     onChange={(checked) => {
                       setSelectedRows((prevSelectedRows) =>
                         checked

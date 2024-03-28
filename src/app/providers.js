@@ -1,23 +1,19 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { HeaderWSideNav } from '@/components/Header/Header';
 import { Content, Theme } from '@carbon/react';
+import { getInitialTheme, setThemeCookie } from '../utils/theme';
 
-export function Providers({ children }) {
+export default function Providers({ children }) {
   const [isSideNavExpanded, setIsSideNavExpanded] = useState(true);
   function toggleSideNavExpanded() {
     setIsSideNavExpanded(!isSideNavExpanded);
   }
-  const [theme, setTheme] = useState(() => {
-    const storedTheme = localStorage.getItem('theme');
-    return storedTheme
-      ? JSON.parse(storedTheme)
-      : { headerTheme: 'white', contentTheme: 'white' };
-  });
+  const [theme, setTheme] = useState(getInitialTheme());
 
-  useEffect(() => {
-    localStorage.setItem('theme', JSON.stringify(theme));
+  useLayoutEffect(() => {
+    setThemeCookie(theme);
     document.documentElement.dataset.carbonTheme = theme;
   }, [theme]);
 

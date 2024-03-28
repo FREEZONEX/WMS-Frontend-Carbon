@@ -11,11 +11,9 @@ import {
   TextInput,
   InlineNotification,
 } from '@carbon/react';
-import { Add, Close } from '@carbon/icons-react';
 import '@/components/MaterialCreateForm/_materialcreateform.scss';
 import TaskListTable from '../Table/TaskListTable';
 import {
-  fetchWarehouses,
   updateOutboundRecord,
   fetchOutboundDetails,
   addOutboundRecord,
