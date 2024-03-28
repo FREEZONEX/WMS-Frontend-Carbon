@@ -11,7 +11,7 @@ function Page() {
         <BreadcrumbItem>
           <a
             onClick={() => {
-              router.push(`${process.env.PATH_PREFIX}/`);
+              router.push(`${process.env.PATH_PREFIX}/home`);
             }}
           >
             Home

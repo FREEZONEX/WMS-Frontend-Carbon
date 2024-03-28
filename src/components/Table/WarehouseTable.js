@@ -16,7 +16,6 @@ import './_table.scss';
 import ShelfLocationModal from '../Modal/ShelfLocationModal';
 import {
   deleteWarehouse,
-  fetchStorageLocationsByWId,
   fetchWarehouses,
   fetchWarehousesWithFilters,
 } from '@/actions/actions';

@@ -54,7 +54,7 @@ export const HeaderWSideNav = ({
       <HeaderName
         prefix="SUPCON"
         onClick={() => {
-          router.push(`${process.env.PATH_PREFIX}/`);
+          router.push(`${process.env.PATH_PREFIX}/home`);
         }}
         className="cursor-pointer"
       >
