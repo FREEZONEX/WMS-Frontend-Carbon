@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Grid,
   Column,
@@ -20,7 +20,12 @@ import {
 import { Add, Close } from '@carbon/icons-react';
 import '@/components/MaterialCreateForm/_materialcreateform.scss';
 import MaterialSelectionTable from '../Table/MaterialSelectionTable';
-import { addStocktakingRecord } from '@/actions/actions';
+import {
+  addStocktakingRecord,
+  fetchWHNameMap,
+  fetchSLNameMap,
+  fetchWHSLNameMap,
+} from '@/actions/actions';
 import { useRouter } from 'next/navigation';
 
 const tagColors = [
@@ -64,9 +69,43 @@ function StocktakingCreateForm() {
     }));
   };
   const [taskList, setTaskList] = useState([]);
-  const whNameMap = JSON.parse(localStorage.getItem('whNameMap'));
-  const slNameMap = JSON.parse(localStorage.getItem('slNameMap'));
-  const whslNameMap = JSON.parse(localStorage.getItem('whslNameMap'));
+  const [whNameMap, setWhNameMap] = useState({});
+  const [slNameMap, setSlNameMap] = useState({});
+  const [whslNameMap, setWhslNameMap] = useState([]);
+  useEffect(() => {
+    fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const map = res.list.reduce((acc, curr) => {
+          acc[curr.id] = curr.name;
+          return acc;
+        }, {});
+
+        setWhNameMap(map);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch WH name map:', error);
+      });
+    fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const map = res.list.reduce((acc, curr) => {
+          acc[curr.id] = curr.name;
+          return acc;
+        }, {});
+
+        setSlNameMap(map);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch SL name map:', error);
+      });
+    fetchWHSLNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        setWhslNameMap(res.list);
+      })
+      .catch((error) => {
+        console.error('Error fetching warehouse data:', error);
+      });
+  }, []);
+
   const warehouseOptions = Object.entries(whNameMap).map(([id, name]) => ({
     id,
     name,
@@ -198,7 +237,9 @@ function StocktakingCreateForm() {
 
     return shelfRecords;
   }
-
+  if (!whNameMap || !slNameMap || !whslNameMap) {
+    return <div>Loading...</div>;
+  }
   return (
     <div>
       <div className=" mt-12">
