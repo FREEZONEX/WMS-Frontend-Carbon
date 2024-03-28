@@ -253,7 +253,11 @@ function InboundCreateForm({ id }) {
         <Button size="sm" onClick={handleSubmit}>
           Submit
         </Button>
-        <Button size="sm" kind="tertiary" href="/operation/inbound">
+        <Button
+          size="sm"
+          kind="tertiary"
+          href={`${process.env.PATH_PREFIX}/operation/inbound/create`}
+        >
           Cancel
         </Button>
       </div>

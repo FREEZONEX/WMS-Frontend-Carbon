@@ -253,7 +253,11 @@ function OutboundCreateForm({ id }) {
         <Button size="sm" onClick={handleSubmit}>
           Submit
         </Button>
-        <Button size="sm" kind="tertiary" href="/operation/outbound">
+        <Button
+          size="sm"
+          kind="tertiary"
+          href={`${process.env.PATH_PREFIX}/operation/outbound`}
+        >
           Cancel
         </Button>
       </div>

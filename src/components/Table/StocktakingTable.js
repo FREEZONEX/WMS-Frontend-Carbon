@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import {
-  HeaderGlobalAction,
   StructuredListWrapper,
   StructuredListHead,
   StructuredListRow,
@@ -10,19 +9,16 @@ import {
   Tag,
   Pagination,
   Link,
-  Button,
 } from '@carbon/react';
-import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
 import {
-  deleteStocktaking,
   fetchStocktaking,
-  fetchStocktakingDetails,
   fetchStocktakingWithFilter,
 } from '@/actions/actions';
 import StocktakingResultModal from '../Modal/StocktakingResultModal';
 import moment from 'moment';
 import { DateTimeFormat } from '@/utils/constants';
+
 function StocktakingTable({
   headers,
   refresh,

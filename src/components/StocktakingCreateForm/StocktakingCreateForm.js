@@ -115,15 +115,6 @@ function StocktakingCreateForm() {
     value,
     checked
   ) => {
-    console.log(
-      'watch heere',
-      taskIndex,
-      materialId,
-      materialName,
-      field,
-      value,
-      checked
-    );
     setTaskList((prevTaskList) => {
       const updatedTaskList = [...prevTaskList];
       if (checked) {
@@ -187,7 +178,7 @@ function StocktakingCreateForm() {
       setFieldValidation({ sourceInvalid: false, typeInvalid: false });
       setFormValues({ type: '', source: '', status: '', note: '' });
       setTaskList([]);
-      router.push('/operation/stocktaking');
+      router.push(`${process.env.PATH_PREFIX}/operation/stocktaking`);
     });
   };
 
@@ -405,7 +396,11 @@ function StocktakingCreateForm() {
         <Button size="sm" onClick={handleSubmit}>
           Submit
         </Button>
-        <Button size="sm" kind="tertiary" href="/operation/stocktaking">
+        <Button
+          size="sm"
+          kind="tertiary"
+          href={`${process.env.PATH_PREFIX}/operation/stocktaking`}
+        >
           Cancel
         </Button>
       </div>
