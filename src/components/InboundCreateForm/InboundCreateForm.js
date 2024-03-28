@@ -256,7 +256,9 @@ function InboundCreateForm({ id }) {
         <Button
           size="sm"
           kind="tertiary"
-          href={`${process.env.PATH_PREFIX}/operation/inbound/create`}
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+          }}
         >
           Cancel
         </Button>

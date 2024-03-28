@@ -1,5 +1,5 @@
 'use client';
-
+import React, { useContext } from 'react';
 import {
   Header,
   HeaderContainer,
@@ -29,14 +29,16 @@ import {
   WatsonHealth3DCursor,
 } from '@carbon/icons-react';
 import { usePathname } from 'next/navigation';
+import { ThemeContext } from '@/utils/ThemeContext';
+import { useRouter } from 'next/navigation';
 
 export const HeaderWSideNav = ({
-  theme,
-  setTheme,
   isSideNavExpanded,
   toggleSideNavExpanded,
 }) => {
+  const router = useRouter();
   const pathname = usePathname();
+  const { theme, setTheme } = useContext(ThemeContext);
   const isCurrentPath = (path) => {
     return process.env.PATH_PREFIX + path === pathname;
   };
@@ -48,19 +50,22 @@ export const HeaderWSideNav = ({
         onClick={toggleSideNavExpanded}
         isActive={isSideNavExpanded}
         aria-expanded={isSideNavExpanded}
-      />
-      <HeaderName href={`${process.env.PATH_PREFIX}/`} prefix="SUPCON">
-        WMS
-      </HeaderName>
-      <SideNav
-        aria-label="Side navigation"
-        expanded={isSideNavExpanded}
-        onSideNavBlur={toggleSideNavExpanded}
-        href="#main-content"
+      />{' '}
+      <a
+        onClick={() => {
+          router.push(`${process.env.PATH_PREFIX}/`);
+        }}
+        className="cursor-pointer"
       >
+        <HeaderName prefix="SUPCON">WMS</HeaderName>
+      </a>
+      <SideNav aria-label="Side navigation" expanded={isSideNavExpanded}>
         <SideNavItems>
           <SideNavLink
-            href={`${process.env.PATH_PREFIX}/warehouse`}
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/warehouse`);
+            }}
+            className="cursor-pointer"
             isActive={isCurrentPath('/warehouse')}
           >
             <IbmDb2Warehouse className="mr-[1.5rem]" />
@@ -68,7 +73,10 @@ export const HeaderWSideNav = ({
           </SideNavLink>
           <SideNavLink
             renderIcon={Product}
-            href={`${process.env.PATH_PREFIX}/warehouse/material`}
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/warehouse/material`);
+            }}
+            className="cursor-pointer"
             isActive={isCurrentPath('/warehouse/material')}
           >
             Material
@@ -76,21 +84,30 @@ export const HeaderWSideNav = ({
           <SwitcherDivider />
           <SideNavLink
             renderIcon={PortInput}
-            href={`${process.env.PATH_PREFIX}/operation/inbound`}
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+            }}
+            className="cursor-pointer"
             isActive={isCurrentPath('/operation/inbound')}
           >
             Inbound
           </SideNavLink>
           <SideNavLink
             renderIcon={PortOutput}
-            href={`${process.env.PATH_PREFIX}/operation/outbound`}
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/operation/outbound`);
+            }}
+            className="cursor-pointer"
             isActive={isCurrentPath('/operation/outbound')}
           >
             Outbound
           </SideNavLink>
           <SideNavLink
             renderIcon={InventoryManagement}
-            href={`${process.env.PATH_PREFIX}/operation/stocktaking`}
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/operation/stocktaking`);
+            }}
+            className="cursor-pointer"
             isActive={isCurrentPath('/operation/stocktaking')}
           >
             Stocktaking
@@ -98,14 +115,20 @@ export const HeaderWSideNav = ({
           <SwitcherDivider />
           <SideNavLink
             renderIcon={Analytics}
-            href={`${process.env.PATH_PREFIX}/analysis`}
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/analysis`);
+            }}
+            className="cursor-pointer"
             isActive={isCurrentPath('/analysis')}
           >
             Analysis
           </SideNavLink>
           <SideNavLink
             renderIcon={WatsonHealth3DCursor}
-            href={`${process.env.PATH_PREFIX}/analysis/3d`}
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/analysis/3d`);
+            }}
+            className="cursor-pointer"
             isActive={isCurrentPath('/analysis/3d')}
           >
             3D-Modeling

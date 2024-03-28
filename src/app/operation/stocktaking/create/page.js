@@ -2,24 +2,42 @@
 import React from 'react';
 import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
 import StocktakingCreateForm from '@/components/StocktakingCreateForm/StocktakingCreateForm';
+import { useRouter } from 'next/navigation';
 
-function page() {
+function Page() {
+  router = useRouter();
   return (
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href={`${process.env.PATH_PREFIX}/`}>Home</a>
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
-        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/operation/inbound`}>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+          }}
+        >
           Operation
         </BreadcrumbItem>
         <BreadcrumbItem
-          href={`${process.env.PATH_PREFIX}/operation/stocktaking`}
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/stocktaking`);
+          }}
         >
           Stocktaking
         </BreadcrumbItem>
         <BreadcrumbItem
-          href={`${process.env.PATH_PREFIX}/operation/stocktaking/create`}
+          onClick={() => {
+            router.push(
+              `${process.env.PATH_PREFIX}/operation/stocktaking/create`
+            );
+          }}
         >
           Create
         </BreadcrumbItem>
@@ -34,4 +52,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

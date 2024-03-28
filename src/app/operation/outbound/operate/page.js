@@ -3,8 +3,10 @@ import React from 'react';
 import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
 import { useSearchParams } from 'next/navigation';
 import OutboundCreateForm from '@/components/OutboundCreateForm/OutboundCreateForm';
+import { useRouter } from 'next/navigation';
 
 function Page() {
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const id = searchParams.get('id');
@@ -12,16 +14,34 @@ function Page() {
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href={`${process.env.PATH_PREFIX}/`}>Home</a>
-        </BreadcrumbItem>
-        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/operation/outbound`}>
-          Operation
-        </BreadcrumbItem>
-        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/operation/outbound`}>
-          Inbound
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
         <BreadcrumbItem
-          href={`${process.env.PATH_PREFIX}/operation/outbound/operate`}
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+          }}
+        >
+          Operation
+        </BreadcrumbItem>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/outbound`);
+          }}
+        >
+          Outbound
+        </BreadcrumbItem>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(
+              `${process.env.PATH_PREFIX}/operation/outbound/operate`
+            );
+          }}
         >
           Operate
         </BreadcrumbItem>

@@ -4,6 +4,7 @@ import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
 import { SimpleBarChart, GaugeChart, MeterChart } from '@carbon/charts-react';
 import '@carbon/charts/styles.css';
 import { ContainedList, ContainedListItem } from '@carbon/react';
+import { useRouter } from 'next/navigation';
 // import './analysis.module.css';
 import {
   Add,
@@ -14,6 +15,7 @@ import {
   Wheat,
 } from '@carbon/icons-react';
 function Page() {
+  const router = useRouter();
   const data = [
     {
       group: 'inbound 1245',
@@ -239,9 +241,21 @@ function Page() {
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href="/">Home</a>
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
-        <BreadcrumbItem href="/analysis">Analysis</BreadcrumbItem>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/analysis`);
+          }}
+        >
+          Analysis
+        </BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <div>

@@ -2,22 +2,40 @@
 import React from 'react';
 import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
 import OutboundCreateForm from '@/components/OutboundCreateForm/OutboundCreateForm';
+import { useRouter } from 'next/navigation';
 
-function page() {
+function Page() {
+  const router = useRouter();
   return (
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href={`${process.env.PATH_PREFIX}/`}>Home</a>
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
-        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/operation/inbound`}>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+          }}
+        >
           Operation
         </BreadcrumbItem>
-        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/operation/outbound`}>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/outbound`);
+          }}
+        >
           Outbound
         </BreadcrumbItem>
         <BreadcrumbItem
-          href={`${process.env.PATH_PREFIX}/operation/outbound/create`}
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/outbound/create`);
+          }}
         >
           Create
         </BreadcrumbItem>
@@ -32,4 +50,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

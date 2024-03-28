@@ -12,11 +12,7 @@ import {
 } from '@carbon/react';
 import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import StocktakingTable from '@/components/Table/StocktakingTable';
-import {
-  fetchSLNameMap,
-  fetchWHNameMap,
-  fetchWHSLNameMap,
-} from '@/actions/actions';
+import { useRouter } from 'next/navigation';
 
 const headers = [
   { key: 'id', header: 'ID' },
@@ -31,6 +27,7 @@ const headers = [
 ];
 
 function Page() {
+  const router = useRouter();
   const [refresh, setRefresh] = useState({});
   const [isSearchClicked, setIsSearchClicked] = useState(false);
   const defaultFormValue = {
@@ -100,13 +97,25 @@ function Page() {
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href={`${process.env.PATH_PREFIX}/`}>Home</a>
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
-        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/operation/inbound`}>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+          }}
+        >
           Operation
         </BreadcrumbItem>
         <BreadcrumbItem
-          href={`${process.env.PATH_PREFIX}/operation/stocktaking`}
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/stocktaking`);
+          }}
         >
           Stocktaking
         </BreadcrumbItem>
@@ -121,7 +130,11 @@ function Page() {
           </Heading>
         </div>
         <Button
-          href={`${process.env.PATH_PREFIX}/operation/stocktaking/create`}
+          onClick={() => {
+            router.push(
+              `${process.env.PATH_PREFIX}/operation/stocktaking/create`
+            );
+          }}
           isExpressive
           size="sm"
           renderIcon={Add}

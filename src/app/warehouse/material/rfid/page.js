@@ -4,6 +4,7 @@ import { Heading, Breadcrumb, BreadcrumbItem, Button } from '@carbon/react';
 import { fetchMaterialRFID } from '@/actions/actions';
 import { Add } from '@carbon/icons-react';
 import LabelingTable from '@/components/Table/LabelingTable';
+import { useRouter } from 'next/navigation';
 
 const headers = [
   { key: 'material_id', header: 'Material ID' },
@@ -12,6 +13,7 @@ const headers = [
 ];
 
 function Page() {
+  const router = useRouter();
   const [rows, setRows] = useState([]);
   const [refresh, setRefresh] = useState({});
 
@@ -22,11 +24,35 @@ function Page() {
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href="/">Home</a>
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse">Warehouse</BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse/material">Material</BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse/material/rfid">RFID</BreadcrumbItem>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/warehouse`);
+          }}
+        >
+          Warehouse
+        </BreadcrumbItem>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/warehouse/material`);
+          }}
+        >
+          Material
+        </BreadcrumbItem>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/warehouse/material/rfid`);
+          }}
+        >
+          RFID
+        </BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
@@ -36,7 +62,11 @@ function Page() {
           </Heading>
         </div>
         <Button
-          href="/warehouse/material/rfid/create"
+          onClick={() => {
+            router.push(
+              `${process.env.PATH_PREFIX}/warehouse/material/rfid/create`
+            );
+          }}
           isExpressive
           size="sm"
           renderIcon={Add}
