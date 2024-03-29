@@ -1,11 +1,15 @@
 'use client';
 import React from 'react';
 import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
+import { useSearchParams } from 'next/navigation';
 import OutboundCreateForm from '@/components/OutboundCreateForm/OutboundCreateForm';
 import { useRouter } from 'next/navigation';
 
 function Page() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const id = searchParams.get('id');
   return (
     <div>
       <Breadcrumb>
@@ -34,18 +38,18 @@ function Page() {
         </BreadcrumbItem>
         <BreadcrumbItem
           onClick={() => {
-            router.push(`${process.env.PATH_PREFIX}/operation/outbound/create`);
+            router.push(
+              `${process.env.PATH_PREFIX}/operation/outbound/operate`
+            );
           }}
         >
-          Create
+          Operate
         </BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
-        <Heading className="mt-2 text-[28px] font-normal">
-          Create a Outbound List
-        </Heading>
+        <Heading className="mt-2 text-[28px] font-normal">Operate</Heading>
       </div>
-      <OutboundCreateForm />
+      <OutboundCreateForm id={id} />
     </div>
   );
 }

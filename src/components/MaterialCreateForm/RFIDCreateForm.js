@@ -4,7 +4,6 @@ import {
   TextInput,
   Grid,
   Column,
-  TextArea,
   Button,
   Select,
   SelectItem,
@@ -146,7 +145,13 @@ function RFIDCreateForm() {
         <Button size="sm" onClick={handleSubmit}>
           Save
         </Button>
-        <Button size="sm" kind="tertiary" href="/warehouse/material/rfid">
+        <Button
+          size="sm"
+          kind="tertiary"
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/warehouse/material/rfid`);
+          }}
+        >
           Cancel
         </Button>
       </div>

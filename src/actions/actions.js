@@ -37,11 +37,13 @@ export async function updateWarehouse(body) {
     .then((res) => console.log(res));
 }
 
-export async function fetchStorageLocationsByWId(body) {
-  return httpToBackend.post('/wms/storagelocation/get', body).then((res) => {
-    console.log(res);
-    return res.data.data;
-  });
+export async function fetchStorageLocationsByWId(body, params) {
+  return httpToBackend
+    .post('/wms/storagelocation/get', body, { params })
+    .then((res) => {
+      console.log(res);
+      return res.data.data;
+    });
 }
 
 export async function addStorageLocation(body) {
@@ -146,10 +148,12 @@ export async function fetchInbound(params) {
 // }
 
 export async function fetchInboundWithFilter(body, params) {
-  return httpToBackend.post('/wms/inbound/get', body, params).then((res) => {
-    console.log(res);
-    return res.data.data;
-  });
+  return httpToBackend
+    .post('/wms/inbound/get', body, { params })
+    .then((res) => {
+      console.log(res);
+      return res.data.data;
+    });
 }
 
 export async function deleteInbound(body) {
@@ -202,6 +206,13 @@ export async function fetchOutboundWithFilter(body) {
   });
 }
 
+export async function updateOutboundRecord(body) {
+  return httpToBackend.post('/wms/outbound/update', body).then((res) => {
+    console.log(res);
+    return res.data.data;
+  });
+}
+
 export async function deleteOutbound(body) {
   return httpToBackend.post('/wms/outbound/delete', body).then((res) => {
     console.log(res);
@@ -224,18 +235,22 @@ export async function addStocktakingRecord(body) {
   });
 }
 
-export async function fetchStocktaking() {
-  return httpToBackend.post('/wms/stocktaking/get').then((res) => {
-    console.log(res);
-    return res.data.data;
-  });
+export async function fetchStocktaking(params) {
+  return httpToBackend
+    .post('/wms/stocktaking/get', {}, { params })
+    .then((res) => {
+      console.log(res);
+      return res.data.data;
+    });
 }
 
-export async function fetchStocktakingWithFilter(body) {
-  return httpToBackend.post('/wms/stocktaking/get', body).then((res) => {
-    console.log(res);
-    return res.data.data;
-  });
+export async function fetchStocktakingWithFilter(body, params) {
+  return httpToBackend
+    .post('/wms/stocktaking/get', body, { params })
+    .then((res) => {
+      console.log(res);
+      return res.data.data;
+    });
 }
 
 export async function deleteStocktaking(body) {
@@ -246,7 +261,7 @@ export async function deleteStocktaking(body) {
 }
 
 export async function fetchStocktakingDetails(body) {
-  return httpToBackend.post('/wms/stocktaking/detail/get', body).then((res) => {
+  return httpToBackend.post('/wms/stocktaking/detail', body).then((res) => {
     console.log(res);
     return res.data.data;
   });
@@ -287,6 +302,15 @@ export async function fetchWHNameMap(params) {
 export async function fetchSLNameMap(params) {
   return httpToBackend
     .post('/wms/storagelocation/namemap', {}, { params })
+    .then((res) => {
+      console.log(res);
+      return res.data.data;
+    });
+}
+
+export async function fetchWHSLNameMap(params) {
+  return httpToBackend
+    .post('/wms/warehousestoragelocation/idmap', {}, { params })
     .then((res) => {
       console.log(res);
       return res.data.data;

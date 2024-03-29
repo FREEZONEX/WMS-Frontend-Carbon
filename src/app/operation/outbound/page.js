@@ -14,16 +14,17 @@ import {
   Grid,
   Column,
 } from '@carbon/react';
-import { Add, Search, CloseOutline } from '@carbon/icons-react';
+import { Add, Search, CloseOutline, Cost } from '@carbon/icons-react';
 import OutboundTable from '@/components/Table/OutboundTable';
-import { fetchWHNameMap, fetchSLNameMap } from '@/actions/actions';
+import { useRouter } from 'next/navigation';
+import moment from 'moment';
 
 const headers = [
   { key: 'outbound_id', header: 'ID' },
   { key: 'outbound_purchase_order_no', header: 'Purchase Order No.' },
   { key: 'outbound_supplier', header: 'Supplier' },
   { key: 'outbound_status', header: 'Status' },
-  { key: 'operator', header: 'Inbounder' },
+  { key: 'operator', header: 'Outbounder' },
   { key: 'material', header: 'Material' },
   { key: 'outbound_delivery_date', header: 'Delivery Date' },
   { key: 'create_time', header: 'Create Time' },
@@ -32,6 +33,7 @@ const headers = [
 ];
 
 function Page() {
+  const router = useRouter();
   const [refresh, setRefresh] = useState({});
   const defaultFormValue = {
     outbound_id: '',
@@ -52,41 +54,44 @@ function Page() {
       [id]: value,
     }));
   };
+  const onDateChange = (e) => {
+    if (!e) {
+      return;
+    }
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      outbound_delivery_date: moment(e[0]).format(),
+    }));
+  };
   const [isSearchClicked, setIsSearchClicked] = useState(false);
-  useEffect(() => {
-    fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
-      .then((res) => {
-        const map = res.list.reduce((acc, curr) => {
-          acc[curr.id] = curr.name;
-          return acc;
-        }, {});
 
-        localStorage.setItem('whNameMap', JSON.stringify(map));
-      })
-      .catch((error) => {
-        console.error('Failed to fetch WH name map:', error);
-      });
-    fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
-      .then((res) => {
-        const map = res.list.reduce((acc, curr) => {
-          acc[curr.id] = curr.name;
-          return acc;
-        }, {});
-
-        localStorage.setItem('slNameMap', JSON.stringify(map));
-      })
-      .catch((error) => {
-        console.error('Failed to fetch SL name map:', error);
-      });
-  }, []);
+  console.log(formValue);
   return (
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href="/">Home</a>
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/home`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
-        <BreadcrumbItem href="/operation/inbound">Operation</BreadcrumbItem>
-        <BreadcrumbItem href="/operation/outbound">Outbound</BreadcrumbItem>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+          }}
+        >
+          Operation
+        </BreadcrumbItem>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/outbound`);
+          }}
+        >
+          Outbound
+        </BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
@@ -96,7 +101,9 @@ function Page() {
           </Heading>
         </div>
         <Button
-          href="/operation/outbound/create"
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/outbound/create`);
+          }}
           isExpressive
           size="sm"
           renderIcon={Add}
@@ -116,13 +123,11 @@ function Page() {
           />
         </Column>
         <Column className="ml-0" sm={2} md={4} lg={4}>
-          <DatePicker datePickerType="single">
+          <DatePicker datePickerType="single" onChange={onDateChange}>
             <DatePickerInput
-              placeholder="mm/dd/yyyy"
+              placeholder="dd/mm/yyyy"
               labelText="Delivery date"
               id="outbound_delivery_date"
-              value={formValue.outbound_delivery_date}
-              onChange={onFormValueChange}
             />
           </DatePicker>
         </Column>
@@ -167,7 +172,7 @@ function Page() {
             className="flex-auto "
             labelText="Outbounder"
             id="operator"
-            placeholder="Ref Id"
+            placeholder="Outbounder"
             value={formValue.operator}
             onChange={onFormValueChange}
           />

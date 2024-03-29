@@ -2,17 +2,41 @@
 import React from 'react';
 import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
 import MaterialCreateForm from '@/components/MaterialCreateForm/MaterialCreateForm';
+import { useRouter } from 'next/navigation';
 
-function page() {
+function Page() {
+  const router = useRouter();
   return (
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href="/">Home</a>
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/home`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse">Warehouse</BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse/material">Material</BreadcrumbItem>
-        <BreadcrumbItem href="/warehouse/material/create">
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/warehouse`);
+          }}
+        >
+          Warehouse
+        </BreadcrumbItem>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/warehouse/material`);
+          }}
+        >
+          Material
+        </BreadcrumbItem>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/warehouse/material/create`);
+          }}
+        >
           Create
         </BreadcrumbItem>
       </Breadcrumb>
@@ -26,4 +50,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

@@ -12,9 +12,11 @@ import {
   Button,
 } from '@carbon/react';
 import './_table.scss';
-import ProductModal from '../Modal/ProductModal';
+import OperationDetailModal from '../Modal/OperationDetailModal';
 import { fetchOutbound, fetchOutboundWithFilter } from '@/actions/actions';
 import { useRouter, useSearchParams } from 'next/navigation';
+import moment from 'moment';
+import { DateTimeFormat } from '@/utils/constants';
 
 function OutboundTable({
   headers,
@@ -32,7 +34,7 @@ function OutboundTable({
 
   const [selectedId, setSelectedId] = useState('');
   const [rows, setRows] = useState([]);
-  console.log(rows);
+
   useEffect(() => {
     if (isSearchClicked) {
       const filteredFormValue = Object.entries(filters).reduce(
@@ -184,6 +186,19 @@ function OutboundTable({
                     </StructuredListCell>
                   );
                 }
+                if (
+                  header.key === 'create_time' ||
+                  header.key === 'outbound_delivery_date'
+                ) {
+                  return (
+                    <StructuredListCell key={header.key}>
+                      {row[header.key] &&
+                        moment(row[header.key]).format(
+                          DateTimeFormat.shortDate
+                        )}
+                    </StructuredListCell>
+                  );
+                }
                 return (
                   <StructuredListCell key={header.key}>
                     {row[header.key]}
@@ -208,11 +223,11 @@ function OutboundTable({
           setPageSize(pageSize);
         }}
       />
-      <ProductModal
+      <OperationDetailModal
         id={selectedId}
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
-      ></ProductModal>
+      ></OperationDetailModal>
     </div>
   );
 }

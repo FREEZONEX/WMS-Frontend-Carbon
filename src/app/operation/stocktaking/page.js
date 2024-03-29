@@ -12,34 +12,31 @@ import {
 } from '@carbon/react';
 import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import StocktakingTable from '@/components/Table/StocktakingTable';
-import {
-  fetchStocktaking,
-  fetchStocktakingWithFilter,
-} from '@/actions/actions';
+import { useRouter } from 'next/navigation';
 
 const headers = [
-  // { key: 'id', header: 'ID' },
-  { key: 'ref_id', header: 'Ref ID' },
+  { key: 'id', header: 'ID' },
+  // { key: 'ref_id', header: 'Ref ID' },
   { key: 'type', header: 'Type' },
-  { key: 'storage_location', header: 'Storage Location' },
   { key: 'operator', header: 'Operator' },
   { key: 'source', header: 'Source' },
   { key: 'status', header: 'Status' },
   { key: 'result', header: 'Result' },
   { key: 'create_time', header: 'Create Time' },
-  // { key: 'note', header: 'Note' },
+  { key: 'note', header: 'Note' },
 ];
 
 function Page() {
-  const [rows, setRows] = useState([]);
+  const router = useRouter();
   const [refresh, setRefresh] = useState({});
-
-  const [formValue, setFormValues] = useState({
-    // id: '',
+  const [isSearchClicked, setIsSearchClicked] = useState(false);
+  const defaultFormValue = {
     ref_id: '',
     status: '',
     type: '',
-  });
+    warehouse_name: '',
+  };
+  const [formValue, setFormValues] = useState(defaultFormValue);
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
     setFormValues((prevValues) => ({
@@ -47,43 +44,79 @@ function Page() {
       [id]: value,
     }));
   };
-  const handleSeachRows = () => {
-    const filteredFormValue = Object.entries(formValue).reduce(
-      (acc, [key, value]) => {
-        if (value !== '') {
-          acc[key] = value;
-        }
-        return acc;
-      },
-      {}
-    );
-    if (Object.entries(filteredFormValue).length > 0) {
-      fetchStocktakingWithFilter(filteredFormValue).then((res) => setRows(res));
-    } else {
-      fetchStocktaking().then((res) => setRows(res));
-    }
-  };
-  const handleRemoveFilters = () => {
-    fetchStocktaking().then((res) => setRows(res));
-    setFormValues({
-      id: '',
-      ref_id: '',
-      status: '',
-      type: '',
-    });
-  };
-  useEffect(() => {
-    fetchStocktaking().then((res) => setRows(res));
-  }, [refresh]);
-  console.log(formValue);
+  // useEffect(() => {
+  //   if (typeof window !== undefined) {
+  //     fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
+  //       .then((res) => {
+  //         const map = res.list.reduce((acc, curr) => {
+  //           acc[curr.id] = curr.name;
+  //           return acc;
+  //         }, {});
+
+  //         localStorage.setItem('whNameMap', JSON.stringify(map));
+  //       })
+  //       .catch((error) => {
+  //         console.error('Failed to fetch WH name map:', error);
+  //       });
+  //     fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
+  //       .then((res) => {
+  //         const map = res.list.reduce((acc, curr) => {
+  //           acc[curr.id] = curr.name;
+  //           return acc;
+  //         }, {});
+
+  //         localStorage.setItem('slNameMap', JSON.stringify(map));
+  //       })
+  //       .catch((error) => {
+  //         console.error('Failed to fetch SL name map:', error);
+  //       });
+  //     fetchWHSLNameMap({ pageNum: 1, pageSize: 999999 })
+  //       .then((res) => {
+  //         const warehouseListString = JSON.stringify(res.list);
+  //         localStorage.setItem('whslNameMap', warehouseListString);
+  //         const locationMap = new Map();
+
+  //         res.list.forEach((warehouse) => {
+  //           warehouse.warehouseNamemap.forEach((location) => {
+  //             locationMap.set(location.id, warehouse.id);
+  //           });
+  //         });
+
+  //         const locationMapString = JSON.stringify(
+  //           Array.from(locationMap.entries())
+  //         );
+  //         localStorage.setItem('location', locationMapString);
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error fetching warehouse data:', error);
+  //       });
+  //   }
+  // }, []);
+
   return (
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href="/">Home</a>
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/home`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
-        <BreadcrumbItem href="/operation/inbound">Operation</BreadcrumbItem>
-        <BreadcrumbItem href="/operation/stocktaking">
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+          }}
+        >
+          Operation
+        </BreadcrumbItem>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/stocktaking`);
+          }}
+        >
           Stocktaking
         </BreadcrumbItem>
       </Breadcrumb>
@@ -97,7 +130,11 @@ function Page() {
           </Heading>
         </div>
         <Button
-          href="/operation/stocktaking/create"
+          onClick={() => {
+            router.push(
+              `${process.env.PATH_PREFIX}/operation/stocktaking/create`
+            );
+          }}
           isExpressive
           size="sm"
           renderIcon={Add}
@@ -132,9 +169,8 @@ function Page() {
           required
         >
           <SelectItem disabled hidden value="" text="Choose an option" />
-          <SelectItem value="cycle stock" text="Cycle Stock" />
-          <SelectItem value="pipeline stock" text="Pipeline Stock" />
-          <SelectItem value="mix stock" text="Mix Stock" />
+          <SelectItem value="Dynamic" text="Dynamic" />
+          <SelectItem value="Static" text="Static" />
         </Select>
         <Select
           className="flex-auto"
@@ -151,12 +187,26 @@ function Page() {
           <SelectItem value="Executing" text="Executing" />
           <SelectItem value="To-do" text="To-do" />
         </Select>
-        <HeaderGlobalAction aria-label="Search" onClick={handleSeachRows}>
+        <TextInput
+          className="flex-auto "
+          labelText="Warehouse Name"
+          id="warehouse_name"
+          placeholder="Warehouse Name"
+          value={formValue.warehouse_name}
+          onChange={onFormValueChange}
+        />
+        <HeaderGlobalAction
+          aria-label="Search"
+          onClick={() => setIsSearchClicked(true)}
+        >
           <Search size={16} />
         </HeaderGlobalAction>
         <HeaderGlobalAction
           aria-label="Remove Filters"
-          onClick={handleRemoveFilters}
+          onClick={() => {
+            setIsSearchClicked(false);
+            setFormValues(defaultFormValue);
+          }}
         >
           <CloseOutline size={16} />
         </HeaderGlobalAction>
@@ -164,8 +214,10 @@ function Page() {
       <div className="mt-12">
         <StocktakingTable
           headers={headers}
-          rows={rows}
+          refresh={refresh}
           setRefresh={setRefresh}
+          filters={formValue}
+          isSearchClicked={isSearchClicked}
         />
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableHead,
@@ -7,8 +7,6 @@ import {
   TableBody,
   TableContainer,
   TableCell,
-  TableSelectRow,
-  TableSelectAll,
   TextInput,
   TableToolbar,
   TableToolbarContent,
@@ -17,7 +15,12 @@ import {
   Checkbox,
 } from '@carbon/react';
 import { Add, Subtract, CheckmarkFilled } from '@carbon/icons-react';
-import { fetchMaterial } from '@/actions/actions';
+import {
+  fetchMaterial,
+  fetchWHNameMap,
+  fetchSLNameMap,
+  fetchWHSLNameMap,
+} from '@/actions/actions';
 import './_table.scss';
 import { usePathname } from 'next/navigation';
 
@@ -34,15 +37,59 @@ function TaskListTable({ headers, rows, setRows }) {
   const [loadingRows, setLoadingRows] = useState([]);
   const [successRows, setSuccessRows] = useState([]);
   const [selectedRows, setSelectedRows] = useState([0]);
-  const whNameMap = JSON.parse(localStorage.getItem('whNameMap'));
-  const slNameMap = JSON.parse(localStorage.getItem('slNameMap'));
+
+  const [whNameMap, setWhNameMap] = useState({});
+  const [slNameMap, setSlNameMap] = useState({});
+  const [whslMap, setWhslMap] = useState({});
+  useEffect(() => {
+    fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const map = res.list.reduce((acc, curr) => {
+          acc[curr.id] = curr.name;
+          return acc;
+        }, {});
+
+        setWhNameMap(map);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch WH name map:', error);
+      });
+    fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const map = res.list.reduce((acc, curr) => {
+          acc[curr.id] = curr.name;
+          return acc;
+        }, {});
+
+        setSlNameMap(map);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch SL name map:', error);
+      });
+    fetchWHSLNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const locationMap = new Map();
+
+        res.list.forEach((warehouse) => {
+          warehouse.warehouseNamemap.forEach((location) => {
+            locationMap.set(location.id, warehouse.id);
+          });
+        });
+
+        setWhslMap(locationMap);
+      })
+      .catch((error) => {
+        console.error('Error fetching warehouse data:', error);
+      });
+  }, []);
+
   const pathName = usePathname();
   const checkIsEdit = () => {
-    console.log(
-      pathName,
-      pathName === `${process.env.PATH_PREFIX}/operation/inbound/create`
-    );
-    if (pathName === `${process.env.PATH_PREFIX}/operation/inbound/create`) {
+    if (
+      pathName === `${process.env.PATH_PREFIX}/operation/inbound/create` ||
+      pathName === `${process.env.PATH_PREFIX}/operation/outbound/create` ||
+      pathName === `${process.env.PATH_PREFIX}/operation/stocktaking/create`
+    ) {
       return false;
     }
     return true;
@@ -108,15 +155,21 @@ function TaskListTable({ headers, rows, setRows }) {
     setRows((prevRows) =>
       prevRows.map((prevRow, i) => {
         if (i === rowId) {
-          if (field === 'expect_wh_id') {
-            const whName = whNameMap[e.target.value] || '';
-            return {
-              ...prevRow,
-              [field]: e.target.value,
-              expect_wh_name: whName,
-            };
-          } else if (field === 'expact_stock_location_id') {
+          if (field === 'expact_stock_location_id') {
             const slName = slNameMap[e.target.value] || '';
+            if (slName !== '') {
+              const getWarehouseId = (locationId) => whslMap.get(locationId);
+              const wh_id = getWarehouseId(e.target.value);
+              const wh_name = whNameMap[wh_id];
+              console.log(wh_id, wh_name);
+              return {
+                ...prevRow,
+                expect_wh_id: wh_id,
+                expect_wh_name: wh_name,
+                [field]: e.target.value,
+                expact_stock_location_name: slName,
+              };
+            }
             return {
               ...prevRow,
               [field]: e.target.value,
@@ -149,7 +202,7 @@ function TaskListTable({ headers, rows, setRows }) {
       );
     }
   };
-
+  console.log(rows);
   const checkQuantity = (value) => {
     console.log('parse int check', parseInt(value), isNaN(value));
     if (value === '' || isNaN(value)) {
@@ -159,6 +212,9 @@ function TaskListTable({ headers, rows, setRows }) {
     }
   };
   console.log(rows);
+  if (!whNameMap || !slNameMap || !whslMap) {
+    return <div>Loading...</div>;
+  }
   return (
     <TableContainer>
       <TableToolbar>
@@ -207,6 +263,7 @@ function TaskListTable({ headers, rows, setRows }) {
                     selectedRows.length === rows.length &&
                     selectedRows.length != 0
                   }
+                  labelText=""
                   onChange={(checked) =>
                     setSelectedRows(checked ? rows.map((row, i) => i) : [])
                   }
@@ -234,6 +291,7 @@ function TaskListTable({ headers, rows, setRows }) {
                 <TableCell>
                   <Checkbox
                     checked={selectedRows.includes(i)}
+                    labelText=""
                     onChange={(checked) => {
                       setSelectedRows((prevSelectedRows) =>
                         checked
@@ -339,21 +397,7 @@ function TaskListTable({ headers, rows, setRows }) {
                 if (header.key === 'expect_wh_id') {
                   return (
                     <TableCell key={header.key}>
-                      {checkIsEdit() ? (
-                        whNameMap[row[header.key]]
-                      ) : (
-                        <TextInput
-                          className="w-40"
-                          id={`expact-wh-id-${i}`}
-                          value={row.expect_wh_name || ''}
-                          onChange={(e) => {
-                            handleInputChange(i, header.key, e);
-                          }}
-                          onBlur={(e) => {
-                            handleBlurFetch(i, header.key, e.target.value);
-                          }}
-                        />
-                      )}
+                      {whNameMap[row[header.key]]}
                     </TableCell>
                   );
                 }

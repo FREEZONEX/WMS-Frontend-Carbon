@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   DataTable,
@@ -18,7 +18,8 @@ import {
   TabPanels,
   Tag,
 } from '@carbon/react';
-
+import { fetchStocktakingDetails } from '@/actions/actions';
+import WMSDataTable from '../Table/DataTable';
 const headers = [
   { key: 'material_name', header: 'Material Name' },
   { key: 'quantity', header: 'Quantity' },
@@ -26,18 +27,33 @@ const headers = [
   { key: 'discrepancy', header: 'Discrepancy' },
 ];
 
-function StocktakingResultModal({ isModalOpen, setModalOpen, material }) {
-  const locationGroups = material.reduce((groups, item) => {
-    const { storage_location } = item;
-    if (!groups[storage_location]) {
-      groups[storage_location] = [];
+function StocktakingResultModal({ isModalOpen, setModalOpen, id }) {
+  const [locationGroups, setlocationGroups] = useState([]);
+  const [locations, setLocations] = useState([]);
+  useEffect(() => {
+    if (id) {
+      fetchStocktakingDetails({ id })
+        .then((data) => {
+          console.log(data);
+          const locationGroups = data.list.reduce((groups, item) => {
+            const { storage_location } = item;
+            if (!groups[storage_location]) {
+              groups[storage_location] = [];
+            }
+            groups[storage_location].push(...item.inventory);
+            return groups;
+          }, {});
+          const locations = Object.keys(locationGroups);
+          console.log(locationGroups);
+          setLocations(locations);
+          setlocationGroups(locationGroups);
+        })
+        .catch((error) => {
+          console.error('Failed to fetch stocktaking details:', error);
+        });
     }
-    groups[storage_location].push(...item.inventory);
-    return groups;
-  }, {});
-  const locations = Object.keys(locationGroups);
-  console.log(locationGroups);
-
+  }, [id]);
+  console.log(id, locationGroups);
   return (
     <Modal
       open={isModalOpen}
@@ -60,59 +76,9 @@ function StocktakingResultModal({ isModalOpen, setModalOpen, material }) {
           <TabPanels>
             {locations.map((location, index) => (
               <TabPanel key={index}>
-                <DataTable
-                  rows={locationGroups[location]}
+                <WMSDataTable
                   headers={headers}
-                  render={({ headers, getHeaderProps }) => (
-                    <TableContainer>
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            {headers.map((header) => (
-                              <TableHeader
-                                key={header}
-                                {...getHeaderProps({ header })}
-                              >
-                                {header.header}
-                              </TableHeader>
-                            ))}
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {locationGroups[location].map((row, index) => {
-                            return (
-                              <TableRow key={index}>
-                                {headers.map((header) => {
-                                  if (header.key === 'discrepancy') {
-                                    return (
-                                      <TableCell key={header.key}>
-                                        <Tag
-                                          type={
-                                            parseInt(row[header.key]) < 0
-                                              ? 'red'
-                                              : parseInt(row[header.key]) === 0
-                                              ? 'blue'
-                                              : 'green'
-                                          }
-                                        >
-                                          {row[header.key]}
-                                        </Tag>
-                                      </TableCell>
-                                    );
-                                  }
-                                  return (
-                                    <TableCell key={header.key}>
-                                      {row[header.key]}
-                                    </TableCell>
-                                  );
-                                })}
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  )}
+                  rows={locationGroups[location]}
                 />
               </TabPanel>
             ))}

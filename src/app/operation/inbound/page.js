@@ -16,7 +16,8 @@ import {
 } from '@carbon/react';
 import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import InboundTable from '@/components/Table/InboundTable';
-import { fetchSLNameMap, fetchWHNameMap } from '@/actions/actions';
+import { useRouter } from 'next/navigation';
+import moment from 'moment';
 
 const headers = [
   { key: 'inbound_id', header: 'ID' },
@@ -32,6 +33,7 @@ const headers = [
 ];
 
 function Page() {
+  const router = useRouter();
   const [refresh, setRefresh] = useState({});
   const defaultFormValue = {
     inbound_id: '',
@@ -52,43 +54,86 @@ function Page() {
       [id]: value,
     }));
   };
+  const onDateChange = (e) => {
+    if (!e) {
+      return;
+    }
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      inbound_delivery_date: moment(e[0]).format(),
+    }));
+  };
   const [isSearchClicked, setIsSearchClicked] = useState(false);
-  useEffect(() => {
-    fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
-      .then((res) => {
-        const map = res.list.reduce((acc, curr) => {
-          acc[curr.id] = curr.name;
-          return acc;
-        }, {});
+  // useEffect(() => {
+  //   if (typeof window !== undefined) {
+  //     fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
+  //       .then((res) => {
+  //         const map = res.list.reduce((acc, curr) => {
+  //           acc[curr.id] = curr.name;
+  //           return acc;
+  //         }, {});
 
-        localStorage.setItem('whNameMap', JSON.stringify(map));
-      })
-      .catch((error) => {
-        console.error('Failed to fetch WH name map:', error);
-      });
-    fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
-      .then((res) => {
-        const map = res.list.reduce((acc, curr) => {
-          acc[curr.id] = curr.name;
-          return acc;
-        }, {});
+  //         localStorage.setItem('whNameMap', JSON.stringify(map));
+  //       })
+  //       .catch((error) => {
+  //         console.error('Failed to fetch WH name map:', error);
+  //       });
+  //     fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
+  //       .then((res) => {
+  //         const map = res.list.reduce((acc, curr) => {
+  //           acc[curr.id] = curr.name;
+  //           return acc;
+  //         }, {});
 
-        localStorage.setItem('slNameMap', JSON.stringify(map));
-      })
-      .catch((error) => {
-        console.error('Failed to fetch SL name map:', error);
-      });
-  }, []);
+  //         localStorage.setItem('slNameMap', JSON.stringify(map));
+  //       })
+  //       .catch((error) => {
+  //         console.error('Failed to fetch SL name map:', error);
+  //       });
+  //     fetchWHSLNameMap({ pageNum: 1, pageSize: 999999 })
+  //       .then((res) => {
+  //         const locationMap = new Map();
+
+  //         res.list.forEach((warehouse) => {
+  //           warehouse.warehouseNamemap.forEach((location) => {
+  //             locationMap.set(location.id, warehouse.id);
+  //           });
+  //         });
+
+  //         const locationMapString = JSON.stringify(
+  //           Array.from(locationMap.entries())
+  //         );
+  //         localStorage.setItem('location', locationMapString);
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error fetching warehouse data:', error);
+  //       });
+  //   }
+  // }, []);
   return (
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href={`${process.env.PATH_PREFIX}/`}>Home</a>
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/home`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
-        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/operation/inbound`}>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+          }}
+        >
           Operation
         </BreadcrumbItem>
-        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/operation/inbound`}>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+          }}
+        >
           Inbound
         </BreadcrumbItem>
       </Breadcrumb>
@@ -100,7 +145,10 @@ function Page() {
           </Heading>
         </div>
         <Button
-          href={`${process.env.PATH_PREFIX}/operation/inbound/create`}
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/inbound/create`);
+          }}
+          className="cursor-pointer"
           isExpressive
           size="sm"
           renderIcon={Add}
@@ -120,13 +168,11 @@ function Page() {
           />
         </Column>
         <Column className="ml-0" sm={2} md={4} lg={4}>
-          <DatePicker datePickerType="single">
+          <DatePicker datePickerType="single" onChange={onDateChange}>
             <DatePickerInput
-              placeholder="mm/dd/yyyy"
+              placeholder="dd/mm/yyyy"
               labelText="Delivery date"
               id="inbound_delivery_date"
-              value={formValue.inbound_delivery_date}
-              onChange={onFormValueChange}
             />
           </DatePicker>
         </Column>
