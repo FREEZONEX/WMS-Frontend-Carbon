@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
 import { SimpleBarChart, GaugeChart, MeterChart } from '@carbon/charts-react';
 import '@carbon/charts/styles.css';
@@ -7,6 +7,7 @@ import { ContainedList, ContainedListItem } from '@carbon/react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 // import './analysis.module.css';
+
 import {
   Add,
   Apple,
@@ -15,8 +16,61 @@ import {
   Close,
   Wheat,
 } from '@carbon/icons-react';
+
+import {
+  fetchTodayInbound,
+  fetchTodayInboundDone,
+  fetchTodayOutbound,
+  fetchTodayOutboundDone,
+} from '@/actions/actions';
+
 function Page() {
+  // const [todayInboundCount, setTodayInboundCount] = useState(0);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const result = await fetchTodayInbound();
+  //     setTodayInboundCount(result.count || result);
+  //   };
+
+  //   fetchData().catch(console.error);
+  // }, []);
+
+  // const [todayInboundDoneCount, setTodayInboundDoneCount] = useState(0);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const result = await fetchTodayInboundDone();
+  //     setTodayInboundDoneCount(result.count || result);
+  //   };
+
+  //   fetchData().catch(console.error);
+  // }, []);
+
+  // const [todayOutboundCount, setTodayOutboundCount] = useState(0);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const result = await fetchTodayOutbound();
+  //     setTodayOutboundCount(result.count || result);
+  //   };
+
+  //   fetchData().catch(console.error);
+  // }, []);
+
+  // const [todayOutboundDoneCount, setTodayOutboundDoneCount] = useState(0);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const result = await fetchTodayOutboundDone();
+  //     setTodayOutboundDoneCount(result.count || result);
+  //   };
+
+  //   fetchData().catch(console.error);
+  // }, []);
+
   const router = useRouter();
+
   const data = [
     {
       group: 'inbound 1245',
@@ -44,32 +98,6 @@ function Page() {
       key: 'turnover rate',
       value: 91.2,
     },
-
-    // {
-    //   "group": "Dataset 6",
-    //   "key": "turnover rate",
-    //   "value": 96.5
-    // },
-    // {
-    //   "group": "Dataset 7",
-    //   "key": "turnover rate",
-    //   "value": 99.5
-    // },
-    // {
-    //   "group": "Dataset 8",
-    //   "key": "turnover rate",
-    //   "value": 97.5
-    // },
-    // {
-    //   "group": "Dataset 9",
-    //   "key": "turnover rate",
-    //   "value": 95.5
-    // },
-    // {
-    //   "group": "Dataset 10",
-    //   "key": "turnover rate",
-    //   "value": 94.5
-    // },
   ];
 
   const options = {
@@ -271,9 +299,7 @@ function Page() {
         <div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="bg-white p-6 shadow-md max-w-lg  relative">
-              <Heading className="mt-2 text-[24px] font-normal">
-                Inbound
-              </Heading>
+              <Heading className="mt-2 text-xl font-normal">Inbound</Heading>
               <div className="absolute bottom-5 left-0 mb-4 ml-6">
                 <div className="flex items-baseline  text-3xl">
                   <Heading className="text-5xl font-semibold fontIBM">
@@ -292,7 +318,7 @@ function Page() {
               </div>
             </div>
             <div className="bg-white p-6 shadow-md max-w-lg  relative">
-              <Heading className="mt-3 text-[24px] font-normal ">
+              <Heading className="mt-3 text-xl font-normal ">
                 Outbound Number
               </Heading>
               <div className="absolute bottom-5 left-0 mb-4 ml-6">
@@ -311,7 +337,7 @@ function Page() {
               </div>
             </div>
             <div className="bg-white p-6 shadow-md max-w-lg  relative">
-              <Heading className="mt-3 text-[24px] font-normal ">
+              <Heading className="mt-3 text-xl font-normal ">
                 Longest awaiting time
               </Heading>
               <div className="absolute bottom-5 left-0 mb-4 ml-6">
@@ -327,7 +353,7 @@ function Page() {
             </div>
 
             <div className="shadow-md bg-white p-6 shadow lg:col-span-2 lg:row-span-2">
-              <Heading className="mt-2 text-[24px] font-normal absolute">
+              <Heading className="mt-2 text-xl font-normal absolute">
                 Turnover Rate Top5
               </Heading>
               <SimpleBarChart
@@ -338,7 +364,7 @@ function Page() {
             </div>
 
             <div className="bg-white p-6 shadow-md max-w-lg  relative">
-              <Heading className="mt-3 text-[24px] font-normal ">
+              <Heading className="mt-3 text-xl font-normal ">
                 Comm Efficiency Rate
               </Heading>
               <div className="absolute bottom-3  mb-2 ml-3 pr-6">
@@ -354,7 +380,7 @@ function Page() {
               </div>
             </div>
             <div className="bg-white p-6 shadow-md max-w-lg relative">
-              <Heading className="mt-3 text-[24px] font-normal ">
+              <Heading className="mt-3 text-xl font-normal ">
                 Space Occupancy
               </Heading>
               <div className="absolute bottom-3 mb-2 ml-3 pr-6">
@@ -370,7 +396,7 @@ function Page() {
               </div>
             </div>
             <div className="bg-white p-6 shadow-md max-w-lg  relative">
-              <Heading className="mt-3 text-[24px] font-normal ">Value</Heading>
+              <Heading className="mt-3 text-xl font-normal ">Value</Heading>
               <div className="absolute bottom-5 left-0 mb-4 ml-6">
                 <div className="flex items-baseline">
                   <Heading className="text-5xl font-semibold fontIBM">
