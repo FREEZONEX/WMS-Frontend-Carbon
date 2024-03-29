@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 export const httpToBackend = axios.create({
-  baseURL: '/',
+  baseURL: '/apps/wenhao-javaw',
   withCredentials: true,
   timeout: 100000,
 });
