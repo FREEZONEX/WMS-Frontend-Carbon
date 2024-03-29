@@ -221,7 +221,9 @@ function TaskListTable({ headers, rows, setRows }) {
           <IconButton
             label="Add"
             onClick={() => {
-              setRows([...rows, { ...defaultDetailValue, id: rows.length }]);
+              if (!checkIsEdit()) {
+                setRows([...rows, { ...defaultDetailValue, id: rows.length }]);
+              }
             }}
           >
             <Add />
@@ -229,16 +231,18 @@ function TaskListTable({ headers, rows, setRows }) {
           <IconButton
             label="Remove"
             onClick={() => {
-              setRows((prevRows) =>
-                prevRows.filter((row, i) => !selectedRows.includes(i))
-              );
-              setSelectedRows([]);
-              setSuccessRows((prevRows) =>
-                prevRows.filter((row, i) => !selectedRows.includes(i))
-              );
-              setLoadingRows((prevRows) =>
-                prevRows.filter((row, i) => !selectedRows.includes(i))
-              );
+              if (!checkIsEdit()) {
+                setRows((prevRows) =>
+                  prevRows.filter((row, i) => !selectedRows.includes(i))
+                );
+                setSelectedRows([]);
+                setSuccessRows((prevRows) =>
+                  prevRows.filter((row, i) => !selectedRows.includes(i))
+                );
+                setLoadingRows((prevRows) =>
+                  prevRows.filter((row, i) => !selectedRows.includes(i))
+                );
+              }
             }}
           >
             <Subtract />
