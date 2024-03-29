@@ -5,6 +5,7 @@ import { SimpleBarChart, GaugeChart, MeterChart } from '@carbon/charts-react';
 import '@carbon/charts/styles.css';
 import { ContainedList, ContainedListItem } from '@carbon/react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 // import './analysis.module.css';
 import {
   Add,
@@ -282,7 +283,12 @@ function Page() {
                 </div>
               </div>
               <div className="absolute bottom-5 right-0 mb-4 mr-6">
-                <img src="/Port--input.svg" alt="arrow" className="w-8 h-8" />
+                <Image
+                  src="/Port--input.svg"
+                  alt="arrow"
+                  width={32}
+                  height={32}
+                />
               </div>
             </div>
             <div className="bg-white p-6 shadow-md max-w-lg  relative">
@@ -296,7 +302,12 @@ function Page() {
                 </div>
               </div>
               <div className="absolute bottom-5 right-0 mb-4 mr-6">
-                <img src="/Port--output.svg" alt="arrow" className="w-8 h-8" />
+                <Image
+                  src="/Port--output.svg"
+                  alt="arrow"
+                  width={32}
+                  height={32}
+                />
               </div>
             </div>
             <div className="bg-white p-6 shadow-md max-w-lg  relative">
@@ -311,7 +322,7 @@ function Page() {
                 </div>
               </div>
               <div className="absolute bottom-5 right-0 mb-4 mr-6">
-                <img src="/Time.svg" alt="arrow" className="w-8 h-8" />
+                <Image src="/Time.svg" alt="arrow" width={32} height={32} />
               </div>
             </div>
 
@@ -368,7 +379,7 @@ function Page() {
                 </div>
               </div>
               <div className="absolute bottom-5 right-0 mb-4 mr-6">
-                <img src="/Money.svg" alt="arrow" className="w-8 h-8" />
+                <Image src="/Money.svg" alt="arrow" width={32} height={32} />
               </div>
             </div>
           </div>
@@ -382,9 +393,11 @@ function Page() {
               </Heading>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-2 w-full h-1/16">
                 <div className="bg-white  p-1  mt-5 relative">
-                  <img
+                  <Image
                     src="/picture/20240322-141125.png"
                     alt="arrow"
+                    width={50}
+                    height={32}
                     className="w-full h-full"
                   />
                 </div>
@@ -394,9 +407,11 @@ function Page() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-2  w-full h-1/16">
                 <div className="bg-white p-1  mt-5  relative">
-                  <img
+                  <Image
                     src="/picture/20240322-141213.png"
                     alt="arrow"
+                    width={50}
+                    height={32}
                     className="w-full h-full"
                   />
                 </div>
@@ -406,9 +421,11 @@ function Page() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-2  w-full h-1/16">
                 <div className="bg-white p-1 mt-5 relative">
-                  <img
+                  <Image
                     src="/picture/20240322-141217.png"
                     alt="arrow"
+                    width={50}
+                    height={32}
                     className="w-full h-full"
                   />
                 </div>
@@ -423,9 +440,11 @@ function Page() {
               </Heading>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-2 w-full h-1/16">
                 <div className="bg-white  p-1  mt-5 relative">
-                  <img
+                  <Image
                     src="/picture/20240322-141220.png"
                     alt="arrow"
+                    width={50}
+                    height={32}
                     className="w-full h-full"
                   />
                 </div>
@@ -435,9 +454,11 @@ function Page() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-2  w-full h-1/16">
                 <div className="bg-white p-1 mt-5 relative">
-                  <img
+                  <Image
                     src="/picture/20240322-141223.png"
                     alt="arrow"
+                    width={50}
+                    height={32}
                     className="w-full h-full"
                   />
                 </div>
@@ -447,9 +468,11 @@ function Page() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-2  w-full h-1/16">
                 <div className="bg-white p-1 mt-5 relative">
-                  <img
+                  <Image
                     src="/picture/20240322-141226.png"
                     alt="arrow"
+                    width={50}
+                    height={32}
                     className="w-full h-full"
                   />
                 </div>
@@ -468,9 +491,11 @@ function Page() {
             </Heading>
             <div className="shadow-md grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-1 w-full">
               <div className="bg-white  items-center justify-center  col-span-2  p-3 mt-4 relative ">
-                <img
+                <Image
                   src="/picture/20240322-145020.png"
                   alt="arrow"
+                  width={500}
+                  height={500}
                   className="ml-5 mx-auto w-3/4 h-full"
                 />
               </div>
@@ -482,9 +507,11 @@ function Page() {
               </div>
               <div className="   bg-white p-2  mt-4   relative">
                 <div className="bottom-2 left-0 absolute ">
-                  <img
+                  <Image
                     src="/Port--input.svg"
                     alt="arrow"
+                    width={500}
+                    height={500}
                     className="w-3/4 h-3/4"
                   />
                 </div>
@@ -492,9 +519,11 @@ function Page() {
               </div>
               <div className="   bg-white p-2  mt-4   relative">
                 <div className="bottom-2 left-0 absolute ">
-                  <img
+                  <Image
                     src="/Port--output.svg"
                     alt="arrow"
+                    width={500}
+                    height={500}
                     className="w-3/4 h-3/4"
                   />
                 </div>
@@ -503,9 +532,11 @@ function Page() {
             </div>
             <div className="shadow-md grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-1 w-full">
               <div className="bg-white  col-span-2  p-3 justify-center mt-4 relative">
-                <img
+                <Image
                   src="/picture/20240322-145025.png"
                   alt="arrow"
+                  width={500}
+                  height={500}
                   className=" ml-5 w-3/4 h-full"
                 />
               </div>
@@ -517,9 +548,11 @@ function Page() {
               </div>
               <div className="   bg-white p-2  mt-4   relative">
                 <div className="bottom-2 left-0 absolute ">
-                  <img
+                  <Image
                     src="/Port--input.svg"
                     alt="arrow"
+                    width={500}
+                    height={500}
                     className="w-3/4 h-3/4"
                   />
                 </div>
@@ -527,9 +560,11 @@ function Page() {
               </div>
               <div className="   bg-white p-2  mt-4   relative">
                 <div className="bottom-2 left-0 absolute ">
-                  <img
+                  <Image
                     src="/Port--output.svg"
                     alt="arrow"
+                    width={500}
+                    height={500}
                     className="w-3/4 h-3/4"
                   />
                 </div>
@@ -538,9 +573,11 @@ function Page() {
             </div>
             <div className="shadow-md grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-1 w-full">
               <div className="bg-white  col-span-2  p-3 justify-center mt-4 relative">
-                <img
+                <Image
                   src="/picture/20240322-145029.png"
                   alt="arrow"
+                  width={500}
+                  height={500}
                   className="ml-5 w-3/4 h-full"
                 />
               </div>
@@ -552,9 +589,11 @@ function Page() {
               </div>
               <div className="   bg-white p-2  mt-4   relative">
                 <div className="bottom-2 left-0 absolute ">
-                  <img
+                  <Image
                     src="/Port--input.svg"
                     alt="arrow"
+                    width={500}
+                    height={500}
                     className="w-3/4 h-3/4"
                   />
                 </div>
@@ -562,9 +601,11 @@ function Page() {
               </div>
               <div className="   bg-white p-2  mt-4   relative">
                 <div className="bottom-2 left-0 absolute ">
-                  <img
+                  <Image
                     src="/Port--output.svg"
                     alt="arrow"
+                    width={500}
+                    height={500}
                     className="w-3/4 h-3/4"
                   />
                 </div>
