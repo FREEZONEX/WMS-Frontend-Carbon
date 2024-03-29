@@ -10,15 +10,15 @@ import PortInputIcon from '@/utils/pic/Port--input.svg';
 import PortOutputIcon from '@/utils/pic/Port--output.svg';
 import Time from '@/utils/pic/Time.svg';
 import Money from '@/utils/pic/Money.svg';
-import picture141125 from '@/utils/pic/picture/20240322-141125.png';
-import picture141213 from '@/utils/pic/picture/20240322-141213.png';
-import picture141217 from '@/utils/pic/picture/20240322-141217.png';
-import picture141220 from '@/utils/pic/picture/20240322-141220.png';
-import picture141223 from '@/utils/pic/picture/20240322-141223.png';
-import picture141226 from '@/utils/pic/picture/20240322-141226.png';
-import picture145020 from '@/utils/pic/picture/20240322-145020.png';
-import picture145025 from '@/utils/pic/picture/20240322-145025.png';
-import picture145029 from '@/utils/pic/picture/20240322-145029.png';
+import picture141125 from '@/utils/pic/picture/Rectangle 2370-1.svg';
+import picture141213 from '@/utils/pic/picture/Rectangle 2370.svg';
+import picture141217 from '@/utils/pic/picture/Rectangle 2371.svg';
+import picture141220 from '@/utils/pic/picture/Rectangle 2372.svg';
+import picture141223 from '@/utils/pic/picture/Rectangle 2373.svg';
+import picture141226 from '@/utils/pic/picture/Rectangle 6477.svg';
+import picture145020 from '@/utils/pic/picture/Thomas.svg';
+import picture145025 from '@/utils/pic/picture/Thomas-1.svg';
+import picture145029 from '@/utils/pic/picture/Thomas-2.svg';
 // import './analysis.module.css';
 
 import {
