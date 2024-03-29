@@ -6,6 +6,19 @@ import '@carbon/charts/styles.css';
 import { ContainedList, ContainedListItem } from '@carbon/react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import PortInputIcon from './pic/Port--input.svg';
+import PortOutputIcon from './pic/Port--output.svg';
+import Time from './pic/Time.svg';
+import Money from './pic/Money.svg';
+import picture141125 from './pic/picture/20240322-141125.png';
+import picture141213 from './pic/picture/20240322-141213.png';
+import picture141217 from './pic/picture/20240322-141217.png';
+import picture141220 from './pic/picture/20240322-141220.png';
+import picture141223 from './pic/picture/20240322-141223.png';
+import picture141226 from './pic/picture/20240322-141226.png';
+import picture145020 from './pic/picture/20240322-145020.png';
+import picture145025 from './pic/picture/20240322-145025.png';
+import picture145029 from './pic/picture/20240322-145029.png';
 // import './analysis.module.css';
 
 import {
@@ -309,12 +322,7 @@ function Page() {
                 </div>
               </div>
               <div className="absolute bottom-5 right-0 mb-4 mr-6">
-                <Image
-                  src="/Port--input.svg"
-                  alt="arrow"
-                  width={32}
-                  height={32}
-                />
+                <Image src={PortInputIcon} alt="arrow" width={32} height={32} />
               </div>
             </div>
             <div className="bg-white p-6 shadow-md max-w-lg  relative">
@@ -329,7 +337,7 @@ function Page() {
               </div>
               <div className="absolute bottom-5 right-0 mb-4 mr-6">
                 <Image
-                  src="/Port--output.svg"
+                  src={PortOutputIcon}
                   alt="arrow"
                   width={32}
                   height={32}
@@ -348,7 +356,7 @@ function Page() {
                 </div>
               </div>
               <div className="absolute bottom-5 right-0 mb-4 mr-6">
-                <Image src="/Time.svg" alt="arrow" width={32} height={32} />
+                <Image src={Time} alt="arrow" width={32} height={32} />
               </div>
             </div>
 
@@ -405,7 +413,7 @@ function Page() {
                 </div>
               </div>
               <div className="absolute bottom-5 right-0 mb-4 mr-6">
-                <Image src="/Money.svg" alt="arrow" width={32} height={32} />
+                <Image src={Money} alt="arrow" width={32} height={32} />
               </div>
             </div>
           </div>
@@ -420,7 +428,7 @@ function Page() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-2 w-full h-1/16">
                 <div className="bg-white  p-1  mt-5 relative">
                   <Image
-                    src="/picture/20240322-141125.png"
+                    src={picture141125}
                     alt="arrow"
                     width={50}
                     height={32}
@@ -434,7 +442,7 @@ function Page() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-2  w-full h-1/16">
                 <div className="bg-white p-1  mt-5  relative">
                   <Image
-                    src="/picture/20240322-141213.png"
+                    src={picture141213}
                     alt="arrow"
                     width={50}
                     height={32}
@@ -448,7 +456,7 @@ function Page() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-2  w-full h-1/16">
                 <div className="bg-white p-1 mt-5 relative">
                   <Image
-                    src="/picture/20240322-141217.png"
+                    src={picture141217}
                     alt="arrow"
                     width={50}
                     height={32}
@@ -467,7 +475,7 @@ function Page() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-2 w-full h-1/16">
                 <div className="bg-white  p-1  mt-5 relative">
                   <Image
-                    src="/picture/20240322-141220.png"
+                    src={picture141220}
                     alt="arrow"
                     width={50}
                     height={32}
@@ -481,7 +489,7 @@ function Page() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-2  w-full h-1/16">
                 <div className="bg-white p-1 mt-5 relative">
                   <Image
-                    src="/picture/20240322-141223.png"
+                    src={picture141223}
                     alt="arrow"
                     width={50}
                     height={32}
@@ -495,7 +503,7 @@ function Page() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-2  w-full h-1/16">
                 <div className="bg-white p-1 mt-5 relative">
                   <Image
-                    src="/picture/20240322-141226.png"
+                    src={picture141226}
                     alt="arrow"
                     width={50}
                     height={32}
@@ -518,7 +526,7 @@ function Page() {
             <div className="shadow-md grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-1 w-full">
               <div className="bg-white  items-center justify-center  col-span-2  p-3 mt-4 relative ">
                 <Image
-                  src="/picture/20240322-145020.png"
+                  src={picture145020}
                   alt="arrow"
                   width={500}
                   height={500}
@@ -534,7 +542,7 @@ function Page() {
               <div className="   bg-white p-2  mt-4   relative">
                 <div className="bottom-2 left-0 absolute ">
                   <Image
-                    src="/Port--input.svg"
+                    src={PortInputIcon}
                     alt="arrow"
                     width={500}
                     height={500}
@@ -546,7 +554,7 @@ function Page() {
               <div className="   bg-white p-2  mt-4   relative">
                 <div className="bottom-2 left-0 absolute ">
                   <Image
-                    src="/Port--output.svg"
+                    src={PortOutputIcon}
                     alt="arrow"
                     width={500}
                     height={500}
@@ -559,7 +567,7 @@ function Page() {
             <div className="shadow-md grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-1 w-full">
               <div className="bg-white  col-span-2  p-3 justify-center mt-4 relative">
                 <Image
-                  src="/picture/20240322-145025.png"
+                  src={picture145025}
                   alt="arrow"
                   width={500}
                   height={500}
@@ -575,7 +583,7 @@ function Page() {
               <div className="   bg-white p-2  mt-4   relative">
                 <div className="bottom-2 left-0 absolute ">
                   <Image
-                    src="/Port--input.svg"
+                    src={PortInputIcon}
                     alt="arrow"
                     width={500}
                     height={500}
@@ -587,7 +595,7 @@ function Page() {
               <div className="   bg-white p-2  mt-4   relative">
                 <div className="bottom-2 left-0 absolute ">
                   <Image
-                    src="/Port--output.svg"
+                    src={PortOutputIcon}
                     alt="arrow"
                     width={500}
                     height={500}
@@ -600,7 +608,7 @@ function Page() {
             <div className="shadow-md grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-1 w-full">
               <div className="bg-white  col-span-2  p-3 justify-center mt-4 relative">
                 <Image
-                  src="/picture/20240322-145029.png"
+                  src={picture145029}
                   alt="arrow"
                   width={500}
                   height={500}
@@ -616,7 +624,7 @@ function Page() {
               <div className="   bg-white p-2  mt-4   relative">
                 <div className="bottom-2 left-0 absolute ">
                   <Image
-                    src="/Port--input.svg"
+                    src={PortInputIcon}
                     alt="arrow"
                     width={500}
                     height={500}
@@ -628,7 +636,7 @@ function Page() {
               <div className="   bg-white p-2  mt-4   relative">
                 <div className="bottom-2 left-0 absolute ">
                   <Image
-                    src="/Port--output.svg"
+                    src={PortOutputIcon}
                     alt="arrow"
                     width={500}
                     height={500}
