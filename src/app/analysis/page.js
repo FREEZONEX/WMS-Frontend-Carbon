@@ -4,11 +4,8 @@ import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
 import { SimpleBarChart, GaugeChart, MeterChart } from '@carbon/charts-react';
 import '@carbon/charts/styles.css';
 import { ContainedList, ContainedListItem } from '@carbon/react';
-<<<<<<< HEAD
-=======
 import { useRouter } from 'next/navigation';
-// import './analysis.module.css';
->>>>>>> f3357899062c71ef3750727dc994f7b9e06c5b51
+
 import {
   Add,
   Apple,
@@ -73,9 +70,8 @@ function Page() {
   //   fetchData().catch(console.error); 
   // }, []); 
 
-=======
   const router = useRouter();
->>>>>>> f3357899062c71ef3750727dc994f7b9e06c5b51
+
   const data = [
     {
       group: 'inbound 1245',
