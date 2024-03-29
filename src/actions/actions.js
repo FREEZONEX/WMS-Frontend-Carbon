@@ -133,6 +133,20 @@ export async function fetchInbound(params) {
   });
 }
 
+// export async function fetchTodayInbound(params) {
+//   return httpToBackend.post('/today/inbound', {}, { params }).then((res) => {
+//     console.log(res);
+//     return res.data.data;
+//   });
+// }
+
+// export async function fetchTodayInboundDone(params) {
+//   return httpToBackend.post('/today/inbound/done', {}, { params }).then((res) => {
+//     console.log(res);
+//     return res.data.data;
+//   });
+// }
+
 export async function fetchInboundWithFilter(body, params) {
   return httpToBackend
     .post('/wms/inbound/get', body, { params })
@@ -169,6 +183,22 @@ export async function fetchOutbound(params) {
     console.log(res);
     return res.data.data;
   });
+}
+
+export async function fetchTodayOutbound(params) {
+  return httpToBackend.post('/today/outbound', {}, { params }).then((res) => {
+    console.log(res);
+    return res.data.data;
+  });
+}
+
+export async function fetchTodayOutboundDone(params) {
+  return httpToBackend
+    .post('/today/outbound/done', {}, { params })
+    .then((res) => {
+      console.log(res);
+      return res.data.data;
+    });
 }
 
 export async function fetchOutboundWithFilter(body) {
