@@ -48,7 +48,6 @@ function Page() {
           height="1120.5"
           src="https://app.powerbi.com/view?r=eyJrIjoiMzM1MjM5MmUtODY2OC00MzZiLWIyZDQtOTdiYmEwMzdlNTQwIiwidCI6ImFhNGU1ODM1LWU3YjctNDQ3NC1hZTE1LWQ3OTA0OTYwZDY2NCIsImMiOjEwfQ%3D%3D"
           frameborder="0"
-<<<<<<< HEAD
           allowFullScreen="true"
         ></iframe> */}
         <iframe title="newwarehouse" width="1800" height="1120.5" 
@@ -56,10 +55,7 @@ function Page() {
         frameborder="0" 
         allowFullScreen="true">
         </iframe>
-=======
-          allowFullScreen={true}
-        ></iframe>
->>>>>>> f3357899062c71ef3750727dc994f7b9e06c5b51
+
       </div>
     </div>
   );
