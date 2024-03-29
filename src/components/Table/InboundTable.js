@@ -12,13 +12,15 @@ import {
   Button,
 } from '@carbon/react';
 import './_table.scss';
-import ProductModal from '../Modal/ProductModal';
+import OperationDetailModal from '../Modal/OperationDetailModal';
 import {
   deleteInbound,
   fetchInbound,
   fetchInboundWithFilter,
 } from '@/actions/actions';
 import { useRouter, useSearchParams } from 'next/navigation';
+import moment from 'moment';
+import { DateTimeFormat } from '@/utils/constants';
 
 function InboundTable({
   headers,
@@ -39,7 +41,7 @@ function InboundTable({
   const [selectedId, setSelectedId] = useState('');
   const [rows, setRows] = useState([]);
   const [detailRows, setDetailRows] = useState({});
-  console.log(filters);
+
   useEffect(() => {
     if (isSearchClicked) {
       const filteredFormValue = Object.entries(filters).reduce(
@@ -139,20 +141,20 @@ function InboundTable({
                     </StructuredListCell>
                   );
                 }
-                if (header.key === 'storage_location') {
-                  return (
-                    <StructuredListCell
-                      key={header.key}
-                      className="truncate"
-                      title={row[header.key]}
-                      onClick={(e) => {
-                        e.currentTarget.classList.toggle('expanded');
-                      }}
-                    >
-                      {detailRows[row.id]?.storage_location || ''}
-                    </StructuredListCell>
-                  );
-                }
+                // if (header.key === 'storage_location') {
+                //   return (
+                //     <StructuredListCell
+                //       key={header.key}
+                //       className="truncate"
+                //       title={row[header.key]}
+                //       onClick={(e) => {
+                //         e.currentTarget.classList.toggle('expanded');
+                //       }}
+                //     >
+                //       {detailRows[row.id]?.storage_location || ''}
+                //     </StructuredListCell>
+                //   );
+                // }
                 if (header.key === 'material') {
                   return (
                     <StructuredListCell key={header.key}>
@@ -191,6 +193,20 @@ function InboundTable({
                     </StructuredListCell>
                   );
                 }
+                if (
+                  header.key === 'create_time' ||
+                  header.key === 'inbound_delivery_date'
+                ) {
+                  return (
+                    <StructuredListCell key={header.key}>
+                      {row[header.key] &&
+                        moment(row[header.key]).format(
+                          DateTimeFormat.shortDate
+                        )}
+                    </StructuredListCell>
+                  );
+                }
+
                 return (
                   <StructuredListCell key={header.key}>
                     {row[header.key]}
@@ -215,11 +231,11 @@ function InboundTable({
           setPageSize(pageSize);
         }}
       />
-      <ProductModal
+      <OperationDetailModal
         id={selectedId}
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
-      ></ProductModal>
+      ></OperationDetailModal>
     </div>
   );
 }

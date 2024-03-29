@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import {
-  HeaderGlobalAction,
   StructuredListWrapper,
   StructuredListHead,
   StructuredListRow,
@@ -11,84 +10,60 @@ import {
   Pagination,
   Link,
 } from '@carbon/react';
-import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
-import { deleteStocktaking, fetchStocktakingDetails } from '@/actions/actions';
+import {
+  fetchStocktaking,
+  fetchStocktakingWithFilter,
+} from '@/actions/actions';
 import StocktakingResultModal from '../Modal/StocktakingResultModal';
+import moment from 'moment';
+import { DateTimeFormat } from '@/utils/constants';
 
-function StocktakingTable({ headers, rows, setRefresh }) {
+function StocktakingTable({
+  headers,
+  refresh,
+  setRefresh,
+  filters,
+  isSearchClicked,
+}) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-
+  const [total, setTotal] = useState(0);
   const [isModalOpen, setModalOpen] = React.useState(false);
-  const handleDeleteRow = async (id) => {
-    deleteStocktaking({ id }).then(() => setRefresh({}));
-  };
-  const [selectedMaterial, setSelectedMaterial] = useState([]);
-  const [detailRows, setDetailRows] = useState({});
+  const [rows, setRows] = useState([]);
+  const [selectedId, setSelectedId] = useState('');
 
   useEffect(() => {
-    const fetchDetails = async () => {
-      const updatedRows = await Promise.all(
-        rows.map(async (row) => {
-          console.log({
-            id: row.id,
-            ref_id: row.ref_id,
-          });
-          const details = await fetchStocktakingDetails({
-            id: row.id,
-            ref_id: row.ref_id,
-          });
-          const storageLocations = [
-            ...new Set(details.map((detail) => detail.storage_location)),
-          ].join(', ');
-          return {
-            ...row,
-            storage_location: storageLocations,
-            material: details,
-          };
-        })
-      );
-      setDetailRows(
-        updatedRows.reduce((acc, row) => {
-          acc[row.id] = row;
+    if (isSearchClicked) {
+      const filteredFormValue = Object.entries(filters).reduce(
+        (acc, [key, value]) => {
+          if (value !== '') {
+            acc[key] = value;
+          }
           return acc;
-        }, {})
+        },
+        {}
       );
-    };
-
-    fetchDetails();
-  }, [rows]);
-  console.log(detailRows);
-
-  const [sortKey, setSortKey] = useState('create_time');
-  const [sortDirection, setSortDirection] = useState('desc');
-  const sortedRows = React.useMemo(() => {
-    if (!sortKey) {
-      return rows;
-    }
-
-    const sortedRows = [...rows];
-    sortedRows.sort((a, b) => {
-      if (a[sortKey] < b[sortKey]) {
-        return sortDirection === 'asc' ? -1 : 1;
+      if (Object.entries(filteredFormValue).length > 0) {
+        console.log(filteredFormValue);
+        fetchStocktakingWithFilter(filteredFormValue, {
+          pageNum: page,
+          pageSize,
+        }).then((res) => {
+          setRows(res.list);
+          setTotal(res.total);
+        });
       }
-      if (a[sortKey] > b[sortKey]) {
-        return sortDirection === 'asc' ? 1 : -1;
-      }
-      return 0;
-    });
-    return sortedRows;
-  }, [rows, sortKey, sortDirection]);
-  const rowsToShow = sortedRows.slice((page - 1) * pageSize, page * pageSize);
-  const handleSort = (key) => {
-    if (sortKey === key) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
-      setSortKey(key);
-      setSortDirection('asc');
+      fetchStocktaking({ pageNum: page, pageSize }).then((res) => {
+        setRows(res.list);
+        setTotal(res.total);
+      });
     }
-  };
+  }, [page, pageSize, refresh, filters, isSearchClicked]);
+  const [sortKey, setSortKey] = useState('');
+  const [sortDirection, setSortDirection] = useState('desc');
+
   return (
     <div>
       <StructuredListWrapper isCondensed>
@@ -109,61 +84,46 @@ function StocktakingTable({ headers, rows, setRefresh }) {
           </StructuredListRow>
         </StructuredListHead>
         <StructuredListBody>
-          {rowsToShow.map((row, index) => (
+          {rows.map((row, index) => (
             <StructuredListRow key={index}>
               {headers.map((header) => {
                 if (header.key === 'status') {
                   return (
                     <StructuredListCell key={header.key}>
-                      <Tag type="blue">
-                        {row[header.key] === '' ? 'Done' : row[header.key]}
+                      <Tag
+                        type={
+                          row[header.key].toLowerCase() === 'pending'
+                            ? 'red'
+                            : 'blue'
+                        }
+                      >
+                        {row[header.key] === null ? '' : row[header.key]}
                       </Tag>
                     </StructuredListCell>
                   );
                 }
-                if (header.key === 'storage_location') {
-                  return (
-                    <StructuredListCell
-                      key={header.key}
-                      className="truncate"
-                      title={row[header.key]}
-                      onClick={(e) => {
-                        e.currentTarget.classList.toggle('expanded');
-                      }}
-                    >
-                      {detailRows[row.id]?.storage_location || ''}
-                    </StructuredListCell>
-                  );
-                }
-                if (header.key === 'material') {
-                  return (
-                    <StructuredListCell key={header.key}>
-                      <Link
-                        onClick={() => {
-                          setModalOpen(true);
-                          setSelectedMaterial(
-                            detailRows[row.id]?.material || []
-                          );
-                        }}
-                      >
-                        More
-                      </Link>
-                    </StructuredListCell>
-                  );
-                }
+
                 if (header.key === 'result') {
                   return (
                     <StructuredListCell key={header.key}>
                       <Link
                         onClick={() => {
                           setModalOpen(true);
-                          setSelectedMaterial(
-                            detailRows[row.id]?.material || []
-                          );
+                          setSelectedId(row['id']);
                         }}
                       >
-                        view Detail
+                        View Detail
                       </Link>
+                    </StructuredListCell>
+                  );
+                }
+                if (header.key === 'create_time') {
+                  return (
+                    <StructuredListCell key={header.key}>
+                      {row[header.key] &&
+                        moment(row[header.key]).format(
+                          DateTimeFormat.shortDate
+                        )}
                     </StructuredListCell>
                   );
                 }
@@ -173,17 +133,6 @@ function StocktakingTable({ headers, rows, setRefresh }) {
                   </StructuredListCell>
                 );
               })}
-              <StructuredListCell>
-                <HeaderGlobalAction aria-label="Edit" disabled>
-                  <Edit size={15} />
-                </HeaderGlobalAction>
-                <HeaderGlobalAction
-                  aria-label="Delete"
-                  onClick={() => handleDeleteRow(row.id)}
-                >
-                  <Delete size={15} />
-                </HeaderGlobalAction>
-              </StructuredListCell>
             </StructuredListRow>
           ))}
         </StructuredListBody>
@@ -196,14 +145,14 @@ function StocktakingTable({ headers, rows, setRefresh }) {
         pageNumberText="Page Number"
         pageSize={pageSize}
         pageSizes={[5, 10, 20, 30, 40, 50]}
-        totalItems={rows.length}
+        totalItems={total}
         onChange={({ page, pageSize }) => {
           setPage(page);
           setPageSize(pageSize);
         }}
       />
       <StocktakingResultModal
-        material={selectedMaterial}
+        id={selectedId}
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
       ></StocktakingResultModal>

@@ -8,6 +8,7 @@ import {
   StructuredListCell,
   StructuredListBody,
   Link,
+  IconButton,
   Pagination,
 } from '@carbon/react';
 import { Edit, Delete } from '@carbon/icons-react';
@@ -15,7 +16,6 @@ import './_table.scss';
 import ShelfLocationModal from '../Modal/ShelfLocationModal';
 import {
   deleteWarehouse,
-  fetchStorageLocationsByWId,
   fetchWarehouses,
   fetchWarehousesWithFilters,
 } from '@/actions/actions';
@@ -126,12 +126,16 @@ function WarehouseTable({
                 );
               })}
               <StructuredListCell>
-                <HeaderGlobalAction aria-label="Edit">
+                <IconButton size="xs" kind="ghost" className="mr-[0.5rem]">
                   <Edit size={15} onClick={() => handleEditRow(row)} />
-                </HeaderGlobalAction>
-                <HeaderGlobalAction aria-label="Delete">
-                  <Delete size={15} onClick={() => handleDeleteRow(row.id)} />
-                </HeaderGlobalAction>
+                </IconButton>
+                <IconButton
+                  size="xs"
+                  kind="ghost"
+                  onClick={() => handleDeleteRow(row.id)}
+                >
+                  <Delete size={15} />
+                </IconButton>
               </StructuredListCell>
             </StructuredListRow>
           ))}

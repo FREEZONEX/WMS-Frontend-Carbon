@@ -19,6 +19,8 @@ import {
   updateInboundRecord,
 } from '@/actions/actions';
 import { useRouter, usePathname } from 'next/navigation';
+import moment from 'moment';
+import { DateTimeFormat } from '@/utils/constants';
 
 const headers = [
   { key: 'name', header: 'Material Name' },
@@ -38,7 +40,6 @@ function InboundCreateForm({ id }) {
   //   deliveryDateInvalid: false,
   // });
   const pathName = usePathname();
-  console.log(pathName);
   const [taskList, setTaskList] = useState([]);
   const [isAlert, setIsAlert] = useState(false);
   const [formValue, setFormValues] = useState({
@@ -46,21 +47,26 @@ function InboundCreateForm({ id }) {
     purchase_order_no: '',
     supplier: '',
     delivery_date: '',
+    delivery_date_show: '',
   });
+  const [dateShow, setDateShow] = useState('');
+  const onDateChange = (e) => {
+    if (!e) {
+      return;
+    }
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      delivery_date: moment(e[0]).format(),
+    }));
+    setDateShow(moment(e[0]).format(DateTimeFormat.shortDate));
+  };
+
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
-    if (id === 'delivery_date') {
-      const formattedDate = new Date(value).toISOString();
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        [id]: formattedDate,
-      }));
-    } else {
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        [id]: value,
-      }));
-    }
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [id]: value,
+    }));
   };
   console.log(formValue, taskList, 'id', id);
 
@@ -75,6 +81,11 @@ function InboundCreateForm({ id }) {
             supplier: data.list[0].inbound_supplier,
             delivery_date: data.list[0].inbound_delivery_date,
           });
+          setDateShow(
+            moment(data.list[0].inbound_delivery_date).format(
+              DateTimeFormat.shortDate
+            )
+          );
           const taskList = data.list.map((item) => ({
             name: item.name,
             product_code: item.product_code,
@@ -193,13 +204,15 @@ function InboundCreateForm({ id }) {
         </Column>
 
         <Column className="ml-0" sm={2} md={4} lg={4}>
-          <DatePicker datePickerType="single">
+          <DatePicker
+            datePickerType="single"
+            id="delivery_date"
+            onChange={onDateChange}
+          >
             <DatePickerInput
-              placeholder="mm/dd/yyyy"
+              placeholder="dd/mm/yyyy"
               labelText="Delivery Date"
-              id="delivery_date"
-              value={formValue.delivery_date}
-              onChange={onFormValueChange}
+              value={dateShow}
             />
           </DatePicker>
         </Column>
@@ -240,7 +253,13 @@ function InboundCreateForm({ id }) {
         <Button size="sm" onClick={handleSubmit}>
           Submit
         </Button>
-        <Button size="sm" kind="tertiary" href="/operation/inbound">
+        <Button
+          size="sm"
+          kind="tertiary"
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
+          }}
+        >
           Cancel
         </Button>
       </div>

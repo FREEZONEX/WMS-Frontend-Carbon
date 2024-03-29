@@ -1,16 +1,35 @@
 'use client';
 import React from 'react';
 import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
-
-function page() {
+import { useRouter } from 'next/navigation';
+function Page() {
+  const router = useRouter();
   return (
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href="/">Home</a>
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/home`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
-        <BreadcrumbItem href="/analysis">Analysis</BreadcrumbItem>
-        <BreadcrumbItem href="/analysis/3d">3D-Modeling</BreadcrumbItem>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/analysis`);
+          }}
+        >
+          Analysis
+        </BreadcrumbItem>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/analysis/3d`);
+          }}
+        >
+          3D-Modeling
+        </BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
@@ -29,6 +48,7 @@ function page() {
           height="1120.5"
           src="https://app.powerbi.com/view?r=eyJrIjoiMzM1MjM5MmUtODY2OC00MzZiLWIyZDQtOTdiYmEwMzdlNTQwIiwidCI6ImFhNGU1ODM1LWU3YjctNDQ3NC1hZTE1LWQ3OTA0OTYwZDY2NCIsImMiOjEwfQ%3D%3D"
           frameborder="0"
+<<<<<<< HEAD
           allowFullScreen="true"
         ></iframe> */}
         <iframe title="newwarehouse" width="1800" height="1120.5" 
@@ -36,9 +56,13 @@ function page() {
         frameborder="0" 
         allowFullScreen="true">
         </iframe>
+=======
+          allowFullScreen={true}
+        ></iframe>
+>>>>>>> f3357899062c71ef3750727dc994f7b9e06c5b51
       </div>
     </div>
   );
 }
 
-export default page;
+export default Page;

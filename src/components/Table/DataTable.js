@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  DataTable,
   Table,
   TableHead,
   TableRow,
@@ -8,18 +7,16 @@ import {
   TableBody,
   TableContainer,
   TableCell,
-  TableSelectRow,
-  TableSelectAll,
+  Tag,
 } from '@carbon/react';
 
 function WMSDataTable({ headers, rows }) {
-  console.log(rows);
+  console.log(rows, headers);
   return (
     <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
-            <TableSelectAll />
             {headers.map((header) => (
               <TableHeader key={header.key} header>
                 {header.header}
@@ -30,27 +27,26 @@ function WMSDataTable({ headers, rows }) {
         <TableBody>
           {rows.map((row, i) => (
             <TableRow key={i}>
-              <TableSelectRow
-                onChange={(checked) => {
-                  if (checked) {
-                    setSelectedRows((prevSelectedRows) => [
-                      ...prevSelectedRows,
-                      row,
-                    ]);
-                  } else {
-                    setSelectedRows((prevSelectedRows) =>
-                      prevSelectedRows.filter(
-                        (selectedRow) => selectedRow.id !== row.id
-                      )
-                    );
-                  }
-                }}
-              />
               {headers.map((header) => {
+                if (header.key === 'discrepancy') {
+                  return (
+                    <TableCell key={header.key}>
+                      <Tag
+                        type={
+                          parseInt(row[header.key]) < 0
+                            ? 'red'
+                            : parseInt(row[header.key]) === 0
+                            ? 'blue'
+                            : 'green'
+                        }
+                      >
+                        {row[header.key]}
+                      </Tag>
+                    </TableCell>
+                  );
+                }
                 return (
-                  <TableCell key={header.key}>
-                    {row[header.key] ? row[header.key] : ''}
-                  </TableCell>
+                  <TableCell key={header.key}>{row[header.key]}</TableCell>
                 );
               })}
             </TableRow>

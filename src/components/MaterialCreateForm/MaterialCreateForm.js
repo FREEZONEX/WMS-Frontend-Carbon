@@ -254,7 +254,9 @@ function MaterialCreateForm() {
         <Button
           size="sm"
           kind="tertiary"
-          href={`${process.env.PATH_PREFIX}/warehouse/material`}
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/warehouse/material`);
+          }}
         >
           Cancel
         </Button>

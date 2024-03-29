@@ -11,6 +11,7 @@ import {
 import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import WarehouseTable from '@/components/Table/WarehouseTable';
 import CreateWarehouseModal from '@/components/Modal/CreateWarehouseModal';
+import { useRouter } from 'next/navigation';
 
 const headers = [
   { key: 'name', header: 'Name' },
@@ -24,6 +25,7 @@ const headers = [
 ];
 
 function Page() {
+  const router = useRouter();
   const defaultFormValue = {
     name: '',
     warehouse_id: '',
@@ -51,9 +53,19 @@ function Page() {
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <a href={`${process.env.PATH_PREFIX}/`}>Home</a>
+          <a
+            onClick={() => {
+              router.push(`${process.env.PATH_PREFIX}/home`);
+            }}
+          >
+            Home
+          </a>
         </BreadcrumbItem>
-        <BreadcrumbItem href={`${process.env.PATH_PREFIX}/warehouse`}>
+        <BreadcrumbItem
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/warehouse`);
+          }}
+        >
           Warehouse
         </BreadcrumbItem>
       </Breadcrumb>

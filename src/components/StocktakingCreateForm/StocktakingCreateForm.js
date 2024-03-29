@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Grid,
   Column,
@@ -21,10 +21,10 @@ import { Add, Close } from '@carbon/icons-react';
 import '@/components/MaterialCreateForm/_materialcreateform.scss';
 import MaterialSelectionTable from '../Table/MaterialSelectionTable';
 import {
-  fetchWarehouses,
-  fetchStorageLocationsByWId,
-  fetchMaterial,
   addStocktakingRecord,
+  fetchWHNameMap,
+  fetchSLNameMap,
+  fetchWHSLNameMap,
 } from '@/actions/actions';
 import { useRouter } from 'next/navigation';
 
@@ -43,8 +43,9 @@ const tagColors = [
 const headers = [
   { key: 'name', header: 'Material Name' },
   { key: 'product_code', header: 'Material Code' },
-  { key: 'unit', header: 'Unit' },
+  { key: 'specification', header: 'Specification' },
   { key: 'quantity', header: 'Quantity' },
+  { key: 'unit', header: 'Unit' },
 ];
 
 function StocktakingCreateForm() {
@@ -56,8 +57,8 @@ function StocktakingCreateForm() {
   const [formValue, setFormValues] = useState({
     type: '',
     source: 'manual',
-    status: '',
-    // note: '',
+    status: 'Done',
+    note: '',
   });
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
@@ -68,56 +69,87 @@ function StocktakingCreateForm() {
     }));
   };
   const [taskList, setTaskList] = useState([]);
-  const [warehouseOptions, setWarehouseOptions] = useState([]);
+  const [whNameMap, setWhNameMap] = useState({});
+  const [slNameMap, setSlNameMap] = useState({});
+  const [whslNameMap, setWhslNameMap] = useState([]);
+  useEffect(() => {
+    fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const map = res.list.reduce((acc, curr) => {
+          acc[curr.id] = curr.name;
+          return acc;
+        }, {});
+
+        setWhNameMap(map);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch WH name map:', error);
+      });
+    fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const map = res.list.reduce((acc, curr) => {
+          acc[curr.id] = curr.name;
+          return acc;
+        }, {});
+
+        setSlNameMap(map);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch SL name map:', error);
+      });
+    fetchWHSLNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        setWhslNameMap(res.list);
+      })
+      .catch((error) => {
+        console.error('Error fetching warehouse data:', error);
+      });
+  }, []);
+
+  const warehouseOptions = Object.entries(whNameMap).map(([id, name]) => ({
+    id,
+    name,
+  }));
+  console.log(whslNameMap);
   const [storageLocationOptions, setStorageLocationOptions] = useState([]);
   const [selectedWarehouse, setSelectedWarehouse] = useState('');
   const [selectedStorageLocation, setSelectedStorageLocation] = useState('');
-  const [materials, setMaterials] = useState([]);
   const [isAlert, setIsAlert] = useState(false);
-  useEffect(() => {
-    fetchWarehouses().then((res) => {
-      setWarehouseOptions(res);
-    });
-    fetchMaterial().then((res) => {
-      setMaterials(res);
-    });
-  }, []);
+
   console.log(formValue, taskList);
   useEffect(() => {
-    console.log(selectedWarehouse);
     if (selectedWarehouse != '') {
-      fetchStorageLocationsByWId({ warehouse_id: selectedWarehouse }).then(
-        (res) => setStorageLocationOptions(res)
-      );
+      const sl = whslNameMap.filter((entry) => {
+        return entry.id === selectedWarehouse;
+      });
+      console.log(sl, selectedWarehouse);
+      setStorageLocationOptions(sl[0].warehouseNamemap);
     }
-  }, [selectedWarehouse]);
+  }, [selectedWarehouse, whslNameMap]);
 
   function handleAddTask() {
     if (selectedWarehouse && selectedStorageLocation) {
-      const newTask = findInfoById(selectedWarehouse, selectedStorageLocation);
+      const newTask = {
+        warehouse: {
+          id: selectedWarehouse,
+          name: whNameMap[selectedWarehouse],
+        },
+        shelf_location: {
+          id: selectedStorageLocation,
+          name: slNameMap[selectedStorageLocation],
+        },
+        materials: [],
+      };
       setTaskList([...taskList, newTask]);
       setSelectedWarehouse('');
       setSelectedStorageLocation('');
     }
   }
-  function findInfoById(wid, slid) {
-    const selectedWarehouse = warehouseOptions.find(
-      (warehouse) => warehouse.id === wid
-    );
 
-    const selectedStorageLocation = storageLocationOptions.find(
-      (location) => location.id === slid
-    );
-
-    return {
-      warehouse: selectedWarehouse,
-      shelf_location: selectedStorageLocation,
-      materials: [],
-    };
-  }
   const handleMaterialSelection = (
     taskIndex,
     materialId,
+    materialName,
     field,
     value,
     checked
@@ -125,19 +157,19 @@ function StocktakingCreateForm() {
     setTaskList((prevTaskList) => {
       const updatedTaskList = [...prevTaskList];
       if (checked) {
-        const selectedMaterial = materials.find(
-          (material) => material.id === materialId
-        );
         const existingMaterialIndex = updatedTaskList[
           taskIndex
-        ].materials.findIndex((material) => material.id === materialId);
+        ].materials.findIndex(
+          (material) => material.material_code === materialId
+        );
 
         if (existingMaterialIndex !== -1) {
           updatedTaskList[taskIndex].materials[existingMaterialIndex][field] =
             value;
         } else {
           updatedTaskList[taskIndex].materials.push({
-            ...selectedMaterial,
+            material_code: materialId,
+            material_name: materialName,
             [field]: value,
           });
         }
@@ -185,14 +217,15 @@ function StocktakingCreateForm() {
       setFieldValidation({ sourceInvalid: false, typeInvalid: false });
       setFormValues({ type: '', source: '', status: '', note: '' });
       setTaskList([]);
-      router.push('/operation/stocktaking');
+      router.push(`${process.env.PATH_PREFIX}/operation/stocktaking`);
     });
   };
 
   function convertTaskListToFormat(taskList) {
     const shelfRecords = taskList.map((task) => {
       const inventory = task.materials.map((material) => ({
-        material_id: material.id,
+        material_code: material.material_code,
+        material_name: material.material_name,
         quantity: parseInt(material.quantity),
       }));
 
@@ -204,7 +237,9 @@ function StocktakingCreateForm() {
 
     return shelfRecords;
   }
-
+  if (!whNameMap || !slNameMap || !whslNameMap) {
+    return <div>Loading...</div>;
+  }
   return (
     <div>
       <div className=" mt-12">
@@ -222,9 +257,8 @@ function StocktakingCreateForm() {
               required
             >
               <SelectItem disabled hidden value="" text="Choose an option" />
-              <SelectItem value="cycle stock" text="Cycle Stock" />
-              <SelectItem value="pipeline stock" text="Pipeline Stock" />
-              <SelectItem value="mix stock" text="Mix Stock" />
+              <SelectItem value="Dynamic" text="Dynamic" />
+              <SelectItem value="Static" text="Static" />
             </Select>
           </Column>
           <Column sm={1} md={3} lg={5}>
@@ -238,7 +272,7 @@ function StocktakingCreateForm() {
               value={formValue.source}
               onChange={onFormValueChange}
               required
-              disabled
+              readOnly
             >
               <SelectItem disabled hidden value="" text="Choose an option" />
               <SelectItem value="PDA" text="PDA" />
@@ -251,6 +285,7 @@ function StocktakingCreateForm() {
               id="status"
               defaultValue=""
               labelText="Status"
+              readOnly
               value={formValue.status}
               onChange={onFormValueChange}
               required
@@ -261,7 +296,7 @@ function StocktakingCreateForm() {
               <SelectItem value="To-do" text="To-do" />
             </Select>
           </Column>
-          {/* <Column sm={1} md={3} lg={4}>
+          <Column sm={1} md={3} lg={5}>
             <TextArea
               className="mb-10 w-full"
               labelText="Note"
@@ -271,7 +306,7 @@ function StocktakingCreateForm() {
               onChange={onFormValueChange}
               placeholder="Note Placeholder"
             />
-          </Column> */}
+          </Column>
         </Grid>
         <SwitcherDivider className="w-full mb-10 pl-0" />
         <Grid className="pl-0">
@@ -366,9 +401,9 @@ function StocktakingCreateForm() {
                     <TabPanel key={index}>
                       <MaterialSelectionTable
                         headers={headers}
-                        rows={materials}
                         onSelectionChange={(
                           materialId,
+                          materialName,
                           field,
                           value,
                           checked
@@ -376,6 +411,7 @@ function StocktakingCreateForm() {
                           handleMaterialSelection(
                             index,
                             materialId,
+                            materialName,
                             field,
                             value,
                             checked
@@ -401,7 +437,13 @@ function StocktakingCreateForm() {
         <Button size="sm" onClick={handleSubmit}>
           Submit
         </Button>
-        <Button size="sm" kind="tertiary" href="/operation/stocktaking">
+        <Button
+          size="sm"
+          kind="tertiary"
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/stocktaking`);
+          }}
+        >
           Cancel
         </Button>
       </div>

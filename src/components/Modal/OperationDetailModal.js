@@ -2,7 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Heading } from '@carbon/react';
 import WMSDataTable from '../Table/DataTable';
-import { fetchInboundDetails, fetchOutboundDetails } from '@/actions/actions';
+import {
+  fetchInboundDetails,
+  fetchOutboundDetails,
+  fetchWHNameMap,
+  fetchSLNameMap,
+} from '@/actions/actions';
 import { usePathname } from 'next/navigation';
 
 const headers = [
@@ -16,13 +21,38 @@ const headers = [
   { key: 'rfid', header: 'RFID' },
 ];
 
-function ProductModal({ isModalOpen, setModalOpen, id }) {
+function OperationDetailModal({ isModalOpen, setModalOpen, id }) {
   const [details, setDetails] = useState([]);
   const pathName = usePathname();
+  const [whNameMap, setWhNameMap] = useState({});
+  const [slNameMap, setSlNameMap] = useState({});
+  useEffect(() => {
+    fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const map = res.list.reduce((acc, curr) => {
+          acc[curr.id] = curr.name;
+          return acc;
+        }, {});
+        setWhNameMap(map);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch WH name map:', error);
+      });
+
+    fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
+      .then((res) => {
+        const map = res.list.reduce((acc, curr) => {
+          acc[curr.id] = curr.name;
+          return acc;
+        }, {});
+        setSlNameMap(map);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch SL name map:', error);
+      });
+  }, []);
   useEffect(() => {
     if (id) {
-      const whNameMap = JSON.parse(localStorage.getItem('whNameMap'));
-      const slNameMap = JSON.parse(localStorage.getItem('slNameMap'));
       if (pathName === `${process.env.PATH_PREFIX}/operation/inbound`) {
         fetchInboundDetails({ id })
           .then((data) => {
@@ -63,7 +93,7 @@ function ProductModal({ isModalOpen, setModalOpen, id }) {
           });
       }
     }
-  }, [id, pathName]);
+  }, [id, pathName, whNameMap, slNameMap]);
   console.log(id, details);
   return (
     <Modal
@@ -81,4 +111,4 @@ function ProductModal({ isModalOpen, setModalOpen, id }) {
   );
 }
 
-export default ProductModal;
+export default OperationDetailModal;

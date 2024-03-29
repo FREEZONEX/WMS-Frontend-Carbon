@@ -1,4 +1,6 @@
 @use '@carbon/react';
+@use '@carbon/styles/scss/theme';
+@use '@carbon/styles/scss/themes';
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
@@ -45,4 +47,12 @@
 }
 .cds--side-nav--expanded {
   width: 16rem;
+}
+
+:root[data-carbon-theme='g10'] {
+  @include theme.theme(themes.$g10);
+}
+
+:root[data-carbon-theme='g100'] {
+  @include theme.theme(themes.$g100);
 }

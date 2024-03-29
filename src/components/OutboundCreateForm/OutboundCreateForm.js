@@ -3,62 +3,49 @@ import React, { useEffect, useState } from 'react';
 import {
   Grid,
   Column,
-  Select,
-  SelectItem,
+  DatePicker,
+  DatePickerInput,
   Button,
-  TextArea,
+  FormLabel,
   SwitcherDivider,
-  IconButton,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel,
-  Tag,
+  TextInput,
   InlineNotification,
 } from '@carbon/react';
-import { Add, Close } from '@carbon/icons-react';
 import '@/components/MaterialCreateForm/_materialcreateform.scss';
-import MaterialSelectionTable from '../Table/MaterialSelectionTable';
+import TaskListTable from '../Table/TaskListTable';
 import {
-  fetchWarehouses,
-  fetchStorageLocationsByWId,
-  fetchMaterial,
+  updateOutboundRecord,
+  fetchOutboundDetails,
   addOutboundRecord,
 } from '@/actions/actions';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import moment from 'moment';
+import { DateTimeFormat } from '@/utils/constants';
 
-const tagColors = [
-  'red',
-  'magenta',
-  'purple',
-  'blue',
-  'cyan',
-  'teal',
-  'green',
-  'gray',
-  'cool-gray',
-  'outline',
-];
 const headers = [
   { key: 'name', header: 'Material Name' },
   { key: 'product_code', header: 'Material Code' },
-  { key: 'unit', header: 'Unit' },
+  { key: 'specification', header: 'Specification' },
   { key: 'quantity', header: 'Quantity' },
+  { key: 'unit', header: 'Unit' },
+  { key: 'expect_wh_id', header: 'WH' },
+  { key: 'expact_stock_location_id', header: 'Shelf' },
 ];
 
-function OutboundCreateForm() {
+function OutboundCreateForm({ id }) {
   const router = useRouter();
-  const [fieldValidation, setFieldValidation] = useState({
-    sourceInvalid: false,
-    typeInvalid: false,
-  });
+  const pathName = usePathname();
+  // const [fieldValidation, setFieldValidation] = useState({
+  //   sourceInvalid: false,
+  //   typeInvalid: false,
+  // });
   const [formValue, setFormValues] = useState({
-    type: '',
-    source: 'manual',
-    status: '',
-    note: '',
+    creator: '',
+    purchase_order_no: '',
+    supplier: '',
+    delivery_date: '',
   });
+  const [dateShow, setDateShow] = useState('');
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
 
@@ -67,342 +54,210 @@ function OutboundCreateForm() {
       [id]: value,
     }));
   };
+  const onDateChange = (e) => {
+    if (!e) {
+      return;
+    }
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      delivery_date: moment(e[0]).format(),
+    }));
+    setDateShow(moment(e[0]).format(DateTimeFormat.shortDate));
+  };
   const [taskList, setTaskList] = useState([]);
-  const [warehouseOptions, setWarehouseOptions] = useState([]);
-  const [storageLocationOptions, setStorageLocationOptions] = useState([]);
-  const [selectedWarehouse, setSelectedWarehouse] = useState('');
-  const [selectedStorageLocation, setSelectedStorageLocation] = useState('');
-  const [materials, setMaterials] = useState([]);
+
   const [isAlert, setIsAlert] = useState(false);
+
   useEffect(() => {
-    fetchWarehouses().then((res) => {
-      setWarehouseOptions(res);
-    });
-    fetchMaterial().then((res) => {
-      setMaterials(res);
-    });
-  }, []);
-  console.log(formValue, taskList);
-  useEffect(() => {
-    console.log(selectedWarehouse);
-    if (selectedWarehouse != '') {
-      fetchStorageLocationsByWId({ warehouse_id: selectedWarehouse }).then(
-        (res) => setStorageLocationOptions(res)
-      );
-    }
-  }, [selectedWarehouse]);
-
-  function handleAddTask() {
-    if (selectedWarehouse && selectedStorageLocation) {
-      const newTask = findInfoById(selectedWarehouse, selectedStorageLocation);
-      setTaskList([...taskList, newTask]);
-      setSelectedWarehouse('');
-      setSelectedStorageLocation('');
-    }
-  }
-  function findInfoById(wid, slid) {
-    const selectedWarehouse = warehouseOptions.find(
-      (warehouse) => warehouse.id === wid
-    );
-
-    const selectedStorageLocation = storageLocationOptions.find(
-      (location) => location.id === slid
-    );
-
-    return {
-      warehouse: selectedWarehouse,
-      shelf_location: selectedStorageLocation,
-      materials: [],
-    };
-  }
-  const handleMaterialSelection = (
-    taskIndex,
-    materialId,
-    field,
-    value,
-    checked
-  ) => {
-    console.log(field);
-    setTaskList((prevTaskList) => {
-      const updatedTaskList = [...prevTaskList];
-      if (checked) {
-        const selectedMaterial = materials.find(
-          (material) => material.id === materialId
-        );
-        const existingMaterialIndex = updatedTaskList[
-          taskIndex
-        ].materials.findIndex((material) => material.id === materialId);
-
-        if (existingMaterialIndex !== -1) {
-          updatedTaskList[taskIndex].materials[existingMaterialIndex][field] =
-            value;
-        } else {
-          updatedTaskList[taskIndex].materials.push({
-            ...selectedMaterial,
-            [field]: value,
+    if (id) {
+      fetchOutboundDetails({ id })
+        .then((data) => {
+          console.log(data);
+          setFormValues({
+            creator: data.list[0].outbound_creator,
+            purchase_order_no: data.list[0].outbound_purchase_order_no,
+            supplier: data.list[0].outbound_supplier,
+            delivery_date: data.list[0].outbound_delivery_date,
           });
-        }
-      } else {
-        updatedTaskList[taskIndex].materials = updatedTaskList[
-          taskIndex
-        ].materials.filter((material) => material.id !== materialId);
-      }
-
-      return updatedTaskList;
-    });
-  };
-  const handleRemoveTask = (taskIndex) => {
-    setTaskList((prevTaskList) => {
-      const updatedTaskList = [...prevTaskList];
-      updatedTaskList.splice(taskIndex, 1);
-      return updatedTaskList;
-    });
-  };
+          setDateShow(
+            moment(data.list[0].outbound_delivery_date).format(
+              DateTimeFormat.shortDate
+            )
+          );
+          const taskList = data.list.map((item) => ({
+            name: item.name,
+            product_code: item.product_code,
+            specification: item.specification,
+            quantity: item.quantity,
+            unit: item.unit,
+            expect_wh_id: item.warehouse_id,
+            expact_stock_location_id: item.stock_location_id,
+          }));
+          setTaskList(taskList);
+        })
+        .catch((error) => {
+          console.error('Failed to fetch inbound details:', error);
+        });
+    }
+  }, [id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newValidation = {
-      sourceInvalid: !formValue.source || formValue.source === '',
-      typeInvalid: !formValue.type || formValue.type === '',
-    };
-    setFieldValidation(newValidation);
+    // const newValidation = {
+    //   sourceInvalid: !formValue.source || formValue.source === '',
+    //   typeInvalid: !formValue.type || formValue.type === '',
+    // };
+    // setFieldValidation(newValidation);
 
-    if (Object.values(newValidation).some((v) => v)) {
-      setFieldValidation(newValidation);
-      return;
-    }
+    // if (Object.values(newValidation).some((v) => v)) {
+    //   setFieldValidation(newValidation);
+    //   return;
+    // }
     if (taskList.length === 0) {
       setIsAlert(true);
       return;
     } else {
       setIsAlert(false);
     }
-    const body = {
-      ...formValue,
-      shelf_records: convertTaskListToFormat(taskList),
-    };
-    console.log(body);
-    addOutboundRecord(body).then(() => {
-      setFieldValidation({ sourceInvalid: false, typeInvalid: false });
-      setFormValues({ type: '', source: '', status: '', note: '' });
-      setTaskList([]);
-      router.push('/operation/outbound');
-    });
+    if (pathName === `${process.env.PATH_PREFIX}/operation/outbound/create`) {
+      let body = {
+        ...formValue,
+        source: 'manual',
+        request_detail: convertTaskListToFormat(taskList),
+      };
+      console.log(body);
+      addOutboundRecord(body).then(() => {
+        setFormValues({
+          creator: '',
+          purchase_order_no: '',
+          supplier: '',
+          delivery_date: '',
+        });
+        setTaskList([]);
+        router.push(`${process.env.PATH_PREFIX}/operation/outbound`);
+      });
+    } else {
+      let body = {
+        ...formValue,
+        source: 'manual',
+        status: 'done',
+        id,
+      };
+      console.log(body);
+      updateOutboundRecord(body).then(() => {
+        setFormValues({
+          creator: '',
+          purchase_order_no: '',
+          supplier: '',
+          delivery_date: '',
+        });
+        setTaskList([]);
+        router.push(`${process.env.PATH_PREFIX}/operation/outbound`);
+      });
+    }
   };
 
   function convertTaskListToFormat(taskList) {
     const shelfRecords = taskList.map((task) => {
-      const inventory = task.materials.map((material) => ({
-        material_id: material.id,
-        quantity: parseInt(material.quantity),
-      }));
-
       return {
-        storage_location_id: task.shelf_location.id,
-        inventory,
+        material_code: task.product_code,
+        quantity: task.quantity,
+        stock_location_id: task.expact_stock_location_id,
+        wh_id: task.expect_wh_id,
       };
     });
 
     return shelfRecords;
   }
-
   return (
     <div>
-      <div className=" mt-12">
-        <Grid className="pl-0">
-          <Column sm={1} md={3} lg={5}>
-            <Select
-              className="mb-10"
-              id="type"
-              defaultValue=""
-              labelText="Outbound Type"
-              invalid={fieldValidation.typeInvalid}
-              invalidText="This field cannot be empty"
-              value={formValue.type}
-              onChange={onFormValueChange}
-              required
-            >
-              <SelectItem disabled hidden value="" text="Choose an option" />
-              <SelectItem value="material outbound" text="Material Outbound" />
-              <SelectItem value="product outbound" text="Product Outbound" />
-              <SelectItem value="mix outbound" text="Mix Outbound" />
-            </Select>
-          </Column>
-          <Column sm={1} md={3} lg={5}>
-            <Select
-              className="mb-10"
-              id="source"
-              defaultValue=""
-              labelText="Source"
-              invalid={fieldValidation.sourceInvalid}
-              invalidText="This field cannot be empty"
-              value={formValue.source}
-              onChange={onFormValueChange}
-              disabled
-              required
-            >
-              <SelectItem disabled hidden value="" text="Choose an option" />
-              <SelectItem value="PDA" text="PDA" />
-              <SelectItem value="manual" text="Manual" />
-            </Select>
-          </Column>
-          <Column sm={1} md={3} lg={5}>
-            <Select
-              className="mb-10"
-              id="status"
-              defaultValue=""
-              labelText="Status"
-              value={formValue.status}
-              onChange={onFormValueChange}
-              required
-            >
-              <SelectItem disabled hidden value="" text="Choose an option" />
-              <SelectItem value="Done" text="Done" />
-              <SelectItem value="Executing" text="Executing" />
-              <SelectItem value="To-do" text="To-do" />
-            </Select>
-          </Column>
-          <Column sm={1} md={3} lg={4}>
-            <TextArea
-              className="mb-10 w-full"
-              labelText="Note"
-              rows={4}
-              id="note"
-              value={formValue.note}
-              onChange={onFormValueChange}
-              placeholder="Note Placeholder"
+      <Grid className="p-0 mt-[50px] gap-[9px]">
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="Creator"
+            id="creator"
+            placeholder="Creator"
+            value={formValue.creator}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="Purchase order No."
+            id="purchase_order_no"
+            placeholder="Purchase order No."
+            value={formValue.purchase_order_no}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="Supplier"
+            id="supplier"
+            placeholder="Supplier"
+            value={formValue.supplier}
+            onChange={onFormValueChange}
+          />
+        </Column>
+
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <DatePicker datePickerType="single" onChange={onDateChange}>
+            <DatePickerInput
+              placeholder="dd/mm/yyyy"
+              labelText="Delivery Date"
+              id="delivery_date"
+              value={dateShow}
             />
-          </Column>
-        </Grid>
-        <SwitcherDivider className="w-full mb-10 pl-0" />
-        <Grid className="pl-0">
-          <Column sm={4} md={3} lg={4}>
-            <Select
-              className="mb-10"
-              id="warehouse"
-              defaultValue=""
-              labelText="Warehouse"
-              value={selectedWarehouse}
-              onChange={(e) => {
-                setSelectedWarehouse(e.target.value);
-              }}
-              required
-            >
-              <SelectItem disabled hidden value="" text="Choose an option" />
-              {warehouseOptions.map((warehouse) => {
-                return (
-                  <SelectItem
-                    key={warehouse.id}
-                    value={warehouse.id}
-                    text={warehouse.name}
-                  />
-                );
-              })}
-            </Select>
-          </Column>
-          <Column sm={4} md={3} lg={4}>
-            <Select
-              className="mb-10"
-              id="shelf_location"
-              defaultValue=""
-              labelText="Shelf Location"
-              value={selectedStorageLocation}
-              onChange={(e) => {
-                setSelectedStorageLocation(e.target.value);
-              }}
-              required
-            >
-              <SelectItem disabled hidden value="" text="Choose an option" />
-              {storageLocationOptions.map((location) => {
-                return (
-                  <SelectItem
-                    key={location.id}
-                    value={location.id}
-                    text={location.name}
-                  />
-                );
-              })}
-            </Select>
-          </Column>
-          <Column sm={1} md={1} lg={2}>
-            <IconButton className="mb-10 " size="md" onClick={handleAddTask}>
-              <Add />
-            </IconButton>
-          </Column>
-        </Grid>
-        <div className="mb-10">
-          {taskList.map((task, index) => {
-            return (
-              <Tag key={index} type={tagColors[index % tagColors.length]}>
-                <div className="flex ">
-                  {task.warehouse.name}-{task.shelf_location.name}
-                  <Close
-                    className="ml-1"
-                    size={16}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemoveTask(index);
-                    }}
-                  />
-                </div>
-              </Tag>
-            );
-          })}
-        </div>
-        {taskList && taskList.length > 0 ? (
-          <>
-            <Tabs>
-              <TabList aria-label="List of tabs" contained>
-                {taskList.map((task, index) => {
-                  return (
-                    <Tab key={index}>
-                      {task.warehouse.name}-{task.shelf_location.name}
-                    </Tab>
-                  );
-                })}
-              </TabList>
-              <TabPanels>
-                {taskList.map((task, index) => {
-                  return (
-                    <TabPanel key={index}>
-                      <MaterialSelectionTable
-                        headers={headers}
-                        rows={materials}
-                        onSelectionChange={(
-                          materialId,
-                          field,
-                          value,
-                          checked
-                        ) =>
-                          handleMaterialSelection(
-                            index,
-                            materialId,
-                            field,
-                            value,
-                            checked
-                          )
-                        }
-                      />
-                    </TabPanel>
-                  );
-                })}
-              </TabPanels>
-            </Tabs>
-          </>
-        ) : null}
+          </DatePicker>
+        </Column>
+        <Column sm={2} md={4} lg={4}>
+          <TextInput
+            readOnly
+            className="flex-auto"
+            labelText="Status"
+            id="status"
+            placeholder="Status"
+            value={
+              pathName ===
+              `${process.env.PATH_PREFIX}/operation/outbound/create`
+                ? 'Pending'
+                : 'Outbound'
+            }
+          />
+        </Column>
+      </Grid>
+      <SwitcherDivider className="w-full mt-10 mb-10 pl-0" />
+
+      <div className="mb-10">
+        <FormLabel className="mb-2">Material List</FormLabel>
+        <TaskListTable
+          headers={headers}
+          rows={taskList}
+          setRows={setTaskList}
+        />
       </div>
+
       {isAlert && (
         <InlineNotification
           className="w-full"
           title="Notice: "
-          subtitle="No outbound material"
+          subtitle="No inbound material"
         />
       )}
       <div className="flex space-x-4 mt-10 justify-center ">
         <Button size="sm" onClick={handleSubmit}>
           Submit
         </Button>
-        <Button size="sm" kind="tertiary" href="/operation/outbound">
+        <Button
+          size="sm"
+          kind="tertiary"
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/outbound`);
+          }}
+        >
           Cancel
         </Button>
       </div>
