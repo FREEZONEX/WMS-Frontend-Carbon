@@ -13,6 +13,7 @@ import {
   TableToolbarSearch,
   IconButton,
   Checkbox,
+  ComboBox,
 } from '@carbon/react';
 import { Add, Subtract, CheckmarkFilled } from '@carbon/icons-react';
 import {
@@ -156,25 +157,30 @@ function TaskListTable({ headers, rows, setRows }) {
       prevRows.map((prevRow, i) => {
         if (i === rowId) {
           if (field === 'expact_stock_location_id') {
-            const slName = slNameMap[e.target.value] || '';
-            if (slName !== '') {
-              const getWarehouseId = (locationId) => whslMap.get(locationId);
-              const wh_id = getWarehouseId(e.target.value);
+            const inputValue = e.target.value;
+            const locationId = Object.entries(slNameMap).find(
+              ([id, name]) => name.toLowerCase() === inputValue.toLowerCase()
+            )?.[0];
+            console.log(inputValue, locationId);
+            if (locationId) {
+              const wh_id = whslMap.get(locationId);
               const wh_name = whNameMap[wh_id];
-              console.log(wh_id, wh_name);
               return {
                 ...prevRow,
                 expect_wh_id: wh_id,
                 expect_wh_name: wh_name,
-                [field]: e.target.value,
-                expact_stock_location_name: slName,
+                [field]: locationId,
+                expact_stock_location_name: inputValue,
+              };
+            } else {
+              return {
+                ...prevRow,
+                [field]: '',
+                expact_stock_location_name: inputValue,
+                expect_wh_id: '',
+                expect_wh_name: '',
               };
             }
-            return {
-              ...prevRow,
-              [field]: e.target.value,
-              expact_stock_location_name: slName,
-            };
           } else {
             return {
               ...prevRow,
@@ -202,15 +208,7 @@ function TaskListTable({ headers, rows, setRows }) {
       );
     }
   };
-  console.log(rows);
-  const checkQuantity = (value) => {
-    console.log('parse int check', parseInt(value), isNaN(value));
-    if (value === '' || isNaN(value)) {
-      return false;
-    } else {
-      return true;
-    }
-  };
+
   console.log(rows);
   if (!whNameMap || !slNameMap || !whslMap) {
     return <div>Loading...</div>;
@@ -334,7 +332,9 @@ function TaskListTable({ headers, rows, setRows }) {
                           {successRows.includes(i) && (
                             <CheckmarkFilled
                               color={
-                                checkQuantity(row['quantity'])
+                                Object.values(row).every(
+                                  (value) => value.trim() !== ''
+                                )
                                   ? 'green'
                                   : '#c6c6c6'
                               }
@@ -410,8 +410,9 @@ function TaskListTable({ headers, rows, setRows }) {
                         <TextInput
                           className="w-40"
                           id={`expact-stock-location-id-${i}`}
-                          value={row.expact_stock_location_name || ''}
+                          value={row.expact_stock_location_name}
                           onChange={(e) => {
+                            console.log(e);
                             handleInputChange(i, header.key, e);
                           }}
                         />
