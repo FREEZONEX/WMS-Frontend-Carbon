@@ -51,10 +51,10 @@ function Page() {
           allowFullScreen="true"
         ></iframe> */}
         <iframe
-          title="newwarehouse"
+          title="tuto_sketchup_warehouse"
           width="1800"
           height="1120.5"
-          src="https://app.powerbi.com/view?r=eyJrIjoiMTA1OGRmNjgtMGVhYi00ZDNmLWI5YzYtZmUwODYzMzc0MDEyIiwidCI6ImFhNGU1ODM1LWU3YjctNDQ3NC1hZTE1LWQ3OTA0OTYwZDY2NCIsImMiOjEwfQ%3D%3D"
+          src="https://app.powerbi.com/reportEmbed?reportId=40841fb9-520d-4003-91ef-71c3ffddadef&autoAuth=true&ctid=aa4e5835-e7b7-4474-ae15-d7904960d664"
           frameborder="0"
           allowFullScreen={true}
         ></iframe>
