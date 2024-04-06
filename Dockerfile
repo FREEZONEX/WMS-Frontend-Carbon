@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Set the environment variable and build your Next.js app
-ARG RUNTIME_IDC_NAME=sg
+ARG RUNTIME_IDC_NAME=local
 RUN RUNTIME_IDC_NAME=${RUNTIME_IDC_NAME} npm run build
 
 # Stage 2: Running the app in production
