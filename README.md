@@ -33,4 +33,3 @@ Configure paths in `jsconfig.json`
   }
 }
 ```
-
