@@ -42,6 +42,7 @@ export const HeaderWSideNav = ({
   const isCurrentPath = (path) => {
     return process.env.PATH_PREFIX + path === pathname;
   };
+  console.log(isSideNavExpanded);
   return (
     <Header aria-label="SUPCON WMS">
       <SkipToContent />
@@ -61,19 +62,26 @@ export const HeaderWSideNav = ({
         WMS
       </HeaderName>
       <Theme theme={theme.sideNavTheme}>
-        <SideNav aria-label="Side navigation" expanded={isSideNavExpanded}>
-          <SideNavItems>
+        <SideNav
+          aria-label="Side navigation"
+          expanded={isSideNavExpanded}
+          isRail={false}
+        >
+          <SideNavItems isSideNavExpanded={false}>
             <SideNavLink
+              isSideNavExpanded={false}
               onClick={() => {
                 router.push(`${process.env.PATH_PREFIX}/warehouse`);
               }}
               className="cursor-pointer"
               isActive={isCurrentPath('/warehouse')}
             >
+              {console.log(isSideNavExpanded)}
               <IbmDb2Warehouse className="mr-[1.5rem]" />
               <span>Warehouse</span>
             </SideNavLink>
             <SideNavLink
+              isSideNavExpanded={false}
               renderIcon={Product}
               onClick={() => {
                 router.push(`${process.env.PATH_PREFIX}/warehouse/material`);
@@ -85,6 +93,7 @@ export const HeaderWSideNav = ({
             </SideNavLink>
             <SwitcherDivider />
             <SideNavLink
+              isSideNavExpanded={false}
               renderIcon={PortInput}
               onClick={() => {
                 router.push(`${process.env.PATH_PREFIX}/operation/inbound`);
@@ -95,6 +104,7 @@ export const HeaderWSideNav = ({
               Inbound
             </SideNavLink>
             <SideNavLink
+              isSideNavExpanded={false}
               renderIcon={PortOutput}
               onClick={() => {
                 router.push(`${process.env.PATH_PREFIX}/operation/outbound`);
@@ -105,6 +115,7 @@ export const HeaderWSideNav = ({
               Outbound
             </SideNavLink>
             <SideNavLink
+              isSideNavExpanded={false}
               renderIcon={InventoryManagement}
               onClick={() => {
                 router.push(`${process.env.PATH_PREFIX}/operation/stocktaking`);
@@ -116,6 +127,7 @@ export const HeaderWSideNav = ({
             </SideNavLink>
             <SwitcherDivider />
             <SideNavLink
+              isSideNavExpanded={false}
               renderIcon={Analytics}
               onClick={() => {
                 router.push(`${process.env.PATH_PREFIX}/analysis`);
@@ -126,6 +138,7 @@ export const HeaderWSideNav = ({
               Analysis
             </SideNavLink>
             <SideNavLink
+              isSideNavExpanded={false}
               renderIcon={WatsonHealth3DCursor}
               onClick={() => {
                 router.push(`${process.env.PATH_PREFIX}/analysis/3d`);
