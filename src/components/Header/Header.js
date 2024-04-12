@@ -112,7 +112,7 @@ export const HeaderWSideNav = ({
               className="cursor-pointer"
               isActive={isCurrentPath('/operation/stocktaking')}
             >
-              Stocktaking
+              Auditing
             </SideNavLink>
             <SwitcherDivider />
             <SideNavLink
