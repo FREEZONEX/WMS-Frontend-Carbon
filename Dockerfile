@@ -27,6 +27,7 @@ WORKDIR /app
 # Specifically, we copy only the dependencies required for production
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
 
 # Use shell commands to conditionally copy the public directory if it exists
 RUN if [ -d /app/public ]; then cp -R /app/public ./public; fi
