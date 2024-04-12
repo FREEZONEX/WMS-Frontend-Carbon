@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "RUNTIME_IDC_NAME=cn next dev",
     "start": "next start",
     "lint": "next lint",
     "ci-check": "yarn format:diff",
