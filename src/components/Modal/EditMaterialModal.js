@@ -10,7 +10,6 @@ import {
 import {
   updateMaterial,
   fetchWarehouses,
-  fetchStorageLocations,
   fetchStorageLocationsByWId,
 } from '@/actions/actions';
 

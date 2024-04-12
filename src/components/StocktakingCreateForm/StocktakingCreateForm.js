@@ -249,7 +249,7 @@ function StocktakingCreateForm() {
               className="mb-10"
               id="type"
               defaultValue=""
-              labelText="Stocktaking Type"
+              labelText="Auditing Type"
               invalid={fieldValidation.typeInvalid}
               invalidText="This field cannot be empty"
               value={formValue.type}
