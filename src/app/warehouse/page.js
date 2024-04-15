@@ -21,7 +21,7 @@ const headers = [
   { key: 'project_group', header: 'Project Group' },
   { key: 'department', header: 'Department' },
   { key: 'email', header: 'Email' },
-  { key: 'storage_location', header: 'Shelf Location' },
+  { key: 'storage_location', header: 'Storage Location' },
 ];
 
 function Page() {
