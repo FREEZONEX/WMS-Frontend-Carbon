@@ -43,6 +43,19 @@ export const HeaderWSideNav = ({
     return process.env.PATH_PREFIX + path === pathname;
   };
   console.log(isSideNavExpanded);
+  const getSideNavExpandedStyle = () => {
+    if (theme.sideNavTheme === 'white') {
+      return {
+        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+        backdropFilter: 'blur(5px)',
+      };
+    } else {
+      return {
+        backgroundColor: 'rgba(38, 38, 38, 0.8)',
+        backdropFilter: ' blur(5px)',
+      };
+    }
+  };
   return (
     <Header aria-label="SUPCON WMS">
       <SkipToContent />
@@ -63,6 +76,7 @@ export const HeaderWSideNav = ({
       </HeaderName>
       <Theme theme={theme.sideNavTheme}>
         <SideNav
+          style={isSideNavExpanded ? getSideNavExpandedStyle() : {}}
           aria-label="Side navigation"
           expanded={isSideNavExpanded}
           isRail={false}
