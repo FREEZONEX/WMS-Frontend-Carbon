@@ -129,7 +129,7 @@ const AddExpectLocationModal = ({ isOpen, onClose }) => {
             </span>
           </div>
         </div>
-        <div></div>
+        <div className="w-auto h-full bg-white mt-2"></div>
       </div>
       {/* <Grid className="pl-0 pr-0">
         <Column sm={2} md={4} lg={8}>
