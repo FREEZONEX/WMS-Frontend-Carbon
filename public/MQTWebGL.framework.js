@@ -15367,7 +15367,7 @@ var unityFramework = (() => {
           webGLContextAttributes.majorVersion > 1
             ? canvas.getContext('webgl2', webGLContextAttributes)
             : canvas.getContext('webgl', webGLContextAttributes);
-              // https://caniuse.com/#feat=webgl
+        // https://caniuse.com/#feat=webgl
 
         if (!ctx) return 0;
 
