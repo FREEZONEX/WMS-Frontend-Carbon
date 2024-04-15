@@ -12,6 +12,7 @@ import './_materialcreateform.scss';
 import { useRouter } from 'next/navigation';
 import { addMaterial, fetchStorageLocationsByWId } from '@/actions/actions';
 import { fetchWarehouses } from '@/actions/actions';
+import AddExpectLocationModal from '@/app/warehouse/material/create/components/addExpectLocation';
 
 function MaterialCreateForm() {
   const router = useRouter();
@@ -37,6 +38,8 @@ function MaterialCreateForm() {
   const [storageLocationOptions, setStorageLocationOptions] = useState([]);
   const [selectedWarehouseInfo, setSelectedWarehouseInfo] = useState({});
   const [selectedStorageLocation, setSelectedStorageLocation] = useState({});
+  const [isOpenExpect, setIsOpenExpect] = useState(false);
+
   useEffect(() => {
     //TODO: select all warehouse instead of with pagination
     fetchWarehouses({ pageNum: 1, pageSize: 99999999 }).then((res) => {
@@ -97,6 +100,12 @@ function MaterialCreateForm() {
       });
     });
     router.push(`${process.env.PATH_PREFIX}/warehouse/material`);
+  };
+  const onSelectExpectLocation = () => {
+    setIsOpenExpect(true);
+  };
+  const onCloseExpectLocationModal = () => {
+    setIsOpenExpect(false);
   };
   return (
     <div>
@@ -235,6 +244,11 @@ function MaterialCreateForm() {
               selectedItem={selectedStorageLocation}
             />
           </Column>
+          <Column sm={2} md={4} lg={4}>
+            <Button onClick={onSelectExpectLocation}>
+              Test designate area
+            </Button>
+          </Column>
           <Column sm={4} md={8} lg={16}>
             <TextArea
               className="mb-8 w-full"
@@ -261,6 +275,10 @@ function MaterialCreateForm() {
           Cancel
         </Button>
       </div>
+      <AddExpectLocationModal
+        isOpen={isOpenExpect}
+        onClose={onCloseExpectLocationModal}
+      ></AddExpectLocationModal>
     </div>
   );
 }
