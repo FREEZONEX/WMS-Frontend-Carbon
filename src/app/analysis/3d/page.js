@@ -2,6 +2,8 @@
 import React from 'react';
 import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
 import { useRouter } from 'next/navigation';
+import UnityWebGL from '@/components/WebGL/UnitiyWebGL';
+
 function Page() {
   const router = useRouter();
   return (
@@ -41,14 +43,8 @@ function Page() {
           </Heading>
         </div>
       </div>
-      <div className="mt-[-220px] flex items-center justify-center">
-        <iframe
-          title="webgl"
-          width="1800"
-          height="1120.5"
-          src="/MQTWebGl/index.html"
-          frameborder="0"
-        ></iframe>
+      <div className="mt-5 flex items-center justify-center h-auto">
+        <UnityWebGL />
       </div>
     </div>
   );

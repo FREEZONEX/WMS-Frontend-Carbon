@@ -2,6 +2,7 @@
 import React from 'react';
 import { Heading, Link } from '@carbon/react';
 import { useRouter } from 'next/navigation';
+import UnityWebGL from '@/components/WebGL/UnitiyWebGL';
 
 export default function Home() {
   const router = useRouter();
@@ -18,14 +19,8 @@ export default function Home() {
       >
         Getting Started
       </Link>
-      <div className="mt-[-100px] flex items-center justify-center">
-        <iframe
-          title="webgl"
-          width="1800"
-          height="1120.5"
-          src="/MQTWebGl/index.html"
-          frameborder="0"
-        ></iframe>
+      <div className="mt-5 flex items-center justify-center h-auto">
+        <UnityWebGL />
       </div>
     </>
   );
