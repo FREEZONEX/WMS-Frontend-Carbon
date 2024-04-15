@@ -12,6 +12,7 @@ import {
   fetchWarehouses,
   fetchStorageLocationsByWId,
 } from '@/actions/actions';
+import WarehouseSelection from '../../../../../components/MaterialCreateForm/WarehouseSelection';
 
 const AddExpectLocationModal = ({ isOpen, onClose }) => {
   const [fieldValidation, setFieldValidation] = useState({
@@ -129,7 +130,9 @@ const AddExpectLocationModal = ({ isOpen, onClose }) => {
             </span>
           </div>
         </div>
-        <div></div>
+        <div className="w-auto h-full bg-white mt-2">
+          <WarehouseSelection />
+        </div>
       </div>
       {/* <Grid className="pl-0 pr-0">
         <Column sm={2} md={4} lg={8}>
