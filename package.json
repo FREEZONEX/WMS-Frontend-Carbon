@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "build": "next build && next export",
-    "dev": "next dev",
+    "dev": "cross-env RUNTIME_IDC_NAME=cn next dev",
     "start": "next start",
     "lint": "next lint",
     "ci-check": "yarn format:diff",
@@ -27,12 +27,14 @@
     "next": "13.4.9",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-unity-webgl": "^9.5.1",
     "sass": "^1.63.6"
   },
   "devDependencies": {
     "@commitlint/cli": "7.5.2",
     "@commitlint/config-conventional": "7.5.0",
     "autoprefixer": "^10.4.17",
+    "cross-env": "^7.0.3",
     "husky": "1.3.1",
     "lint-staged": "8.1.5",
     "postcss": "^8.4.35",
