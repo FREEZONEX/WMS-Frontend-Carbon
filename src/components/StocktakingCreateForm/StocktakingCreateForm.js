@@ -339,7 +339,7 @@ function StocktakingCreateForm() {
               className="mb-10"
               id="shelf_location"
               defaultValue=""
-              labelText="Shelf Location"
+              labelText="Storage Location"
               value={selectedStorageLocation}
               onChange={(e) => {
                 setSelectedStorageLocation(e.target.value);
