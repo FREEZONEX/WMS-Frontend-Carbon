@@ -245,10 +245,10 @@ function MaterialCreateForm() {
           {/* <Column sm={2} md={4} lg={4}>
             <ComboBox
               className="mb-8"
-              titleText="Expect Shelf"
+              titleText="Expect Location"
               items={storageLocationOptions}
               itemToString={(item) => (item ? item.name : '')}
-              placeholder="Choose a Shelf"
+              placeholder="Choose a Location"
               onChange={(selectedItem) => {
                 setSelectedStorageLocation(selectedItem.selectedItem);
                 setFormValue({

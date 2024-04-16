@@ -29,7 +29,7 @@ const headers = [
   { key: 'quantity', header: 'Quantity' },
   { key: 'unit', header: 'Unit' },
   { key: 'expect_wh_id', header: 'WH' },
-  { key: 'expact_stock_location_id', header: 'Shelf' },
+  { key: 'expact_stock_location_id', header: 'Location' },
 ];
 
 function OutboundCreateForm({ id }) {

@@ -17,7 +17,7 @@ const headers = [
   { key: 'quantity', header: 'Quantity' },
   { key: 'unit', header: 'Unit' },
   { key: 'warehouse', header: 'WH' },
-  { key: 'stock_location', header: 'Shelf' },
+  { key: 'stock_location', header: 'Location' },
   { key: 'rfid', header: 'RFID' },
 ];
 

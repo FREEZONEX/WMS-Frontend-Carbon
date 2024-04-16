@@ -31,7 +31,7 @@ import {
 import WMSDataTable from '../Table/DataTable';
 
 const headers = [
-  { key: 'name', header: 'Shelf Location' },
+  { key: 'name', header: 'Storage Location' },
   { key: 'occupied', header: 'Occupied' },
   { key: 'materials', header: 'Material' },
 ];
@@ -112,7 +112,7 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
   return (
     <Modal
       open={isModalOpen}
-      modalHeading="All Shelf Location"
+      modalHeading="All Storage Location"
       passiveModal
       onRequestClose={() => {
         setModalOpen(false);
@@ -123,7 +123,7 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
       {!isCreate && !showMaterial && (
         <>
           <Heading className="text-sm font-normal leading-tight tracking-tight mb-3">
-            All shelf location under this warehouse -{' '}
+            All Storage location under this warehouse -{' '}
             {warehouse_info.warehouse_id} -{warehouse_info.warehouse_name}.
           </Heading>
           <DataTable
@@ -250,7 +250,7 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
       {isCreate && (
         <div>
           <Heading className="text-sm font-normal leading-tight tracking-tight mb-3">
-            Add a shelf Location
+            Add a Storage Location
           </Heading>
           <TextInput
             labelText="Name"
@@ -278,7 +278,7 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
       {showMaterial && (
         <div>
           <Heading className="text-sm font-normal leading-tight tracking-tight mb-3">
-            All materials on this shelf
+            All materials at this Location
           </Heading>
           <WMSDataTable
             headers={[

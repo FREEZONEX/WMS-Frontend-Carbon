@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Unity, useUnityContext } from 'react-unity-webgl';
 
 const UnityWebGL = () => {
-  const buildUrl = '/MQTWebGL';
+  const buildUrl = '/MQTTWEBGL';
   const { unityProvider } = useUnityContext({
     loaderUrl: buildUrl + '.loader.js',
     dataUrl: buildUrl + '.data',
