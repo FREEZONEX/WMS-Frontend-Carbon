@@ -30,7 +30,7 @@ function Page() {
             router.push(`${process.env.PATH_PREFIX}/operation/stocktaking`);
           }}
         >
-          Stocktaking
+          Auditing
         </BreadcrumbItem>
         <BreadcrumbItem
           onClick={() => {
@@ -44,7 +44,7 @@ function Page() {
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <Heading className="mt-2 text-[28px] font-normal">
-          Create a Stocktaking Order
+          Create a Auditing Order
         </Heading>
       </div>
       <StocktakingCreateForm />

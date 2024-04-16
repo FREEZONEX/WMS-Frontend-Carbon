@@ -4378,6 +4378,11 @@ react-is@^18.2.0:
   resolved "https://registry.npmjs.org/react-is/-/react-is-18.2.0.tgz"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
+react-unity-webgl@^9.5.1:
+  version "9.5.1"
+  resolved "https://registry.npmjs.org/react-unity-webgl/-/react-unity-webgl-9.5.1.tgz"
+  integrity sha512-7zQmJR7gfzyAW/oXjMDMDozVmdEzktzm54vbftcbtS5bGXGUE8S9BYeXElQyugdUL1tY7EC7UpF+9nQPcwGhIQ==
+
 "react@^16.8.6 || ^17.0.1 || ^18.2.0", react@^18.2.0, "react@>= 16.8.0 || 17.x.x || ^18.0.0-0", react@>=0.14.9, react@>=16, react@>=16.8.0, react@18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"

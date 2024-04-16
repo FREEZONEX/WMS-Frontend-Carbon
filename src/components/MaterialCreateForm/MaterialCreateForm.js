@@ -7,11 +7,14 @@ import {
   TextArea,
   Button,
   ComboBox,
+  IconButton,
 } from '@carbon/react';
+import { IbmDb2Warehouse } from '@carbon/icons-react';
 import './_materialcreateform.scss';
 import { useRouter } from 'next/navigation';
 import { addMaterial, fetchStorageLocationsByWId } from '@/actions/actions';
 import { fetchWarehouses } from '@/actions/actions';
+import AddExpectLocationModal from '@/components/Modal/addExpectLocationModal';
 
 function MaterialCreateForm() {
   const router = useRouter();
@@ -37,6 +40,8 @@ function MaterialCreateForm() {
   const [storageLocationOptions, setStorageLocationOptions] = useState([]);
   const [selectedWarehouseInfo, setSelectedWarehouseInfo] = useState({});
   const [selectedStorageLocation, setSelectedStorageLocation] = useState({});
+  const [isOpenExpect, setIsOpenExpect] = useState(false);
+
   useEffect(() => {
     //TODO: select all warehouse instead of with pagination
     fetchWarehouses({ pageNum: 1, pageSize: 99999999 }).then((res) => {
@@ -97,6 +102,12 @@ function MaterialCreateForm() {
       });
     });
     router.push(`${process.env.PATH_PREFIX}/warehouse/material`);
+  };
+  const onSelectExpectLocation = () => {
+    setIsOpenExpect(true);
+  };
+  const onCloseExpectLocationModal = () => {
+    setIsOpenExpect(false);
   };
   return (
     <div>
@@ -187,6 +198,21 @@ function MaterialCreateForm() {
             />
           </Column>
           <Column sm={2} md={4} lg={4}>
+            <div>
+              <span className="text-gray-500 text-sm"> Except Location</span>
+            </div>
+            <div className="mt-2 mb-5">
+              <Button
+                onClick={onSelectExpectLocation}
+                kind="tertiary"
+                size="sm"
+                renderIcon={IbmDb2Warehouse}
+              >
+                Warehouse
+              </Button>
+            </div>
+          </Column>
+          {/* <Column sm={2} md={4} lg={4}>
             <ComboBox
               className="mb-8"
               titleText="Expect WH"
@@ -215,14 +241,14 @@ function MaterialCreateForm() {
                 }
               }}
             />
-          </Column>
-          <Column sm={2} md={4} lg={4}>
+          </Column> */}
+          {/* <Column sm={2} md={4} lg={4}>
             <ComboBox
               className="mb-8"
-              titleText="Expect Shelf"
+              titleText="Expect Location"
               items={storageLocationOptions}
               itemToString={(item) => (item ? item.name : '')}
-              placeholder="Choose a Shelf"
+              placeholder="Choose a Location"
               onChange={(selectedItem) => {
                 setSelectedStorageLocation(selectedItem.selectedItem);
                 setFormValue({
@@ -234,7 +260,7 @@ function MaterialCreateForm() {
               }}
               selectedItem={selectedStorageLocation}
             />
-          </Column>
+          </Column> */}
           <Column sm={4} md={8} lg={16}>
             <TextArea
               className="mb-8 w-full"
@@ -261,6 +287,10 @@ function MaterialCreateForm() {
           Cancel
         </Button>
       </div>
+      <AddExpectLocationModal
+        isOpen={isOpenExpect}
+        onClose={onCloseExpectLocationModal}
+      ></AddExpectLocationModal>
     </div>
   );
 }

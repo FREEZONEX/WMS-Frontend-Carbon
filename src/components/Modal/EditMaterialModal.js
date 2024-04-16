@@ -10,7 +10,6 @@ import {
 import {
   updateMaterial,
   fetchWarehouses,
-  fetchStorageLocations,
   fetchStorageLocationsByWId,
 } from '@/actions/actions';
 
@@ -248,10 +247,10 @@ const EditMaterialModal = ({
         <Column sm={2} md={4} lg={8}>
           <ComboBox
             className="mb-8"
-            titleText="Expect Shelf"
+            titleText="Expect Location"
             items={storageLocationOptions}
             itemToString={(item) => (item ? item.name : '')}
-            placeholder="Choose a Shelf"
+            placeholder="Choose a Location"
             onChange={(selectedItem) => {
               setSelectedStorageLocation(selectedItem.selectedItem);
               setFormValues({

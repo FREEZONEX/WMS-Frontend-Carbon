@@ -117,14 +117,12 @@ function Page() {
             router.push(`${process.env.PATH_PREFIX}/operation/stocktaking`);
           }}
         >
-          Stocktaking
+          Auditing
         </BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
-          <Heading className="mt-2 text-[28px] font-normal">
-            Stocktaking
-          </Heading>
+          <Heading className="mt-2 text-[28px] font-normal">Auditing</Heading>
           <Heading className="mt-1 text-sm">
             Verify and adjust inventory accuracy
           </Heading>
@@ -139,7 +137,7 @@ function Page() {
           size="sm"
           renderIcon={Add}
         >
-          Create a Stocktaking Order
+          Create a Auditing Order
         </Button>
       </div>
       <div className="flex mt-20 space-x-4 items-end">
@@ -163,7 +161,7 @@ function Page() {
           className="flex-auto"
           id="type"
           defaultValue=""
-          labelText="Stocktaking Type"
+          labelText="Auditing Type"
           value={formValue.type}
           onChange={onFormValueChange}
           required

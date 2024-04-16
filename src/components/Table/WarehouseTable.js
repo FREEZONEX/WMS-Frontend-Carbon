@@ -114,7 +114,7 @@ function WarehouseTable({
                           )
                         }
                       >
-                        All Shelves
+                        All Locations
                       </Link>
                     </StructuredListCell>
                   );
