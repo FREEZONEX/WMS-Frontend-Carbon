@@ -6,7 +6,7 @@
   "bugs": "https://github.com/carbon-design-system/carbon-tutorial-nextjs/issues",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "next build",
+    "build": "next build && next export",
     "dev": "cross-env RUNTIME_IDC_NAME=cn next dev",
     "start": "next start",
     "lint": "next lint",
