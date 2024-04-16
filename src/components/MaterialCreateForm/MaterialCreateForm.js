@@ -7,12 +7,14 @@ import {
   TextArea,
   Button,
   ComboBox,
+  IconButton,
 } from '@carbon/react';
+import { IbmDb2Warehouse } from '@carbon/icons-react';
 import './_materialcreateform.scss';
 import { useRouter } from 'next/navigation';
 import { addMaterial, fetchStorageLocationsByWId } from '@/actions/actions';
 import { fetchWarehouses } from '@/actions/actions';
-import AddExpectLocationModal from '@/app/warehouse/material/create/components/addExpectLocation';
+import AddExpectLocationModal from '@/components/Modal/addExpectLocationModal';
 
 function MaterialCreateForm() {
   const router = useRouter();
@@ -196,6 +198,21 @@ function MaterialCreateForm() {
             />
           </Column>
           <Column sm={2} md={4} lg={4}>
+            <div>
+              <span className="text-gray-500 text-sm"> Except Location</span>
+            </div>
+            <div className="mt-2 mb-5">
+              <Button
+                onClick={onSelectExpectLocation}
+                kind="tertiary"
+                size="sm"
+                renderIcon={IbmDb2Warehouse}
+              >
+                Warehouse
+              </Button>
+            </div>
+          </Column>
+          {/* <Column sm={2} md={4} lg={4}>
             <ComboBox
               className="mb-8"
               titleText="Expect WH"
@@ -224,8 +241,8 @@ function MaterialCreateForm() {
                 }
               }}
             />
-          </Column>
-          <Column sm={2} md={4} lg={4}>
+          </Column> */}
+          {/* <Column sm={2} md={4} lg={4}>
             <ComboBox
               className="mb-8"
               titleText="Expect Location"
@@ -243,12 +260,7 @@ function MaterialCreateForm() {
               }}
               selectedItem={selectedStorageLocation}
             />
-          </Column>
-          <Column sm={2} md={4} lg={4}>
-            <Button onClick={onSelectExpectLocation}>
-              Test designate area
-            </Button>
-          </Column>
+          </Column> */}
           <Column sm={4} md={8} lg={16}>
             <TextArea
               className="mb-8 w-full"
