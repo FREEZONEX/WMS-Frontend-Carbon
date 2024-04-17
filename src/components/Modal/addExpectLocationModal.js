@@ -25,17 +25,19 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
   useEffect(() => {
     initPage();
     fetchWarehouses({ pageNum: 1, pageSize: 99999999 }).then((res) => {
-      setWarehouseOptions(res.list);
+      if (res && res.list) {
+        setWarehouseOptions(res.list);
+      }
     });
   }, []);
 
   const initPage = () => {
     let container = document.getElementById('shelf-container');
-    let canvas = document.getElementById('shelf-canvas');
+    let modal = document.getElementsByClassName('shelf-modal')[0];
     container.onselectstart = function () {
       return false;
     };
-    canvas.oncontextmenu = function () {
+    modal.oncontextmenu = function () {
       return false;
     };
   };
@@ -116,7 +118,7 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
         if (
           boxRect.x < event.clientX &&
           boxRect.y < event.clientY &&
-          boxRect.y >= rect.top + selection.y - 60
+          boxRect.y >= rect.top + selection.y - 40
         ) {
           t.classList.add('bg-sky-200');
           const dataFlags = t.id?.split('-');
@@ -154,10 +156,18 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
     const startY = event.clientY - position.y;
 
     const handleMouseMove = (moveEvent) => {
-      setPosition({
-        x: moveEvent.clientX - startX,
-        y: moveEvent.clientY - startY,
-      });
+      let canvasRect = document
+        .getElementById('shelf-canvas')
+        .getBoundingClientRect();
+      if (
+        moveEvent.x - canvasRect.x > 100 &&
+        moveEvent.x < canvasRect.width + canvasRect.x - 100
+      ) {
+        setPosition({
+          x: moveEvent.clientX - startX,
+          y: moveEvent.clientY - startY,
+        });
+      }
     };
 
     const handleMouseUp = () => {
@@ -179,10 +189,10 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
       onRequestClose={handleCancelClicked}
       onRequestSubmit={handleSubmit}
       className="shelf-modal"
-      size="lg"
-      style={{ overflow: 'hidden' }}
+      isFullWidth={true}
+      size="md"
     >
-      <div style={{ height: '500px' }}>
+      <div className="p-3" style={{ height: '650px' }}>
         <div style={{ width: '50%' }}>
           <ComboBox
             titleText="Warehouse"
@@ -199,11 +209,11 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
         </div>
         <div
           id="shelf-canvas"
-          className="bg-white p-5 mt-5"
-          style={{ overflow: 'auto', height: '500px' }}
+          className="bg-white p-5 mt-2"
+          style={{ overflow: 'auto', height: '300px' }}
         >
           <div
-            className="bg-white p-5 mt-5"
+            className="bg-white"
             style={{
               transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
             }}
@@ -211,7 +221,7 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
           >
             <div id="shelf-container" style={{ width: '100%' }}>
               <div
-                className="flex flex-row text-center relative"
+                className="flex flex-row items-end text-center relative"
                 ref={divRef}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
@@ -223,7 +233,7 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
                       <div
                         key={index}
                         style={{
-                          width: '50px',
+                          width: '40px',
                           marginLeft: index % 2 == 0 ? '30px' : '0px',
                         }}
                         className=" relative"
@@ -284,15 +294,15 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
             </div>
           </div>
         </div>
-        <div className="mt-5">
-          <div
-            className="text-xs w-90"
-            style={{ background: '#F2F1F1', width: 'auto' }}
-          >
-            <p>*You can drap the map by hold the right mouse button</p>
-            <p>
-              *You can select multiple shelves at the same time with the left
-              mouse button
+        <div className="pt-2">
+          <div className="inline-block pr-2" style={{ background: '#eee' }}>
+            <p className="text-sm text-gray-600">
+              <span className="text-red-500">*</span>You can drag the map by
+              holding down the right mouse button.
+            </p>
+            <p className="text-sm text-gray-600">
+              <span className="text-red-500">*</span>You can select multiple
+              shelves at the same time with the left mouse button.
             </p>
           </div>
         </div>

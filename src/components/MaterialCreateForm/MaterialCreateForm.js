@@ -206,7 +206,9 @@ function MaterialCreateForm() {
           </Column>
           <Column sm={2} md={4} lg={4}>
             <div>
-              <span className="text-gray-500 text-sm"> Except Location</span>
+              <span className="text-xs" style={{ color: '#525252' }}>
+                Except Location
+              </span>
             </div>
             <div className="mt-2 mb-5">
               <Button
