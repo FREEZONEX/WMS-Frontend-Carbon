@@ -318,3 +318,11 @@ export async function fetchWHSLNameMap(params) {
       return res.data.data;
     });
 }
+
+export async function getPlanelLocations(body) {
+  return httpToBackend
+    .post('/wms/storagelocation/getPlaneLocations', body)
+    .then((res) => {
+      return res.data.data;
+    });
+}

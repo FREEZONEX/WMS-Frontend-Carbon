@@ -1,3 +1,8 @@
 .cds--css-grid-column {
   margin-left: 0;
 }
+.shelf-modal {
+  .cds--modal-content {
+    overflow-y: hidden;
+  }
+}
