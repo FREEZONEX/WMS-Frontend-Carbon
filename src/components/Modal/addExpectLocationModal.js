@@ -128,11 +128,12 @@ const AddExpectLocationModal = ({ isOpen, onClose }) => {
   const handleMouseDown = (event) => {
     setIsSelecting(true);
     const rect = divRef.current.getBoundingClientRect();
+    console.log('mouse down rec: ', rect, 'event: ', event);
     const startX = event.clientX - rect.left;
     const startY = event.clientY - rect.top;
     setSelection({ x: startX, y: startY, width: 0, height: 0 });
   };
-
+  console.log(selection);
   const handleMouseMove = (event) => {
     if (isSelecting) {
       // console.log('move', event.target);

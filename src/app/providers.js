@@ -6,7 +6,7 @@ import { Content, Theme } from '@carbon/react';
 import { ThemeContext } from '@/utils/ThemeContext';
 
 export default function Providers({ children }) {
-  const [isSideNavExpanded, setIsSideNavExpanded] = useState(true);
+  const [isSideNavExpanded, setIsSideNavExpanded] = useState(false);
   function toggleSideNavExpanded() {
     setIsSideNavExpanded(!isSideNavExpanded);
   }
@@ -16,7 +16,7 @@ export default function Providers({ children }) {
     <>
       <Theme theme={theme.headerTheme}>
         <HeaderWSideNav
-          isSideNavExpanded={isSideNavExpanded}
+          isExpanded={isSideNavExpanded}
           toggleSideNavExpanded={toggleSideNavExpanded}
         />
       </Theme>
