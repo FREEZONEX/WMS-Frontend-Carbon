@@ -94,7 +94,7 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
   };
 
   const handleMouseDown = (event) => {
-    if (event.button != 0) {
+    if (event.button != 2) {
       return;
     }
     setIsSelecting(true);
@@ -118,7 +118,7 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
         if (
           boxRect.x < event.clientX &&
           boxRect.y < event.clientY &&
-          boxRect.y >= rect.top + selection.y - 40
+          boxRect.y >= rect.top + selection.y - 60
         ) {
           t.classList.add('bg-sky-200');
           const dataFlags = t.id?.split('-');
@@ -149,9 +149,11 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
    * @returns
    */
   const onContainerMouseDown = (event) => {
-    if (event.button != 2) {
+    if (event.button != 1) {
       return;
     }
+    event.preventDefault();
+
     const startX = event.clientX - position.x;
     const startY = event.clientY - position.y;
 
@@ -298,11 +300,11 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
           <div className="inline-block pr-2" style={{ background: '#eee' }}>
             <p className="text-sm text-gray-600">
               <span className="text-red-500">*</span>You can drag the map by
-              holding down the right mouse button.
+              holding down the middle mouse button.
             </p>
             <p className="text-sm text-gray-600">
               <span className="text-red-500">*</span>You can select multiple
-              shelves at the same time with the left mouse button.
+              shelves at the same time with the right mouse button.
             </p>
           </div>
         </div>
