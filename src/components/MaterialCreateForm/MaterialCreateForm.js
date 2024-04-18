@@ -6,10 +6,11 @@ import {
   Column,
   TextArea,
   Button,
+  Tag,
   ComboBox,
   IconButton,
 } from '@carbon/react';
-import { IbmDb2Warehouse } from '@carbon/icons-react';
+import { IbmDb2Warehouse, Close } from '@carbon/icons-react';
 import './_materialcreateform.scss';
 import { useRouter } from 'next/navigation';
 import { addMaterial, fetchStorageLocationsByWId } from '@/actions/actions';
@@ -68,6 +69,19 @@ function MaterialCreateForm() {
     }
   }, [selectedWarehouseInfo]);
 
+  const tagColors = [
+    'red',
+    'magenta',
+    'purple',
+    'blue',
+    'cyan',
+    'teal',
+    'green',
+    'gray',
+    'cool-gray',
+    'outline',
+  ];
+
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
     setFormValue((prevData) => ({
@@ -110,6 +124,10 @@ function MaterialCreateForm() {
     setIsOpenExpect(false);
   };
   const onConfirmExpectLocationModal = (datas) => {
+    setFormValue((prevData) => ({
+      ...prevData,
+      locations: [],
+    }));
     setFormValue((prevData) => ({
       ...prevData,
       locations: datas,
@@ -204,21 +222,36 @@ function MaterialCreateForm() {
               onChange={onFormValueChange}
             />
           </Column>
-          <Column sm={2} md={4} lg={4}>
+          <Column sm={16} md={16} lg={16}>
             <div>
               <span className="text-xs" style={{ color: '#525252' }}>
                 Except Location
               </span>
             </div>
-            <div className="mt-2 mb-5">
-              <Button
-                onClick={onSelectExpectLocation}
-                kind="tertiary"
-                size="sm"
-                renderIcon={IbmDb2Warehouse}
-              >
-                Warehouse
-              </Button>
+            <div className="flex flex-row mt-2 mb-5">
+              <div>
+                <Button
+                  onClick={onSelectExpectLocation}
+                  kind="tertiary"
+                  size="sm"
+                  renderIcon={IbmDb2Warehouse}
+                >
+                  Warehouse
+                </Button>
+              </div>
+              <div className="ml-5">
+                {formValue.locations?.map((shelf, index) => {
+                  return (
+                    <Tag
+                      key={index}
+                      type={tagColors[index % tagColors.length]}
+                      className="ml-0"
+                    >
+                      <div className="flex w-10 justify-center">{shelf}</div>
+                    </Tag>
+                  );
+                })}
+              </div>
             </div>
           </Column>
           <Column sm={4} md={8} lg={16}>

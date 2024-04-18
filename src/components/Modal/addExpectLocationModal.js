@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Modal, ComboBox } from '@carbon/react';
 import { fetchWarehouses, getPlanelLocations } from '@/actions/actions';
 
+let mouseX = 0;
+
 const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
   const [warehouseOptions, setWarehouseOptions] = useState([]);
   const [selectedStorageLocation, setSelectedStorageLocation] = useState([]);
@@ -68,34 +70,35 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
   };
 
   const handleSubmit = async () => {
-    let shelfIds = [];
-    selectedStorageLocation.forEach((t) => {
-      shelfIds.push(...t.items);
+    let shelves = [];
+    const shelvesEles = document.querySelectorAll('.shelf-area');
+    shelvesEles.forEach(async (t) => {
+      if (t.classList.contains('bg-sky-200')) {
+        console.log('container', t);
+        const dataFlags = t.id?.split('-');
+        const shelfId = dataFlags[0];
+        const colId = dataFlags[1];
+        locationDatas.forEach((shelf) => {
+          if (shelf.shelfId == shelfId) {
+            let item = shelf.shelfCols.find(
+              (col) => col.colId == colId && col.shelfId == shelfId
+            );
+            if (item != null) {
+              shelves.push(`${shelf.shelfName}-${item.colName}`);
+            }
+          }
+        });
+      }
     });
-    onConfirm(shelfIds);
+    onConfirm(shelves);
   };
   const onShelfClick = (e, item) => {
-    setSelectedShelves(item);
     e.target.classList.toggle('bg-sky-200');
-  };
-
-  const setSelectedShelves = (item) => {
-    const exist =
-      selectedStorageLocation.find(
-        (t) => t.colId == item.colId && item.shelfId == t.shelfId
-      ) != null;
-    if (!exist) {
-      setSelectedStorageLocation([...selectedStorageLocation, item]);
-    }
-    if (exist) {
-      selectedStorageLocation.splice(selectedStorageLocation.indexOf(item), 1);
-    }
-    console.log('selectLocation', selectedStorageLocation);
   };
 
   const handleMouseDown = (event) => {
     if (event.button != 2) {
-      return;
+      return true;
     }
     setIsSelecting(true);
     const rect = divRef.current.getBoundingClientRect();
@@ -106,37 +109,43 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
 
   const handleMouseMove = (event) => {
     if (isSelecting) {
+      //
+      const currentMouseX = event.clientX;
+      let direction = '';
+      if (currentMouseX > mouseX) {
+        direction = 'right';
+      } else if (currentMouseX < mouseX) {
+        direction = 'left';
+      }
+      mouseX = currentMouseX;
+      console.log(direction);
+
       const rect = divRef.current.getBoundingClientRect();
-      const width = event.clientX - rect.left - selection.x;
-      const height = event.clientY - rect.top - selection.y;
+      let width = event.clientX - rect.left - selection.x;
+      let height = event.clientY - rect.top - selection.y;
+      // if (direction == 'left') {
+      //   width = event.clientX + rect.left + selection.x;
+      //   height = event.clientY + rect.top + selection.y;
+      // }
       setSelection((prevSelection) => ({ ...prevSelection, width, height }));
 
       const shelvesEles = document.querySelectorAll('.shelf-area');
       shelvesEles.forEach((t) => {
-        t.classList.remove('bg-sky-200');
+        // t.classList.remove('bg-sky-200');
         const boxRect = t.getBoundingClientRect();
         if (
           boxRect.x < event.clientX &&
           boxRect.y < event.clientY &&
-          boxRect.y >= rect.top + selection.y - 60
+          boxRect.y >= rect.top + selection.y - 60 &&
+          boxRect.x > rect.left + selection.x - 40
         ) {
           t.classList.add('bg-sky-200');
-          const dataFlags = t.id?.split('-');
-          const shelfId = dataFlags[0];
-          const colId = dataFlags[1];
-          locationDatas.forEach((shelf) => {
-            if (shelf.shelfId == shelfId) {
-              let item = shelf.shelfCols.find(
-                (col) => col.colId == colId && col.shelfId == shelfId
-              );
-              if (item != null) {
-                setSelectedShelves(item);
-              }
-            }
-          });
+        } else {
+          t.classList.remove('bg-sky-200');
         }
       });
     }
+    document.removeEventListener('mousemove', handleMouseMove);
   };
 
   const handleMouseUp = () => {
@@ -148,7 +157,7 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
    */
   const onContainerMouseDown = (event) => {
     if (event.button != 1) {
-      return;
+      return true;
     }
     event.preventDefault();
 
@@ -219,7 +228,11 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
             }}
             onMouseDown={onContainerMouseDown}
           >
-            <div id="shelf-container" style={{ width: '100%' }}>
+            <div
+              id="shelf-container"
+              className="relative"
+              style={{ width: '100%' }}
+            >
               <div
                 className="flex flex-row items-end text-center relative"
                 ref={divRef}
@@ -254,7 +267,7 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
                             return (
                               <>
                                 <div
-                                  className="shelf-area content-center"
+                                  className="shelf-area content-center relative"
                                   id={`${col.shelfId}-${col.colId}`}
                                   key={colIndex}
                                   style={{
