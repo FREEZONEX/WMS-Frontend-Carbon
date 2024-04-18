@@ -109,6 +109,13 @@ function MaterialCreateForm() {
   const onCloseExpectLocationModal = () => {
     setIsOpenExpect(false);
   };
+  const onConfirmExpectLocationModal = (datas) => {
+    setFormValue((prevData) => ({
+      ...prevData,
+      locations: datas,
+    }));
+    setIsOpenExpect(false);
+  };
   return (
     <div>
       <div className=" mt-8">
@@ -199,7 +206,9 @@ function MaterialCreateForm() {
           </Column>
           <Column sm={2} md={4} lg={4}>
             <div>
-              <span className="text-gray-500 text-sm"> Except Location</span>
+              <span className="text-xs" style={{ color: '#525252' }}>
+                Except Location
+              </span>
             </div>
             <div className="mt-2 mb-5">
               <Button
@@ -212,55 +221,6 @@ function MaterialCreateForm() {
               </Button>
             </div>
           </Column>
-          {/* <Column sm={2} md={4} lg={4}>
-            <ComboBox
-              className="mb-8"
-              titleText="Expect WH"
-              items={warehouseOptions}
-              itemToString={(item) => (item ? item.name : '')}
-              placeholder="Choose a warehouse"
-              onChange={(selectedItem) => {
-                if (selectedItem) {
-                  setSelectedWarehouseInfo(selectedItem);
-                  setSelectedStorageLocation({});
-                  setFormValue({
-                    ...formValue,
-                    expect_wh_id: selectedItem.selectedItem
-                      ? selectedItem.selectedItem?.id
-                      : '',
-                    expact_stock_location_id: '',
-                  });
-                } else {
-                  setSelectedWarehouseInfo({});
-                  setSelectedStorageLocation({});
-                  setFormValue({
-                    ...formValue,
-                    expect_wh_id: '',
-                    expact_stock_location_id: '',
-                  });
-                }
-              }}
-            />
-          </Column> */}
-          {/* <Column sm={2} md={4} lg={4}>
-            <ComboBox
-              className="mb-8"
-              titleText="Expect Location"
-              items={storageLocationOptions}
-              itemToString={(item) => (item ? item.name : '')}
-              placeholder="Choose a Location"
-              onChange={(selectedItem) => {
-                setSelectedStorageLocation(selectedItem.selectedItem);
-                setFormValue({
-                  ...formValue,
-                  expact_stock_location_id: selectedItem.selectedItem
-                    ? selectedItem.selectedItem?.id
-                    : '',
-                });
-              }}
-              selectedItem={selectedStorageLocation}
-            />
-          </Column> */}
           <Column sm={4} md={8} lg={16}>
             <TextArea
               className="mb-8 w-full"
@@ -290,6 +250,7 @@ function MaterialCreateForm() {
       <AddExpectLocationModal
         isOpen={isOpenExpect}
         onClose={onCloseExpectLocationModal}
+        onConfirm={onConfirmExpectLocationModal}
       ></AddExpectLocationModal>
     </div>
   );
