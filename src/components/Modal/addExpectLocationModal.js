@@ -145,8 +145,6 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
 
   /**
    * background move
-   * @param {*} event
-   * @returns
    */
   const onContainerMouseDown = (event) => {
     if (event.button != 1) {
