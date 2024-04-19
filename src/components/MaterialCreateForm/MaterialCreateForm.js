@@ -1,20 +1,10 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import {
-  TextInput,
-  Grid,
-  Column,
-  TextArea,
-  Button,
-  Tag,
-  ComboBox,
-  IconButton,
-} from '@carbon/react';
-import { IbmDb2Warehouse, Close } from '@carbon/icons-react';
+import React, { useState } from 'react';
+import { TextInput, Grid, Column, TextArea, Button, Tag } from '@carbon/react';
+import { IbmDb2Warehouse } from '@carbon/icons-react';
 import './_materialcreateform.scss';
 import { useRouter } from 'next/navigation';
-import { addMaterial, fetchStorageLocationsByWId } from '@/actions/actions';
-import { fetchWarehouses } from '@/actions/actions';
+import { addMaterial } from '@/actions/actions';
 import AddExpectLocationModal from '@/components/Modal/addExpectLocationModal';
 
 function MaterialCreateForm() {
@@ -33,42 +23,19 @@ function MaterialCreateForm() {
     min: '',
     status: '',
     expect_wh_id: '',
+    locations: [],
     expact_stock_location_id: '',
     note: '',
   };
   const [formValue, setFormValue] = useState(defaultFormValue);
-  const [warehouseOptions, setWarehouseOptions] = useState([]);
-  const [storageLocationOptions, setStorageLocationOptions] = useState([]);
   const [selectedWarehouseInfo, setSelectedWarehouseInfo] = useState({});
-  const [selectedStorageLocation, setSelectedStorageLocation] = useState({});
   const [isOpenExpect, setIsOpenExpect] = useState(false);
 
-  useEffect(() => {
-    //TODO: select all warehouse instead of with pagination
-    fetchWarehouses({ pageNum: 1, pageSize: 99999999 }).then((res) => {
-      setWarehouseOptions(res.list);
-    });
-  }, []);
   console.log(
     formValue,
     selectedWarehouseInfo,
-    selectedStorageLocation,
     process.env.PATH_PREFIX + '/warehouse/material'
   );
-  useEffect(() => {
-    //TODO: select all warehouse instead of with pagination
-    if (selectedWarehouseInfo.selectedItem) {
-      fetchStorageLocationsByWId(
-        { warehouse_id: selectedWarehouseInfo.selectedItem.id },
-        { pageNum: 1, pageSize: 99999999 }
-      ).then((res) => {
-        setStorageLocationOptions(res.list);
-      });
-    } else {
-      setStorageLocationOptions([]);
-    }
-  }, [selectedWarehouseInfo]);
-
   const tagColors = [
     'red',
     'magenta',
@@ -123,15 +90,18 @@ function MaterialCreateForm() {
   const onCloseExpectLocationModal = () => {
     setIsOpenExpect(false);
   };
-  const onConfirmExpectLocationModal = (datas) => {
+  const onConfirmExpectLocationModal = (data) => {
     setFormValue((prevData) => ({
       ...prevData,
       locations: [],
     }));
     setFormValue((prevData) => ({
       ...prevData,
-      locations: datas,
+      warehouse_id: data.warehouseInfo?.id,
+      locations: data.shelves,
     }));
+    setSelectedWarehouseInfo(data.warehouseInfo);
+    //console.log(formValue);
     setIsOpenExpect(false);
   };
   return (
@@ -236,7 +206,9 @@ function MaterialCreateForm() {
                   size="sm"
                   renderIcon={IbmDb2Warehouse}
                 >
-                  Warehouse
+                  {selectedWarehouseInfo?.name
+                    ? selectedWarehouseInfo?.name
+                    : 'Warehouse'}
                 </Button>
               </div>
               <div className="ml-5">
