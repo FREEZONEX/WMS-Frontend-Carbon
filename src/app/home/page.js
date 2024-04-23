@@ -2,7 +2,7 @@
 import React from 'react';
 import { Heading, Link } from '@carbon/react';
 import { useRouter } from 'next/navigation';
-import UnityWebGL from '@/components/WebGL/UnitiyWebGL';
+import UnityWebGL from '@/components/WebGL/UnityWebGL';
 
 export default function Home() {
   const router = useRouter();

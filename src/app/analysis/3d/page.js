@@ -2,7 +2,7 @@
 import React from 'react';
 import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
 import { useRouter } from 'next/navigation';
-import UnityWebGL from '@/components/WebGL/UnitiyWebGL';
+import UnityWebGL from '@/components/WebGL/UnityWebGL';
 
 function Page() {
   const router = useRouter();
