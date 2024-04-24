@@ -268,8 +268,8 @@ export default function Task() {
                 </div>
               </div>
             </div>
-            <div className="mt-4 bg-white  p-4 shadow  h-[170px]">
-              <Heading className="mt-3 text-[12px] font-bold ">
+            <div className="mt-4 bg-white  p-4 shadow  h-[166px]">
+              <Heading className="mt-2 text-[12px] font-bold ">
                 <div className="flex flex-row justify-between">
                   <div>Time Of Resource Idle</div>
                   <div className="pr-4">
