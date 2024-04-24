@@ -27,6 +27,7 @@ import {
   Settings,
   Analytics,
   WatsonHealth3DCursor,
+  DocumentTasks,
 } from '@carbon/icons-react';
 import { usePathname } from 'next/navigation';
 import { ThemeContext } from '@/utils/ThemeContext';
@@ -112,6 +113,17 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
               isActive={isCurrentPath('/operation/outbound')}
             >
               Outbound
+            </SideNavLink>
+            <SideNavLink
+              isSideNavExpanded={isExpanded}
+              renderIcon={DocumentTasks}
+              onClick={() => {
+                router.push(`${process.env.PATH_PREFIX}/operation/task`);
+              }}
+              className="cursor-pointer"
+              isActive={isCurrentPath('/operation/task')}
+            >
+              Task
             </SideNavLink>
             <SideNavLink
               isSideNavExpanded={isExpanded}
