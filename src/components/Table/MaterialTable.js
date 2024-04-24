@@ -90,6 +90,17 @@ function MaterialTable({
           {rows.map((row, index) => (
             <StructuredListRow key={row.id}>
               {headers.map((header) => {
+                if (header.key === 'product_type') {
+                  return (
+                    <StructuredListCell key={header.key}>
+                      {row[header.key] === 'FIFO' ? (
+                        <Tag type="purple">{row[header.key]}</Tag>
+                      ) : (
+                        row[header.key]
+                      )}
+                    </StructuredListCell>
+                  );
+                }
                 if (header.key === 'status') {
                   return (
                     <StructuredListCell key={header.key}>
