@@ -223,8 +223,8 @@ export default function Task() {
             </div>
           </div>
 
-          <div className="w-1/5 bg-gray-100 h-128 gap-4">
-            <div className="h-[100px] p-4 shadow  bg-white">
+          <div className="w-1/5 bg-gray-100 h-128 flex flex-col gap-4">
+            <div className="h-[100px]  p-4  pl-6  pr-6 shadow  bg-white">
               <Heading className="text-[12px] font-bold ">
                 Average Time To Process
               </Heading>
@@ -239,18 +239,18 @@ export default function Task() {
                 />
               </div>
             </div>
-            <div className="mt-4 shadow ">
+            <div className="shadow ">
               <Heading className="mt-3 text-[12px] font-bold ">
-                <div className="flex flex-row justify-between">
-                  <div> Resource Occupation Rate</div>
-                  <div className="pr-4">
-                    <CaretLeft /> <CaretRight />
-                  </div>
-                </div>
+                Resource Occupation Rate
               </Heading>
-              <div className="bg-white mt-2 p-4 h-[230px]">
+              <div className="bg-white mt-2  p-4  pl-6  pr-6 h-[230px]">
                 <Heading className="text-[12px] font-bold ">
-                  Time Of Resource In Use
+                  <div className="flex flex-row justify-between">
+                    <div> Time Of Resource In Use</div>
+                    <div>
+                      <CaretLeft /> <CaretRight />
+                    </div>
+                  </div>
                 </Heading>
                 <div className="h-[180px] mt-2">
                   <div className="h-1/4">
@@ -268,11 +268,11 @@ export default function Task() {
                 </div>
               </div>
             </div>
-            <div className="mt-4 bg-white  p-4 shadow  h-[166px]">
-              <Heading className="mt-2 text-[12px] font-bold ">
+            <div className=" bg-white p-4  pl-6  pr-6 shadow flex-auto">
+              <Heading className="text-[12px] font-bold ">
                 <div className="flex flex-row justify-between">
                   <div>Time Of Resource Idle</div>
-                  <div className="pr-4">
+                  <div>
                     <CaretLeft /> <CaretRight />
                   </div>
                 </div>
