@@ -157,7 +157,12 @@ export default function Task() {
                     Open Putaway Tasks
                   </Heading>
                   <Image
-                    className=" text-[#333]"
+                    onClick={() => {
+                      router.push(
+                        `${process.env.PATH_PREFIX}/operation/task/putaway`
+                      );
+                    }}
+                    className=" text-[#333] cursor-pointer"
                     src={PortInputIcon}
                     alt="arrow"
                     width={24}
@@ -196,6 +201,12 @@ export default function Task() {
                     Open Picking Tasks
                   </Heading>
                   <Image
+                    onClick={() => {
+                      router.push(
+                        `${process.env.PATH_PREFIX}/operation/task/picking`
+                      );
+                    }}
+                    className=" text-[#333] cursor-pointer"
                     style={{ color: 'black' }}
                     src={PortOutputIcon}
                     alt="arrow"

@@ -53,7 +53,10 @@ function OperationDetailModal({ isModalOpen, setModalOpen, id }) {
   }, []);
   useEffect(() => {
     if (id) {
-      if (pathName === `${process.env.PATH_PREFIX}/operation/inbound`) {
+      if (
+        pathName === `${process.env.PATH_PREFIX}/operation/inbound` ||
+        pathName === `${process.env.PATH_PREFIX}/operation/task/putaway`
+      ) {
         fetchInboundDetails({ id })
           .then((data) => {
             console.log(data);
@@ -73,7 +76,10 @@ function OperationDetailModal({ isModalOpen, setModalOpen, id }) {
             console.error('Failed to fetch inbound details:', error);
           });
       }
-      if (pathName === `${process.env.PATH_PREFIX}/operation/outbound`) {
+      if (
+        pathName === `${process.env.PATH_PREFIX}/operation/outbound` ||
+        pathName === `${process.env.PATH_PREFIX}/operation/task/picking`
+      ) {
         fetchOutboundDetails({ id })
           .then((data) => {
             console.log(data);
