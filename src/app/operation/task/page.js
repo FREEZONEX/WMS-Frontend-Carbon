@@ -10,10 +10,15 @@ import PortInputIcon from '@/utils/pic/Port--input.svg';
 import PortOutputIcon from '@/utils/pic/Port--output.svg';
 import Time from '@/utils/pic/Time.svg';
 import Money from '@/utils/pic/Money.svg';
-import { CaretRight, CaretLeft } from '@carbon/icons-react';
-import WMSDataTable from '@/components/Table/DataTable';
+import {
+  CaretRight,
+  CaretLeft,
+  Maximize,
+  NextOutline,
+} from '@carbon/icons-react';
 import moment from 'moment';
 import { DateTimeFormat } from '@/utils/constants';
+import TaskTable from '@/components/Task/TaskTable';
 
 const lineStyle = {
   width: '190px',
@@ -54,7 +59,7 @@ const rowData = () => {
       material: 'Planks',
       quantity: '100',
       resource: 'Resource',
-      assigned_to: 'admin',
+      assigned_to: null,
     });
   }
   console.log(datas);
@@ -110,7 +115,9 @@ const options = {
     height: '5px',
   },
 };
+
 export default function Task() {
+  const router = useRouter();
   return (
     <div>
       <Breadcrumb>
@@ -171,14 +178,14 @@ export default function Task() {
                 </div>
               </div>
               <div className="p-4 flex-auto">
-                <Heading className="mr-2 text-[12px] font-bold">
-                  List Of Putaway Tasks
+                <Heading className="mr-2 text-[12px] font-bold flex flex-row justify-between">
+                  <div> List Of Putaway Tasks</div>
+                  <div>
+                    <Maximize />
+                  </div>
                 </Heading>
                 <div className="pt-2">
-                  <WMSDataTable
-                    rows={rowData()}
-                    headers={headerData}
-                  ></WMSDataTable>
+                  <TaskTable rows={rowData()} headers={headerData}></TaskTable>
                 </div>
               </div>
             </div>
@@ -190,7 +197,7 @@ export default function Task() {
                   </Heading>
                   <Image
                     style={{ color: 'black' }}
-                    src={PortInputIcon}
+                    src={PortOutputIcon}
                     alt="arrow"
                     width={24}
                     height={24}
@@ -210,14 +217,14 @@ export default function Task() {
                 </div>
               </div>
               <div className="p-4 flex-auto">
-                <Heading className="mr-2 text-[12px] font-bold">
-                  List Of Picking Tasks
+                <Heading className="mr-2 text-[12px] font-bold flex flex-row justify-between">
+                  <div> List Of Picking Tasks</div>
+                  <div>
+                    <Maximize />
+                  </div>
                 </Heading>
                 <div className="pt-2">
-                  <WMSDataTable
-                    rows={rowData()}
-                    headers={headerData}
-                  ></WMSDataTable>
+                  <TaskTable rows={rowData()} headers={headerData}></TaskTable>
                 </div>
               </div>
             </div>
