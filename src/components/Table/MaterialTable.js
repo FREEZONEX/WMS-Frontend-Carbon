@@ -18,6 +18,7 @@ import {
   fetchMaterial,
   fetchMaterialWithFilters,
 } from '@/actions/actions';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import './_table.scss';
 
 function MaterialTable({
@@ -93,11 +94,20 @@ function MaterialTable({
                 if (header.key === 'product_type') {
                   return (
                     <StructuredListCell key={header.key}>
-                      {row[header.key] === 'FIFO' ? (
-                        <Tag type="purple">{row[header.key]}</Tag>
-                      ) : (
-                        row[header.key]
-                      )}
+                      <RadioGroup defaultValue="FIFO">
+                        <div className="flex align-middle">
+                          <RadioGroupItem disabled value={row[header.key]} />
+                          <span
+                            className={
+                              row[header.key] === 'FIFO'
+                                ? 'ml-2 text-sky-600 font-semibold'
+                                : 'ml-2'
+                            }
+                          >
+                            {row[header.key]}
+                          </span>
+                        </div>
+                      </RadioGroup>
                     </StructuredListCell>
                   );
                 }

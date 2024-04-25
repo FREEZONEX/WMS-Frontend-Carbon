@@ -81,7 +81,7 @@ function Page() {
             onClick={() => {
               router.push(`${process.env.PATH_PREFIX}/warehouse/material/rfid`);
             }}
-            className="mr-2 bg-[#6929C4]"
+            style={{ backgroundColor: '#6f42c1', marginRight: '8px' }}
             isExpressive
             size="sm"
             renderIcon={Search}
