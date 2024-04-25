@@ -254,7 +254,7 @@ export default function Task() {
                 <Heading className="text-[12px] font-bold ">
                   <div className="flex flex-row justify-between">
                     <div> Time Of Resource In Use</div>
-                    <div>
+                    <div className="flex">
                       <CaretLeft /> <CaretRight />
                     </div>
                   </div>
@@ -279,7 +279,7 @@ export default function Task() {
               <Heading className="text-[12px] font-bold ">
                 <div className="flex flex-row justify-between">
                   <div>Time Of Resource Idle</div>
-                  <div>
+                  <div className="flex">
                     <CaretLeft /> <CaretRight />
                   </div>
                 </div>
