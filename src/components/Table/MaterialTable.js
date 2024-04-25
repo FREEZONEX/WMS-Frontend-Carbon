@@ -94,20 +94,18 @@ function MaterialTable({
                 if (header.key === 'product_type') {
                   return (
                     <StructuredListCell key={header.key}>
-                      <RadioGroup defaultValue="FIFO">
-                        <div className="flex align-middle">
-                          <RadioGroupItem disabled value={row[header.key]} />
-                          <span
-                            className={
-                              row[header.key] === 'FIFO'
-                                ? 'ml-2 text-sky-600 font-semibold'
-                                : 'ml-2'
-                            }
-                          >
-                            {row[header.key]}
-                          </span>
-                        </div>
-                      </RadioGroup>
+                      {row[header.key] === 'FIFO' ? (
+                        <RadioGroup defaultValue="FIFO">
+                          <div className="flex align-middle">
+                            <RadioGroupItem disabled value={row[header.key]} />
+                            <span className="ml-2 text-sky-600 font-semibold">
+                              {row[header.key]}
+                            </span>
+                          </div>
+                        </RadioGroup>
+                      ) : (
+                        <span className="ml-2">{row[header.key]}</span>
+                      )}
                     </StructuredListCell>
                   );
                 }
