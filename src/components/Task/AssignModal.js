@@ -1,4 +1,4 @@
-import { Modal, ComboBox, Tag } from '@carbon/react';
+import { Modal, ComboBox, Tag, MultiSelect } from '@carbon/react';
 import { useEffect, useState } from 'react';
 
 export default function AssignModal({ isOpen, onClose, onConfirm }) {
@@ -34,7 +34,8 @@ export default function AssignModal({ isOpen, onClose, onConfirm }) {
 
   const onSelectWorker = (item) => {};
   const onSelectResource = (item) => {
-    setSelectedResources([...selectedResources, item.selectedItem]);
+    setSelectedResources(item.selectedItems);
+    console.log(item, selectedResources);
   };
 
   const handleCancelClicked = () => {
@@ -67,12 +68,20 @@ export default function AssignModal({ isOpen, onClose, onConfirm }) {
               placeholder="Choose worker"
               onChange={(selectedItem) => onSelectWorker(selectedItem)}
             />
-            <ComboBox
+            {/* <ComboBox
               className="mt-8"
               titleText="Resource"
               items={resource}
               itemToString={(item) => (item ? item : '')}
               placeholder="Choose resource"
+              onChange={(selectedItem) => onSelectResource(selectedItem)}
+            /> */}
+            <MultiSelect
+              label="Multiselect Label"
+              titleText="Resource"
+              items={resource}
+              itemToString={(item) => (item ? item : '')}
+              selectionFeedback="top-after-reopen"
               onChange={(selectedItem) => onSelectResource(selectedItem)}
             />
             <div className="mt-2">
