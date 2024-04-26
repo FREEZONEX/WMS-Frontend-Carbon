@@ -1,8 +1,8 @@
-function createUnityInstance(r, n, l) {
-  function s(e, r) {
+function createUnityInstance(t, n, c) {
+  function s(e, t) {
     if (!s.aborted && n.showBanner)
-      return 'error' == r && (s.aborted = !0), n.showBanner(e, r);
-    switch (r) {
+      return 'error' == t && (s.aborted = !0), n.showBanner(e, t);
+    switch (t) {
       case 'error':
         console.error(e);
         break;
@@ -13,42 +13,47 @@ function createUnityInstance(r, n, l) {
         console.log(e);
     }
   }
-  function t(e) {
-    var r = e.reason || e.error,
-      n = r ? r.toString() : e.message || e.reason || '',
-      t = r && r.stack ? r.stack.toString() : '';
-    (n += '\n' + (t = t.startsWith(n) ? t.substring(n.length) : t).trim()) &&
-      c.stackTraceRegExp &&
-      c.stackTraceRegExp.test(n) &&
-      g(
+  function r(e) {
+    var t = e.reason || e.error,
+      n = t ? t.toString() : e.message || e.reason || '',
+      r = t && t.stack ? t.stack.toString() : '';
+    (n += '\n' + (r = r.startsWith(n) ? r.substring(n.length) : r).trim()) &&
+      l.stackTraceRegExp &&
+      l.stackTraceRegExp.test(n) &&
+      D(
         n,
-        e.filename || (r && (r.fileName || r.sourceURL)) || '',
-        e.lineno || (r && (r.lineNumber || r.line)) || 0
+        e.filename || (t && (t.fileName || t.sourceURL)) || '',
+        e.lineno || (t && (t.lineNumber || t.line)) || 0
       );
   }
-  function e(e, r, n) {
-    var t = e[r];
-    (void 0 !== t && t) ||
+  function e(e, t, n) {
+    var r = e[t];
+    (void 0 !== r && r) ||
       (console.warn(
         'Config option "' +
-          r +
+          t +
           '" is missing or empty. Falling back to default value: "' +
           n +
           '". Consider updating your WebGL template to include the missing config option.'
       ),
-      (e[r] = n));
+      (e[t] = n));
   }
-  l = l || function () {};
+  c = c || function () {};
   var o,
-    c = {
-      canvas: r,
+    l = {
+      canvas: t,
       webglContextAttributes: { preserveDrawingBuffer: !1, powerPreference: 2 },
+      cacheControl: function (e) {
+        return e == l.dataUrl || e.match(/\.bundle/)
+          ? 'must-revalidate'
+          : 'no-store';
+      },
       streamingAssetsUrl: 'StreamingAssets',
       downloadProgress: {},
       deinitializers: [],
       intervals: {},
-      setInterval: function (e, r) {
-        e = window.setInterval(e, r);
+      setInterval: function (e, t) {
+        e = window.setInterval(e, t);
         return (this.intervals[e] = !0), e;
       },
       clearInterval: function (e) {
@@ -66,13 +71,13 @@ function createUnityInstance(r, n, l) {
             (-1 != e.toLowerCase().indexOf('mime')
               ? s(
                   'HTTP Response Header "Content-Type" configured incorrectly on the server for file ' +
-                    c.codeUrl +
+                    l.codeUrl +
                     ' , should be "application/wasm". Startup time performance will suffer.',
                   'warning'
                 )
               : s(
                   'WebAssembly streaming compilation failed! This can happen for example if "Content-Encoding" HTTP header is incorrectly enabled on the server for file ' +
-                    c.codeUrl +
+                    l.codeUrl +
                     ', but the file is not pre-compressed on disk (or vice versa). Check the Network tab in browser Devtools to debug server header configuration.',
                   'warning'
                 ));
@@ -86,79 +91,88 @@ function createUnityInstance(r, n, l) {
   e(n, 'productName', 'WebGL Player'),
   e(n, 'productVersion', '1.0'),
   n))
-    c[o] = n[o];
-  c.streamingAssetsUrl = new URL(c.streamingAssetsUrl, document.URL).href;
-  var a = c.disabledCanvasEvents.slice();
+    l[o] = n[o];
+  l.streamingAssetsUrl = new URL(l.streamingAssetsUrl, document.URL).href;
+  var a = l.disabledCanvasEvents.slice();
   function i(e) {
     e.preventDefault();
   }
   a.forEach(function (e) {
-    r.addEventListener(e, i);
+    t.addEventListener(e, i);
   }),
-    window.addEventListener('error', t),
-    window.addEventListener('unhandledrejection', t);
-  var d = '',
-    u = '';
-  function f(e) {
-    document.webkitCurrentFullScreenElement === r
-      ? r.style.width &&
-        ((d = r.style.width),
-        (u = r.style.height),
-        (r.style.width = '100%'),
-        (r.style.height = '100%'))
-      : d && ((r.style.width = d), (r.style.height = u), (u = d = ''));
+    window.addEventListener('error', r),
+    window.addEventListener('unhandledrejection', r);
+  var u = '',
+    d = '';
+  function h(e) {
+    document.webkitCurrentFullScreenElement === t
+      ? t.style.width &&
+        ((u = t.style.width),
+        (d = t.style.height),
+        (t.style.width = '100%'),
+        (t.style.height = '100%'))
+      : u && ((t.style.width = u), (t.style.height = d), (d = u = ''));
   }
-  document.addEventListener('webkitfullscreenchange', f),
-    c.deinitializers.push(function () {
-      for (var e in (c.disableAccessToMediaDevices(),
+  document.addEventListener('webkitfullscreenchange', h),
+    l.deinitializers.push(function () {
+      for (var e in (l.disableAccessToMediaDevices(),
       a.forEach(function (e) {
-        r.removeEventListener(e, i);
+        t.removeEventListener(e, i);
       }),
-      window.removeEventListener('error', t),
-      window.removeEventListener('unhandledrejection', t),
-      document.removeEventListener('webkitfullscreenchange', f),
-      c.intervals))
+      window.removeEventListener('error', r),
+      window.removeEventListener('unhandledrejection', r),
+      document.removeEventListener('webkitfullscreenchange', h),
+      l.intervals))
         window.clearInterval(e);
-      c.intervals = {};
+      l.intervals = {};
     }),
-    (c.QuitCleanup = function () {
-      for (var e = 0; e < c.deinitializers.length; e++) c.deinitializers[e]();
-      (c.deinitializers = []), 'function' == typeof c.onQuit && c.onQuit();
+    (l.QuitCleanup = function () {
+      for (var e = 0; e < l.deinitializers.length; e++) l.deinitializers[e]();
+      (l.deinitializers = []), 'function' == typeof l.onQuit && l.onQuit();
     });
-  var h = {
-    Module: c,
-    SetFullscreen: function () {
-      if (c.SetFullscreen) return c.SetFullscreen.apply(c, arguments);
-      c.print('Failed to set Fullscreen mode: Player not loaded yet.');
-    },
-    SendMessage: function () {
-      if (c.SendMessage) return c.SendMessage.apply(c, arguments);
-      c.print('Failed to execute SendMessage: Player not loaded yet.');
-    },
-    Quit: function () {
-      return new Promise(function (e, r) {
-        (c.shouldQuit = !0), (c.onQuit = e);
-      });
-    },
-    GetMemoryInfo: function () {
-      var e = c._getMemInfo();
-      return {
-        totalWASMHeapSize: c.HEAPU32[e >> 2],
-        usedWASMHeapSize: c.HEAPU32[1 + (e >> 2)],
-        totalJSHeapSize: c.HEAPF64[1 + (e >> 3)],
-        usedJSHeapSize: c.HEAPF64[2 + (e >> 3)],
-      };
-    },
-  };
-  function g(e, r, n) {
+  var f,
+    p,
+    m,
+    g,
+    b,
+    v,
+    w,
+    y,
+    S,
+    C = {
+      Module: l,
+      SetFullscreen: function () {
+        if (l.SetFullscreen) return l.SetFullscreen.apply(l, arguments);
+        l.print('Failed to set Fullscreen mode: Player not loaded yet.');
+      },
+      SendMessage: function () {
+        if (l.SendMessage) return l.SendMessage.apply(l, arguments);
+        l.print('Failed to execute SendMessage: Player not loaded yet.');
+      },
+      Quit: function () {
+        return new Promise(function (e, t) {
+          (l.shouldQuit = !0), (l.onQuit = e);
+        });
+      },
+      GetMemoryInfo: function () {
+        var e = l._getMemInfo();
+        return {
+          totalWASMHeapSize: l.HEAPU32[e >> 2],
+          usedWASMHeapSize: l.HEAPU32[1 + (e >> 2)],
+          totalJSHeapSize: l.HEAPF64[1 + (e >> 3)],
+          usedJSHeapSize: l.HEAPF64[2 + (e >> 3)],
+        };
+      },
+    };
+  function D(e, t, n) {
     -1 == e.indexOf('fullscreen error') &&
-      (c.startupErrorHandler
-        ? c.startupErrorHandler(e, r, n)
-        : (c.errorHandler && c.errorHandler(e, r, n)) ||
+      (l.startupErrorHandler
+        ? l.startupErrorHandler(e, t, n)
+        : (l.errorHandler && l.errorHandler(e, t, n)) ||
           (console.log('Invoking error handler due to\n' + e),
           'function' == typeof dump &&
             dump('Invoking error handler due to\n' + e),
-          g.didShowErrorMessage ||
+          D.didShowErrorMessage ||
             (-1 !=
             (e =
               'An error occurred running the Unity content on this page. See your browser JavaScript console for more info. The error was:\n' +
@@ -175,60 +189,80 @@ function createUnityInstance(r, n, l) {
                 (e =
                   'The browser could not allocate enough memory for the WebGL content. If you are the developer of this content, try allocating less memory to your WebGL build in the WebGL player settings.'),
             alert(e),
-            (g.didShowErrorMessage = !0))));
+            (D.didShowErrorMessage = !0))));
   }
-  function p(e, r) {
+  function P(e, t) {
     if ('symbolsUrl' != e) {
-      var n = c.downloadProgress[e],
-        t =
+      var n = l.downloadProgress[e],
+        r =
           ((n =
             n ||
-            (c.downloadProgress[e] = {
+            (l.downloadProgress[e] = {
               started: !1,
               finished: !1,
               lengthComputable: !1,
               total: 0,
               loaded: 0,
             })),
-          'object' != typeof r ||
-            ('progress' != r.type && 'load' != r.type) ||
+          'object' != typeof t ||
+            ('progress' != t.type && 'load' != t.type) ||
             (n.started ||
-              ((n.started = !0), (n.lengthComputable = r.lengthComputable)),
-            (n.total = r.total),
-            (n.loaded = r.loaded),
-            'load' == r.type && (n.finished = !0)),
+              ((n.started = !0), (n.lengthComputable = t.lengthComputable)),
+            (n.total = t.total),
+            (n.loaded = t.loaded),
+            'load' == t.type && (n.finished = !0)),
           0),
         o = 0,
         a = 0,
         i = 0,
         s = 0;
-      for (e in c.downloadProgress) {
-        if (!(n = c.downloadProgress[e]).started) return;
+      for (e in l.downloadProgress) {
+        if (!(n = l.downloadProgress[e]).started) return;
         a++,
           n.lengthComputable
-            ? ((t += n.loaded), (o += n.total), i++)
+            ? ((r += n.loaded), (o += n.total), i++)
             : n.finished || s++;
       }
-      l(0.9 * (a ? (a - s - (o ? (i * (o - t)) / o : 0)) / a : 0));
+      c(0.9 * (a ? (a - s - (o ? (i * (o - r)) / o : 0)) / a : 0));
     }
   }
-  function m() {
+  function x() {
+    var e = this;
+    (this.isConnected = this.connect().then(function () {
+      return e.cleanUpCache();
+    })),
+      this.isConnected.catch(function (e) {
+        (e = 'Error when initializing cache: ' + e),
+          console.log('[UnityCache] ' + e);
+      });
+  }
+  function E(e) {
+    console.log('[UnityCache] ' + e);
+  }
+  function U(e) {
+    return (
+      (U.link = U.link || document.createElement('a')),
+      (U.link.href = e),
+      U.link.href
+    );
+  }
+  function T() {
     new Promise(function (a, e) {
       var i = document.createElement('script');
-      (i.src = c.frameworkUrl),
+      (i.src = l.frameworkUrl),
         (i.onload = function () {
           if ('undefined' == typeof unityFramework || !unityFramework) {
             var e,
-              r = [
+              t = [
                 ['br', 'br'],
                 ['gz', 'gzip'],
               ];
-            for (e in r) {
+            for (e in t) {
               var n,
-                t = r[e];
-              if (c.frameworkUrl.endsWith('.' + t[0]))
+                r = t[e];
+              if (l.frameworkUrl.endsWith('.' + r[0]))
                 return (
-                  (n = 'Unable to parse ' + c.frameworkUrl + '!'),
+                  (n = 'Unable to parse ' + l.frameworkUrl + '!'),
                   'file:' == location.protocol
                     ? void s(
                         n +
@@ -237,30 +271,30 @@ function createUnityInstance(r, n, l) {
                       )
                     : ((n +=
                         ' This can happen if build compression was enabled but web server hosting the content was misconfigured to not serve the file with HTTP Response Header "Content-Encoding: ' +
-                        t[1] +
+                        r[1] +
                         '" present. Check browser Console and Devtools Network tab to debug.'),
-                      'br' == t[0] &&
+                      'br' == r[0] &&
                         'http:' == location.protocol &&
-                        ((t =
+                        ((r =
                           -1 !=
                           ['localhost', '127.0.0.1'].indexOf(location.hostname)
                             ? ''
                             : 'Migrate your server to use HTTPS.'),
                         (n = /Firefox/.test(navigator.userAgent)
                           ? 'Unable to parse ' +
-                            c.frameworkUrl +
+                            l.frameworkUrl +
                             '!<br>If using custom web server, verify that web server is sending .br files with HTTP Response Header "Content-Encoding: br". Brotli compression may not be supported in Firefox over HTTP connections. ' +
-                            t +
+                            r +
                             ' See <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1670675">https://bugzilla.mozilla.org/show_bug.cgi?id=1670675</a> for more information.'
                           : 'Unable to parse ' +
-                            c.frameworkUrl +
+                            l.frameworkUrl +
                             '!<br>If using custom web server, verify that web server is sending .br files with HTTP Response Header "Content-Encoding: br". Brotli compression may not be supported over HTTP connections. Migrate your server to use HTTPS.')),
                       void s(n, 'error'))
                 );
             }
             s(
               'Unable to parse ' +
-                c.frameworkUrl +
+                l.frameworkUrl +
                 '! The file is corrupt, or compression was misconfigured? (check Content-Encoding HTTP Response Header on web server)',
               'error'
             );
@@ -271,86 +305,89 @@ function createUnityInstance(r, n, l) {
         (i.onerror = function (e) {
           s(
             'Unable to load file ' +
-              c.frameworkUrl +
+              l.frameworkUrl +
               '! Check that the file exists on the remote server. (also check browser Console and Devtools Network tab to debug)',
             'error'
           );
         }),
         document.body.appendChild(i),
-        c.deinitializers.push(function () {
+        l.deinitializers.push(function () {
           document.body.removeChild(i);
         });
     }).then(function (e) {
-      e(c);
+      e(l);
     });
-    p((n = 'dataUrl')),
-      (e = c.fetchWithProgress),
-      (r = c[n]),
+    P((n = 'dataUrl')),
+      (e = l.cacheControl(l[n])),
+      (t =
+        l.companyName && l.productName ? l.cachedFetch : l.fetchWithProgress),
+      (r = l[n]),
       (r = /file:\/\//.exec(r) ? 'same-origin' : void 0);
     var n,
       e,
+      t,
       r,
-      t = e(c[n], {
+      o = t(l[n], {
         method: 'GET',
-        companyName: c.companyName,
-        productName: c.productName,
-        productVersion: c.productVersion,
-        control: 'no-store',
+        companyName: l.companyName,
+        productName: l.productName,
+        productVersion: l.productVersion,
+        control: e,
         mode: r,
         onProgress: function (e) {
-          p(n, e);
+          P(n, e);
         },
       })
         .then(function (e) {
           return e.parsedBody;
         })
         .catch(function (e) {
-          var r = 'Failed to download file ' + c[n];
+          var t = 'Failed to download file ' + l[n];
           'file:' == location.protocol
             ? s(
-                r +
+                t +
                   '. Loading web pages via a file:// URL without a web server is not supported by this browser. Please use a local development web server to host Unity content, or use the Unity Build and Run option.',
                 'error'
               )
-            : console.error(r);
+            : console.error(t);
         });
-    c.preRun.push(function () {
-      c.addRunDependency('dataUrl'),
-        t.then(function (e) {
-          var r = new DataView(e.buffer, e.byteOffset, e.byteLength),
+    l.preRun.push(function () {
+      l.addRunDependency('dataUrl'),
+        o.then(function (e) {
+          var t = new DataView(e.buffer, e.byteOffset, e.byteLength),
             n = 0,
-            t = 'UnityWebData1.0\0';
+            r = 'UnityWebData1.0\0';
           if (
-            !String.fromCharCode.apply(null, e.subarray(n, n + t.length)) == t
+            !String.fromCharCode.apply(null, e.subarray(n, n + r.length)) == r
           )
             throw 'unknown data format';
-          var o = r.getUint32((n += t.length), !0);
+          var o = t.getUint32((n += r.length), !0);
           for (n += 4; n < o; ) {
-            var a = r.getUint32(n, !0),
-              i = ((n += 4), r.getUint32(n, !0)),
-              s = ((n += 4), r.getUint32(n, !0)),
-              l =
+            var a = t.getUint32(n, !0),
+              i = ((n += 4), t.getUint32(n, !0)),
+              s = ((n += 4), t.getUint32(n, !0)),
+              c =
                 ((n += 4),
                 String.fromCharCode.apply(null, e.subarray(n, n + s)));
             n += s;
             for (
-              var d = 0, u = l.indexOf('/', d) + 1;
-              0 < u;
-              d = u, u = l.indexOf('/', d) + 1
+              var u = 0, d = c.indexOf('/', u) + 1;
+              0 < d;
+              u = d, d = c.indexOf('/', u) + 1
             )
-              c.FS_createPath(l.substring(0, d), l.substring(d, u - 1), !0, !0);
-            c.FS_createDataFile(l, null, e.subarray(a, a + i), !0, !0, !0);
+              l.FS_createPath(c.substring(0, u), c.substring(u, d - 1), !0, !0);
+            l.FS_createDataFile(c, null, e.subarray(a, a + i), !0, !0, !0);
           }
-          c.removeRunDependency('dataUrl');
+          l.removeRunDependency('dataUrl');
         });
     });
   }
   return (
-    (c.SystemInfo = (function () {
+    (l.SystemInfo = (function () {
       var e,
-        r,
-        n,
         t,
+        n,
+        r,
         o = navigator.userAgent + ' ',
         a = [
           ['Firefox', 'Firefox'],
@@ -364,18 +401,18 @@ function createUnityInstance(r, n, l) {
           ['FxiOS', 'Firefox on iOS Safari'],
           ['Safari', 'Safari'],
         ];
-      function i(e, r, n) {
-        return (e = RegExp(e, 'i').exec(r)) && e[n];
+      function i(e, t, n) {
+        return (e = RegExp(e, 'i').exec(t)) && e[n];
       }
       for (var s = 0; s < a.length; ++s)
-        if ((r = i(a[s][0] + '[/ ](.*?)[ \\)]', o, 1))) {
+        if ((t = i(a[s][0] + '[/ ](.*?)[ \\)]', o, 1))) {
           e = a[s][1];
           break;
         }
-      'Safari' == e && (r = i('Version/(.*?) ', o, 1)),
-        'Internet Explorer' == e && (r = i('rv:(.*?)\\)? ', o, 1) || r);
+      'Safari' == e && (t = i('Version/(.*?) ', o, 1)),
+        'Internet Explorer' == e && (t = i('rv:(.*?)\\)? ', o, 1) || t);
       for (
-        var l = [
+        var c = [
             ['Windows (.*?)[;)]', 'Windows'],
             ['Android ([0-9_.]+)', 'Android'],
             ['iPhone OS ([0-9_.]+)', 'iPhoneOS'],
@@ -386,16 +423,16 @@ function createUnityInstance(r, n, l) {
             ['Mac OS X ([0-9_\\.]+)', 'MacOS'],
             ['bot|google|baidu|bing|msn|teoma|slurp|yandex', 'Search Bot'],
           ],
-          d = 0;
-        d < l.length;
-        ++d
+          u = 0;
+        u < c.length;
+        ++u
       )
-        if ((c = i(l[d][0], o, 1))) {
-          (n = l[d][1]), (c = c.replace(/_/g, '.'));
+        if ((l = i(c[u][0], o, 1))) {
+          (n = c[u][1]), (l = l.replace(/_/g, '.'));
           break;
         }
-      var u,
-        c =
+      var d,
+        l =
           {
             'NT 5.0': '2000',
             'NT 5.1': 'XP',
@@ -405,18 +442,18 @@ function createUnityInstance(r, n, l) {
             'NT 6.2': '8',
             'NT 6.3': '8.1',
             'NT 10.0': '10',
-          }[c] || c,
-        f =
-          ((f = document.createElement('canvas')) &&
-            ((u = (h = f.getContext('webgl2')) ? 2 : 0),
-            h || ((h = f && f.getContext('webgl')) && (u = 1)),
-            h &&
-              (t =
-                (h.getExtension('WEBGL_debug_renderer_info') &&
-                  h.getParameter(37446)) ||
-                h.getParameter(7937))),
-          'undefined' != typeof SharedArrayBuffer),
+          }[l] || l,
         h =
+          ((h = document.createElement('canvas')) &&
+            ((d = (f = h.getContext('webgl2')) ? 2 : 0),
+            f || ((f = h && h.getContext('webgl')) && (d = 1)),
+            f &&
+              (r =
+                (f.getExtension('WEBGL_debug_renderer_info') &&
+                  f.getParameter(37446)) ||
+                f.getParameter(7937))),
+          'undefined' != typeof SharedArrayBuffer),
+        f =
           'object' == typeof WebAssembly &&
           'function' == typeof WebAssembly.compile;
       return {
@@ -424,34 +461,34 @@ function createUnityInstance(r, n, l) {
         height: screen.height,
         userAgent: o.trim(),
         browser: e || 'Unknown browser',
-        browserVersion: r || 'Unknown version',
+        browserVersion: t || 'Unknown version',
         mobile: /Mobile|Android|iP(ad|hone)/.test(navigator.appVersion),
         os: n || 'Unknown OS',
-        osVersion: c || 'Unknown OS Version',
-        gpu: t || 'Unknown GPU',
+        osVersion: l || 'Unknown OS Version',
+        gpu: r || 'Unknown GPU',
         language: navigator.userLanguage || navigator.language,
-        hasWebGL: u,
+        hasWebGL: d,
         hasCursorLock: !!document.body.requestPointerLock,
         hasFullscreen:
           !!document.body.requestFullscreen ||
           !!document.body.webkitRequestFullscreen,
-        hasThreads: f,
-        hasWasm: h,
+        hasThreads: h,
+        hasWasm: f,
         hasWasmThreads: !1,
       };
     })()),
-    (c.abortHandler = function (e) {
-      return g(e, '', 0), !0;
+    (l.abortHandler = function (e) {
+      return D(e, '', 0), !0;
     }),
     (Error.stackTraceLimit = Math.max(Error.stackTraceLimit || 0, 50)),
-    (c.readBodyWithProgress = function (a, i, s) {
+    (l.readBodyWithProgress = function (a, i, s) {
       var e = a.body ? a.body.getReader() : void 0,
-        l = void 0 !== a.headers.get('Content-Length'),
-        d = (function (e, r) {
-          if (!r) return 0;
-          var r = e.headers.get('Content-Encoding'),
+        c = void 0 !== a.headers.get('Content-Length'),
+        u = (function (e, t) {
+          if (!t) return 0;
+          var t = e.headers.get('Content-Encoding'),
             n = parseInt(e.headers.get('Content-Length'));
-          switch (r) {
+          switch (t) {
             case 'br':
               return Math.round(5 * n);
             case 'gzip':
@@ -459,55 +496,55 @@ function createUnityInstance(r, n, l) {
             default:
               return n;
           }
-        })(a, l),
-        u = new Uint8Array(d),
-        c = [],
-        f = 0,
-        h = 0;
+        })(a, c),
+        d = new Uint8Array(u),
+        l = [],
+        h = 0,
+        f = 0;
       return (
-        l ||
+        c ||
           console.warn(
             '[UnityCache] Response is served without Content-Length header. Please reconfigure server to include valid Content-Length for better download performance.'
           ),
         (function o() {
           return void 0 === e
             ? a.arrayBuffer().then(function (e) {
-                var r = new Uint8Array(e);
+                var t = new Uint8Array(e);
                 return (
                   i({
                     type: 'progress',
                     response: a,
                     total: e.length,
                     loaded: 0,
-                    lengthComputable: l,
-                    chunk: s ? r : null,
+                    lengthComputable: c,
+                    chunk: s ? t : null,
                   }),
-                  r
+                  t
                 );
               })
             : e.read().then(function (e) {
                 if (e.done) {
-                  if (f === d) return u;
-                  if (f < d) return u.slice(0, f);
+                  if (h === u) return d;
+                  if (h < u) return d.slice(0, h);
                   for (
-                    var r = new Uint8Array(f), n = (r.set(u, 0), h), t = 0;
-                    t < c.length;
-                    ++t
+                    var t = new Uint8Array(h), n = (t.set(d, 0), f), r = 0;
+                    r < l.length;
+                    ++r
                   )
-                    r.set(c[t], n), (n += c[t].length);
-                  return r;
+                    t.set(l[r], n), (n += l[r].length);
+                  return t;
                 }
                 return (
-                  f + e.value.length <= u.length
-                    ? (u.set(e.value, f), (h = f + e.value.length))
-                    : c.push(e.value),
-                  (f += e.value.length),
+                  h + e.value.length <= d.length
+                    ? (d.set(e.value, h), (f = h + e.value.length))
+                    : l.push(e.value),
+                  (h += e.value.length),
                   i({
                     type: 'progress',
                     response: a,
-                    total: Math.max(d, f),
-                    loaded: f,
-                    lengthComputable: l,
+                    total: Math.max(u, h),
+                    loaded: h,
+                    lengthComputable: c,
                     chunk: s ? e.value : null,
                   }),
                   o()
@@ -520,7 +557,7 @@ function createUnityInstance(r, n, l) {
               response: a,
               total: e.length,
               loaded: e.length,
-              lengthComputable: l,
+              lengthComputable: c,
               chunk: null,
             }),
             (a.parsedBody = e),
@@ -529,36 +566,448 @@ function createUnityInstance(r, n, l) {
         })
       );
     }),
-    (c.fetchWithProgress = function (e, r) {
+    (l.fetchWithProgress = function (e, t) {
       var n = function () {};
       return (
-        r && r.onProgress && (n = r.onProgress),
-        fetch(e, r).then(function (e) {
-          return c.readBodyWithProgress(e, n, r.enableStreamingDownload);
+        t && t.onProgress && (n = t.onProgress),
+        fetch(e, t).then(function (e) {
+          return l.readBodyWithProgress(e, n, t.enableStreamingDownload);
         })
       );
     }),
-    new Promise(function (e, r) {
+    (l.UnityCache =
+      ((f = { name: 'UnityCache', version: 4 }),
+      (p = { name: 'RequestMetaDataStore', version: 1 }),
+      (m = 'RequestStore'),
+      (g = 'WebAssembly'),
+      (b =
+        window.indexedDB ||
+        window.mozIndexedDB ||
+        window.webkitIndexedDB ||
+        window.msIndexedDB),
+      (v = null),
+      (x.getInstance = function () {
+        return (v = v || new x());
+      }),
+      (x.destroyInstance = function () {
+        return v
+          ? v.close().then(function () {
+              v = null;
+            })
+          : Promise.resolve();
+      }),
+      (x.prototype.clearCache = function () {
+        var r = this;
+        return this.isConnected
+          .then(function () {
+            return r.execute(p.name, 'clear', []);
+          })
+          .then(function () {
+            return r.cache.keys();
+          })
+          .then(function e(t) {
+            var n;
+            return 0 === t.length
+              ? Promise.resolve()
+              : ((n = t.pop()),
+                r.cache.delete(n).then(function () {
+                  return e(t);
+                }));
+          });
+      }),
+      (x.UnityCacheDatabase = f),
+      (x.RequestMetaDataStore = p),
+      (x.MaximumCacheSize = 1073741824),
+      (x.prototype.loadRequest = function (e) {
+        var t = this;
+        return t.isConnected
+          .then(function () {
+            return Promise.all([t.cache.match(e), t.loadRequestMetaData(e)]);
+          })
+          .then(function (e) {
+            if (void 0 !== e[0] && void 0 !== e[1])
+              return { response: e[0], metaData: e[1] };
+          });
+      }),
+      (x.prototype.loadRequestMetaData = function (e) {
+        e = 'string' == typeof e ? e : e.url;
+        return this.execute(p.name, 'get', [e]);
+      }),
+      (x.prototype.updateRequestMetaData = function (e) {
+        return this.execute(p.name, 'put', [e]);
+      }),
+      (x.prototype.storeRequest = function (e, t) {
+        var n = this;
+        return n.isConnected.then(function () {
+          return n.cache.put(e, t);
+        });
+      }),
+      (x.prototype.close = function () {
+        return this.isConnected.then(
+          function () {
+            this.database && (this.database.close(), (this.database = null)),
+              this.cache && (this.cache = null);
+          }.bind(this)
+        );
+      }),
+      (x.prototype.connect = function () {
+        var o = this;
+        return void 0 === b
+          ? Promise.reject(
+              new Error(
+                'Could not connect to cache: IndexedDB is not supported.'
+              )
+            )
+          : void 0 === window.caches
+          ? Promise.reject(
+              new Error(
+                'Could not connect to cache: Cache API is not supported.'
+              )
+            )
+          : new Promise(function (t, n) {
+              try {
+                function r() {
+                  o.openDBTimeout &&
+                    (clearTimeout(o.openDBTimeout), (o.openDBTimeout = null));
+                }
+                o.openDBTimeout = setTimeout(function () {
+                  void 0 === o.database &&
+                    n(
+                      new Error('Could not connect to cache: Database timeout.')
+                    );
+                }, 2e4);
+                var e = b.open(f.name, f.version);
+                (e.onupgradeneeded = o.upgradeDatabase.bind(o)),
+                  (e.onsuccess = function (e) {
+                    r(), (o.database = e.target.result), t();
+                  }),
+                  (e.onerror = function (e) {
+                    r(),
+                      (o.database = null),
+                      n(new Error('Could not connect to database.'));
+                  });
+              } catch (e) {
+                r(),
+                  (o.database = null),
+                  (o.cache = null),
+                  n(
+                    new Error(
+                      'Could not connect to cache: Could not connect to database.'
+                    )
+                  );
+              }
+            })
+              .then(function () {
+                var e = f.name + '_' + l.companyName + '_' + l.productName;
+                return caches.open(e);
+              })
+              .then(function (e) {
+                o.cache = e;
+              });
+      }),
+      (x.prototype.upgradeDatabase = function (e) {
+        var t,
+          e = e.target.result;
+        e.objectStoreNames.contains(p.name) ||
+          ((t = e.createObjectStore(p.name, { keyPath: 'url' })),
+          ['accessedAt', 'updatedAt'].forEach(function (e) {
+            t.createIndex(e, e);
+          })),
+          e.objectStoreNames.contains(m) && e.deleteObjectStore(m),
+          e.objectStoreNames.contains(g) && e.deleteObjectStore(g);
+      }),
+      (x.prototype.execute = function (a, i, s) {
+        return this.isConnected.then(
+          function () {
+            return new Promise(
+              function (t, n) {
+                try {
+                  var e, r, o;
+                  null === this.database
+                    ? n(new Error('indexedDB access denied'))
+                    : ((e =
+                        -1 != ['put', 'delete', 'clear'].indexOf(i)
+                          ? 'readwrite'
+                          : 'readonly'),
+                      (r = this.database.transaction([a], e).objectStore(a)),
+                      'openKeyCursor' == i &&
+                        ((r = r.index(s[0])), (s = s.slice(1))),
+                      ((o = r[i].apply(r, s)).onsuccess = function (e) {
+                        t(e.target.result);
+                      }),
+                      (o.onerror = function (e) {
+                        n(e);
+                      }));
+                } catch (e) {
+                  n(e);
+                }
+              }.bind(this)
+            );
+          }.bind(this)
+        );
+      }),
+      (x.prototype.getMetaDataEntries = function () {
+        var r = this,
+          o = 0,
+          a = [];
+        return new Promise(function (t, n) {
+          var e = r.database
+            .transaction([p.name], 'readonly')
+            .objectStore(p.name)
+            .openCursor();
+          (e.onsuccess = function (e) {
+            e = e.target.result;
+            e
+              ? ((o += e.value.size), a.push(e.value), e.continue())
+              : t({ metaDataEntries: a, cacheSize: o });
+          }),
+            (e.onerror = function (e) {
+              n(e);
+            });
+        });
+      }),
+      (x.prototype.cleanUpCache = function () {
+        var i = this;
+        return this.getMetaDataEntries().then(function (e) {
+          for (
+            var t = e.metaDataEntries, n = e.cacheSize, r = [], o = [], a = 0;
+            a < t.length;
+            ++a
+          )
+            t[a].version == l.productVersion
+              ? o.push(t[a])
+              : (r.push(t[a]), (n -= t[a].size));
+          o.sort(function (e, t) {
+            return e.accessedAt - t.accessedAt;
+          });
+          for (a = 0; a < o.length && !(n < x.MaximumCacheSize); ++a)
+            r.push(o[a]), (n -= o[a].size);
+          return (function e() {
+            var t;
+            return 0 === r.length
+              ? Promise.resolve()
+              : ((t = r.pop()),
+                i.cache
+                  .delete(t.url)
+                  .then(function (e) {
+                    if (e)
+                      return (
+                        (r = t.url),
+                        new Promise(function (e, t) {
+                          var n = i.database.transaction([p.name], 'readwrite');
+                          n.objectStore(p.name).delete(r),
+                            (n.oncomplete = e),
+                            (n.onerror = t);
+                        })
+                      );
+                    var r;
+                  })
+                  .then(e));
+          })();
+        });
+      }),
+      x)),
+    (l.cachedFetch =
+      ((w = l.UnityCache),
+      (y = l.fetchWithProgress),
+      (S = l.readBodyWithProgress),
+      function (o, a) {
+        var e,
+          t,
+          i = w.getInstance(),
+          s = U('string' == typeof o ? o : o.url),
+          c = {
+            enabled:
+              ((e = s),
+              (!(t = a) || !t.method || 'GET' === t.method) &&
+                (!t ||
+                  -1 != ['must-revalidate', 'immutable'].indexOf(t.control)) &&
+                !!e.match('^https?://')),
+          };
+        function u(n, r) {
+          return fetch(n, r).then(function (e) {
+            var t;
+            return !c.enabled || c.revalidated
+              ? e
+              : 304 === e.status
+              ? ((c.revalidated = !0),
+                i
+                  .updateRequestMetaData(c.metaData)
+                  .then(function () {
+                    E(
+                      "'" +
+                        c.metaData.url +
+                        "' successfully revalidated and served from the indexedDB cache"
+                    );
+                  })
+                  .catch(function (e) {
+                    E(
+                      "'" +
+                        c.metaData.url +
+                        "' successfully revalidated but not stored in the indexedDB cache due to the error: " +
+                        e
+                    );
+                  }),
+                S(c.response, r.onProgress, r.enableStreamingDownload))
+              : 200 == e.status
+              ? ((c.response = e),
+                (c.metaData.updatedAt = c.metaData.accessedAt),
+                (c.revalidated = !0),
+                (t = e.clone()),
+                S(e, r.onProgress, r.enableStreamingDownload).then(function (
+                  e
+                ) {
+                  return (
+                    (c.metaData.size = e.parsedBody.length),
+                    Promise.all([
+                      i.storeRequest(n, t),
+                      i.updateRequestMetaData(c.metaData),
+                    ])
+                      .then(function () {
+                        E(
+                          "'" +
+                            s +
+                            "' successfully downloaded and stored in the indexedDB cache"
+                        );
+                      })
+                      .catch(function (e) {
+                        E(
+                          "'" +
+                            s +
+                            "' successfully downloaded but not stored in the indexedDB cache due to the error: " +
+                            e
+                        );
+                      }),
+                    e
+                  );
+                }))
+              : (E(
+                  "'" +
+                    s +
+                    "' request failed with status: " +
+                    e.status +
+                    ' ' +
+                    e.statusText
+                ),
+                S(e, r.onProgress, r.enableStreamingDownload));
+          });
+        }
+        return (
+          a &&
+            ((c.control = a.control),
+            (c.companyName = a.companyName),
+            (c.productName = a.productName),
+            (c.productVersion = a.productVersion)),
+          (c.revalidated = !1),
+          (c.metaData = {
+            url: s,
+            accessedAt: Date.now(),
+            version: c.productVersion,
+          }),
+          (c.response = null),
+          c.enabled
+            ? i
+                .loadRequest(s)
+                .then(function (e) {
+                  var n, r, t;
+                  return e
+                    ? ((n = e.response),
+                      (r = e.metaData),
+                      (c.response = n),
+                      (c.metaData.size = r.size),
+                      (c.metaData.updatedAt = r.updatedAt),
+                      'immutable' == c.control
+                        ? ((c.revalidated = !0),
+                          i.updateRequestMetaData(r).then(function () {
+                            E(
+                              "'" +
+                                c.metaData.url +
+                                "' served from the indexedDB cache without revalidation"
+                            );
+                          }),
+                          S(n, a.onProgress, a.enableStreamingDownload))
+                        : ((e = s),
+                          ((t =
+                            window.location.href.match(/^[a-z]+:\/\/[^\/]+/)) &&
+                            !e.lastIndexOf(t[0], 0)) ||
+                          (!n.headers.get('Last-Modified') &&
+                            !n.headers.get('ETag'))
+                            ? ((e = (a = a || {}).headers || {}),
+                              (a.headers = e),
+                              n.headers.get('Last-Modified')
+                                ? ((e['If-Modified-Since'] =
+                                    n.headers.get('Last-Modified')),
+                                  (e['Cache-Control'] = 'no-cache'))
+                                : n.headers.get('ETag') &&
+                                  ((e['If-None-Match'] = n.headers.get('ETag')),
+                                  (e['Cache-Control'] = 'no-cache')),
+                              u(o, a))
+                            : fetch(s, { method: 'HEAD' }).then(function (t) {
+                                return (
+                                  (c.revalidated = [
+                                    'Last-Modified',
+                                    'ETag',
+                                  ].every(function (e) {
+                                    return (
+                                      !n.headers.get(e) ||
+                                      n.headers.get(e) == t.headers.get(e)
+                                    );
+                                  })),
+                                  c.revalidated
+                                    ? (i
+                                        .updateRequestMetaData(r)
+                                        .then(function () {
+                                          E(
+                                            "'" +
+                                              c.metaData.url +
+                                              "' successfully revalidated and served from the indexedDB cache"
+                                          );
+                                        }),
+                                      S(
+                                        c.response,
+                                        a.onProgress,
+                                        a.enableStreamingDownload
+                                      ))
+                                    : u(o, a)
+                                );
+                              })))
+                    : u(o, a);
+                })
+                .catch(function (e) {
+                  return (
+                    E(
+                      "Failed to load '" +
+                        c.metaData.url +
+                        "' from indexedDB cache due to the error: " +
+                        e
+                    ),
+                    y(o, a)
+                  );
+                })
+            : y(o, a)
+        );
+      })),
+    new Promise(function (e, t) {
       var n;
-      c.SystemInfo.hasWebGL
-        ? 1 == c.SystemInfo.hasWebGL
+      l.SystemInfo.hasWebGL
+        ? 1 == l.SystemInfo.hasWebGL
           ? ((n =
               'Your browser does not support graphics API "WebGL 2" which is required for this content.'),
-            'Safari' == c.SystemInfo.browser &&
-              parseInt(c.SystemInfo.browserVersion) < 15 &&
-              (c.SystemInfo.mobile || 1 < navigator.maxTouchPoints
+            'Safari' == l.SystemInfo.browser &&
+              parseInt(l.SystemInfo.browserVersion) < 15 &&
+              (l.SystemInfo.mobile || 1 < navigator.maxTouchPoints
                 ? (n += '\nUpgrade to iOS 15 or later.')
                 : (n += '\nUpgrade to Safari 15 or later.')),
-            r(n))
-          : c.SystemInfo.hasWasm
-          ? ((c.startupErrorHandler = r),
-            l(0),
-            c.postRun.push(function () {
-              l(1), delete c.startupErrorHandler, e(h);
+            t(n))
+          : l.SystemInfo.hasWasm
+          ? ((l.startupErrorHandler = t),
+            c(0),
+            l.postRun.push(function () {
+              c(1), delete l.startupErrorHandler, e(C);
             }),
-            m())
-          : r('Your browser does not support WebAssembly.')
-        : r('Your browser does not support WebGL.');
+            T())
+          : t('Your browser does not support WebAssembly.')
+        : t('Your browser does not support WebGL.');
     })
   );
 }
