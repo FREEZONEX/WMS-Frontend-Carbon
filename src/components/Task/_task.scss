@@ -20,4 +20,17 @@
     font-size: 12px;
     font-style: italic;
   }
+  .cds--btn--secondary {
+    width: 93px;
+    height: 33px;
+    background-color: var(--Layer-accent-layer-accent-01, #e0e0e0);
+    color: #000;
+    &:hover {
+      color: #fff;
+      background-color: var(--cds-button-secondary, #474747);
+    }
+  }
+  .cds--progress-bar__label-text {
+    font-style: italic;
+  }
 }

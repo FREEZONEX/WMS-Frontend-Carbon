@@ -59,13 +59,14 @@ function TaskTable({ headers, rows }) {
                     if (row[header.key] == null) {
                       return (
                         <TableCell key={header.key}>
-                          {/* <Button
+                          <Button
                             size="sm"
-                            className="h-[20px]"
-                            onClick={onOpenAssign}>
-                            Assign
-                          </Button> */}
-                          <TaskApproved onClick={onOpenAssign} />
+                            kind="secondary"
+                            onClick={onOpenAssign}
+                          >
+                            Click
+                          </Button>
+                          {/* <TaskApproved onClick={onOpenAssign} /> */}
                         </TableCell>
                       );
                     }

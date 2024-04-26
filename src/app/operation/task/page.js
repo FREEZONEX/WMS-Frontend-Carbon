@@ -7,20 +7,13 @@ import {
   BreadcrumbItem,
   ProgressBar,
 } from '@carbon/react';
-import { SimpleBarChart, GaugeChart, MeterChart } from '@carbon/charts-react';
 import '@carbon/charts/styles.css';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import PortInputIcon from '@/utils/pic/Port--input.svg';
 import PortOutputIcon from '@/utils/pic/Port--output.svg';
 import Time from '@/utils/pic/Time.svg';
-import Money from '@/utils/pic/Money.svg';
-import {
-  CaretRight,
-  CaretLeft,
-  Maximize,
-  NextOutline,
-} from '@carbon/icons-react';
+import { CaretRight, CaretLeft, Maximize } from '@carbon/icons-react';
 import moment from 'moment';
 import { DateTimeFormat } from '@/utils/constants';
 import TaskTable from '@/components/Task/TaskTable';
@@ -67,7 +60,6 @@ const rowData = () => {
       assigned_to: null,
     });
   }
-  console.log(datas);
   return datas;
 };
 
@@ -150,10 +142,13 @@ export default function Task() {
                   </p>
                 </div>
                 <div className=" absolute bottom-6 w-[100%] pl-3 pr-3">
-                  <hr className="border-[#333] border-2 border-solid"></hr>
+                  <hr
+                    className="border-[#333] border-solid"
+                    style={{ borderWidth: '1.5px' }}
+                  ></hr>
                 </div>
               </div>
-              <div className="p-4 flex-auto">
+              <div className="p-4 flex-auto min-w-[300px]">
                 <Heading className="mr-2  font-bold flex flex-row justify-between">
                   <div> List Of Putaway Tasks</div>
                   <div>
@@ -198,10 +193,13 @@ export default function Task() {
                   </p>
                 </div>
                 <div className=" absolute bottom-6 w-[100%] pl-3 pr-3">
-                  <hr className="border-[#333] border-[2px] border-solid"></hr>
+                  <hr
+                    className="border-[#333] border-solid"
+                    style={{ borderWidth: '1.5px' }}
+                  ></hr>
                 </div>
               </div>
-              <div className="p-4 flex-auto">
+              <div className="p-4 flex-auto  min-w-[300px]">
                 <Heading className="mr-2  font-bold flex flex-row justify-between">
                   <div> List Of Picking Tasks</div>
                   <div>
@@ -223,8 +221,8 @@ export default function Task() {
                   className="ml-6"
                   src={Time}
                   alt="arrow"
-                  width={24}
-                  height={24}
+                  width={35}
+                  height={35}
                 />
               </div>
             </div>

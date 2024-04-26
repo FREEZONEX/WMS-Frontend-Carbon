@@ -1,4 +1,5 @@
 import { Modal, ComboBox, Tag, MultiSelect } from '@carbon/react';
+import { Close } from '@carbon/icons-react';
 import { useEffect, useState } from 'react';
 
 export default function AssignModal({ isOpen, onClose, onConfirm }) {
@@ -35,7 +36,6 @@ export default function AssignModal({ isOpen, onClose, onConfirm }) {
   const onSelectWorker = (item) => {};
   const onSelectResource = (item) => {
     setSelectedResources(item.selectedItems);
-    console.log(item, selectedResources);
   };
 
   const handleCancelClicked = () => {
@@ -44,6 +44,15 @@ export default function AssignModal({ isOpen, onClose, onConfirm }) {
 
   const handleSubmit = async () => {
     onConfirm();
+  };
+
+  const onRemoveResource = (item) => {
+    const index = selectedResources.indexOf(item);
+    setSelectedResources((prvItems) => {
+      const newItems = [...prvItems];
+      newItems.splice(index, 1);
+      return newItems;
+    });
   };
 
   return (
@@ -74,6 +83,7 @@ export default function AssignModal({ isOpen, onClose, onConfirm }) {
               items={resource}
               itemToString={(item) => (item ? item : '')}
               selectionFeedback="top-after-reopen"
+              selectedItems={selectedResources}
               onChange={(selectedItem) => onSelectResource(selectedItem)}
             />
             <div className="mt-2">
@@ -84,7 +94,17 @@ export default function AssignModal({ isOpen, onClose, onConfirm }) {
                     type={tagColors[index % tagColors.length]}
                     className="ml-0"
                   >
-                    <div className="flex w-10 justify-center">{item}</div>
+                    <div className="flex ">
+                      {item}
+                      <Close
+                        className="ml-1"
+                        size={16}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onRemoveResource(item);
+                        }}
+                      />
+                    </div>
                   </Tag>
                 );
               })}
