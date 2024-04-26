@@ -220,6 +220,7 @@ function TaskListTable({ headers, rows, setRows }) {
           <TableToolbarSearch />
           <IconButton
             label="Add"
+            kind="ghost"
             onClick={() => {
               if (!checkIsEdit()) {
                 setRows([...rows, { ...defaultDetailValue, id: rows.length }]);
@@ -230,6 +231,7 @@ function TaskListTable({ headers, rows, setRows }) {
           </IconButton>
           <IconButton
             label="Remove"
+            kind="ghost"
             onClick={() => {
               if (!checkIsEdit()) {
                 setRows((prevRows) =>

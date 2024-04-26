@@ -132,7 +132,7 @@ export default function Task() {
         </BreadcrumbItem>
         <BreadcrumbItem
           onClick={() => {
-            router.push(`${process.env.PATH_PREFIX}/task`);
+            router.push(`${process.env.PATH_PREFIX}/operation/task`);
           }}
         >
           Task
@@ -147,7 +147,7 @@ export default function Task() {
           </Heading>
         </div>
       </div>
-      <div id="taskContent" className="flex-grow bg-gray-100 mt-3">
+      <div id="taskContent" className="flex-grow bg-transparent mt-3">
         <div className="flex w-full gap-4">
           <div className="w-4/5">
             <div className="flex flex-row bg-white shadow h-[270px]">
@@ -241,7 +241,7 @@ export default function Task() {
             </div>
           </div>
 
-          <div className="w-1/5 bg-gray-100 h-128 flex flex-col gap-4">
+          <div className="w-1/5 bg-transparent h-128 flex flex-col gap-4">
             <div className="h-[100px]  p-4  pl-6  pr-6 shadow  bg-white">
               <Heading className="text-[12px] font-bold ">
                 Average Time To Process
