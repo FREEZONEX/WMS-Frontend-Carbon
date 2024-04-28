@@ -5,9 +5,13 @@ const UnityWebGL = () => {
   const buildUrl = '/webgl/WareHouseDemoWebGL_v3';
   const { unityProvider, requestFullscreen } = useUnityContext({
     loaderUrl: buildUrl + '.loader.js',
-    dataUrl: buildUrl + '.data',
+    //buildUrl + '.data',
+    dataUrl:
+      'https://wmswebgl.oss-ap-southeast-1.aliyuncs.com/WareHouseDemoWebGL_v3.data',
     frameworkUrl: buildUrl + '.framework.js',
-    codeUrl: buildUrl + '.wasm',
+    //buildUrl + '.wasm',
+    codeUrl:
+      'https://wmswebgl.oss-ap-southeast-1.aliyuncs.com/WareHouseDemoWebGL_v3.wasm',
   });
   function handleClick() {
     requestFullscreen(true);
