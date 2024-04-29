@@ -23,6 +23,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import moment from 'moment';
 import { DateTimeFormat } from '@/utils/constants';
 import { Icon, Email } from '@carbon/icons-react';
+import AssignModal from '../Task/AssignModal';
 
 function PutawayTable({ headers, refresh, setRefresh }) {
   const [page, setPage] = useState(1);
@@ -58,6 +59,16 @@ function PutawayTable({ headers, refresh, setRefresh }) {
   );
   const [sortKey, setSortKey] = useState('');
   const [sortDirection, setSortDirection] = useState('desc');
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const handleAssignModalOpen = () => {
+    setAssignModalOpen(true);
+  };
+  const handleAssignModalClose = () => {
+    setAssignModalOpen(false);
+  };
+  const handleAssignModalConfirm = () => {
+    setAssignModalOpen(false);
+  };
   // const sortedRows = React.useMemo(() => {
   //   if (!sortKey) {
   //     return rows;
@@ -193,7 +204,11 @@ function PutawayTable({ headers, refresh, setRefresh }) {
                 if (header.key === 'assigned_to') {
                   return (
                     <StructuredListCell key={header.key}>
-                      <Button size="xs" kind="secondary" onClick={() => {}}>
+                      <Button
+                        size="xs"
+                        kind="secondary"
+                        onClick={handleAssignModalOpen}
+                      >
                         <Heading className="mt-1 ml-2 text-[13px]">
                           Click
                         </Heading>
@@ -242,6 +257,11 @@ function PutawayTable({ headers, refresh, setRefresh }) {
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
       ></OperationDetailModal>
+      <AssignModal
+        isOpen={assignModalOpen}
+        onClose={handleAssignModalClose}
+        onConfirm={handleAssignModalConfirm}
+      ></AssignModal>
     </div>
   );
 }
