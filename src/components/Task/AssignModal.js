@@ -1,6 +1,7 @@
 import { Modal, ComboBox, Tag, MultiSelect } from '@carbon/react';
 import { Close } from '@carbon/icons-react';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 export default function AssignModal({ isOpen, onClose, onConfirm }) {
   const [msgOpen, setMsgOpen] = useState(false);
@@ -69,7 +70,7 @@ export default function AssignModal({ isOpen, onClose, onConfirm }) {
         size="sm"
       >
         <div className="p-3 pb-12">
-          <div style={{ width: '70%' }}>
+          <div style={{ width: '80%' }}>
             <ComboBox
               titleText="Worker"
               items={worker}
@@ -77,15 +78,24 @@ export default function AssignModal({ isOpen, onClose, onConfirm }) {
               placeholder="Choose worker"
               onChange={(selectedItem) => onSelectWorker(selectedItem)}
             />
-            <MultiSelect
-              label="Multiselect Label"
-              titleText="Resource"
-              items={resource}
-              itemToString={(item) => (item ? item : '')}
-              selectionFeedback="top-after-reopen"
-              selectedItems={selectedResources}
-              onChange={(selectedItem) => onSelectResource(selectedItem)}
-            />
+            <div className="flex w-full items-end mt-2 space-x-2">
+              <MultiSelect
+                className="w-5/6"
+                label="Multiselect Label"
+                titleText="Resource"
+                items={resource}
+                itemToString={(item) => (item ? item : '')}
+                selectionFeedback="top-after-reopen"
+                selectedItems={selectedResources}
+                onChange={(selectedItem) => onSelectResource(selectedItem)}
+              />
+              <Link
+                href={`${process.env.PATH_PREFIX}/operation/task/resource`}
+                className="w-1/6 font-inherit text-[#0043CE] text-[0.75rem]"
+              >
+                View All
+              </Link>
+            </div>
             <div className="mt-2">
               {selectedResources?.map((item, index) => {
                 return (
