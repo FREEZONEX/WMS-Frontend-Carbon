@@ -28,6 +28,7 @@ import {
   Analytics,
   WatsonHealth3DCursor,
   DocumentTasks,
+  GroupResource,
 } from '@carbon/icons-react';
 import { usePathname } from 'next/navigation';
 import { ThemeContext } from '@/utils/ThemeContext';
@@ -114,6 +115,18 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
             >
               Outbound
             </SideNavLink>
+
+            <SideNavLink
+              isSideNavExpanded={isExpanded}
+              renderIcon={InventoryManagement}
+              onClick={() => {
+                router.push(`${process.env.PATH_PREFIX}/operation/stocktaking`);
+              }}
+              className="cursor-pointer"
+              isActive={isCurrentPath('/operation/stocktaking')}
+            >
+              Auditing
+            </SideNavLink>
             <SideNavLink
               isSideNavExpanded={isExpanded}
               renderIcon={DocumentTasks}
@@ -127,14 +140,16 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
             </SideNavLink>
             <SideNavLink
               isSideNavExpanded={isExpanded}
-              renderIcon={InventoryManagement}
+              renderIcon={GroupResource}
               onClick={() => {
-                router.push(`${process.env.PATH_PREFIX}/operation/stocktaking`);
+                router.push(
+                  `${process.env.PATH_PREFIX}/operation/task/resource`
+                );
               }}
               className="cursor-pointer"
-              isActive={isCurrentPath('/operation/stocktaking')}
+              isActive={isCurrentPath('/operation/task/resource')}
             >
-              Auditing
+              Resource
             </SideNavLink>
             <SwitcherDivider />
             <SideNavLink
