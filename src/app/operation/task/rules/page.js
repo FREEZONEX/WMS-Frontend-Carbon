@@ -49,7 +49,12 @@ export default function Page() {
             streamlining warehouse management.
           </Heading>
         </div>
-        <Button kind="secondary" isExpressive size="sm" renderIcon={Add}>
+        <Button
+          style={{ backgroundColor: '#393939' }}
+          isExpressive
+          size="sm"
+          renderIcon={Add}
+        >
           Create a New Rule
         </Button>
       </div>

@@ -1,7 +1,7 @@
 'use client';
 import '@/components/Task/_task.scss';
 import React, { useState, useEffect, useCallback } from 'react';
-import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
+import { Heading, Breadcrumb, BreadcrumbItem, Button } from '@carbon/react';
 import '@carbon/charts/styles.css';
 import { useRouter } from 'next/navigation';
 import PutawayTable from '@/components/Table/PutawayTable';
@@ -59,6 +59,16 @@ export default function Page() {
             streamlining warehouse management.
           </Heading>
         </div>
+        <Button
+          isExpressive
+          size="sm"
+          style={{ backgroundColor: '#393939' }}
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/task/rules`);
+          }}
+        >
+          Distribution Rules
+        </Button>
       </div>
 
       <div className="mt-10">
