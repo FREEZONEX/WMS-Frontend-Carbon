@@ -23,7 +23,7 @@ export default function Page() {
   return (
     <div>
       <Breadcrumb>
-        <BreadcrumbItem>
+        <BreadcrumbItem className="cursor-pointer">
           <a
             onClick={() => {
               router.push(`${process.env.PATH_PREFIX}/home`);
@@ -33,6 +33,7 @@ export default function Page() {
           </a>
         </BreadcrumbItem>
         <BreadcrumbItem
+          className="cursor-pointer"
           onClick={() => {
             router.push(`${process.env.PATH_PREFIX}/operation/task`);
           }}
@@ -40,6 +41,7 @@ export default function Page() {
           Task
         </BreadcrumbItem>
         <BreadcrumbItem
+          className="cursor-pointer"
           onClick={() => {
             router.push(`${process.env.PATH_PREFIX}/operation/task/putaway`);
           }}

@@ -80,7 +80,7 @@ export default function Task() {
   return (
     <div>
       <Breadcrumb>
-        <BreadcrumbItem>
+        <BreadcrumbItem className="cursor-pointer">
           <a
             onClick={() => {
               router.push(`${process.env.PATH_PREFIX}/home`);
@@ -90,6 +90,7 @@ export default function Task() {
           </a>
         </BreadcrumbItem>
         <BreadcrumbItem
+          className="cursor-pointer"
           onClick={() => {
             router.push(`${process.env.PATH_PREFIX}/operation/task`);
           }}

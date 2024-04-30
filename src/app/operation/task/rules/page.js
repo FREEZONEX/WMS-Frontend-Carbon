@@ -1,18 +1,11 @@
 'use client';
 import '@/components/Task/_task.scss';
 import React, { useState, useEffect, useCallback } from 'react';
-import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
-import '@carbon/charts/styles.css';
-import { useRouter } from 'next/navigation';
-import ResourceTable from '@/components/Table/ResourceTable';
+import { Heading, Breadcrumb, BreadcrumbItem, Button } from '@carbon/react';
+import { Add } from '@carbon/icons-react';
 
-const headers = [
-  { header: 'Resource ID', key: 'resource_id' },
-  { header: 'Resource Name', key: 'resource_name' },
-  { header: 'Status', key: 'status' },
-  { header: 'Starting Time', key: 'starting_time' },
-  { header: 'End Time', key: 'end_time' },
-];
+import { useRouter } from 'next/navigation';
+import RuleBoard from '@/components/Rule/RuleBoard';
 
 export default function Page() {
   const router = useRouter();
@@ -40,30 +33,29 @@ export default function Page() {
         <BreadcrumbItem
           className="cursor-pointer"
           onClick={() => {
-            router.push(`${process.env.PATH_PREFIX}/operation/task/resource`);
+            router.push(`${process.env.PATH_PREFIX}/operation/task/rules`);
           }}
         >
-          Resource
+          Rules
         </BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
           <Heading className="mt-2 text-[28px] font-normal">
-            Resource List
+            Distribution Rules
           </Heading>
           <Heading className="mt-1 text-sm">
             An instant snapshot of inventory, order status, and efficiency,
             streamlining warehouse management.
           </Heading>
         </div>
+        <Button kind="secondary" isExpressive size="sm" renderIcon={Add}>
+          Create a New Rule
+        </Button>
       </div>
 
       <div className="mt-10">
-        <ResourceTable
-          headers={headers}
-          refresh={refresh}
-          setRefresh={setRefresh}
-        ></ResourceTable>
+        <RuleBoard />
       </div>
     </div>
   );

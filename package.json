@@ -20,6 +20,7 @@
     "@carbon/icons-react": "^11.36.0",
     "@carbon/react": "^1.33.0",
     "axios": "^1.6.7",
+    "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",

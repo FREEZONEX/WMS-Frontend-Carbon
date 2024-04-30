@@ -9,7 +9,7 @@ function Page() {
   return (
     <div>
       <Breadcrumb>
-        <BreadcrumbItem>
+        <BreadcrumbItem className="cursor-pointer">
           <a
             onClick={() => {
               router.push(`${process.env.PATH_PREFIX}/home`);
@@ -19,6 +19,7 @@ function Page() {
           </a>
         </BreadcrumbItem>
         <BreadcrumbItem
+          className="cursor-pointer"
           onClick={() => {
             router.push(`${process.env.PATH_PREFIX}/warehouse`);
           }}
@@ -26,6 +27,7 @@ function Page() {
           Warehouse
         </BreadcrumbItem>
         <BreadcrumbItem
+          className="cursor-pointer"
           onClick={() => {
             router.push(`${process.env.PATH_PREFIX}/warehouse/material`);
           }}
@@ -33,6 +35,7 @@ function Page() {
           Material
         </BreadcrumbItem>
         <BreadcrumbItem
+          className="cursor-pointer"
           onClick={() => {
             router.push(`${process.env.PATH_PREFIX}/warehouse/material/create`);
           }}
