@@ -11,7 +11,7 @@ import {
   IconButton,
   Pagination,
 } from '@carbon/react';
-import { Edit, Delete } from '@carbon/icons-react';
+import { Edit, Delete, DataTable } from '@carbon/icons-react';
 import './_table.scss';
 import ShelfLocationModal from '../Modal/ShelfLocationModal';
 import {
@@ -20,6 +20,7 @@ import {
   fetchWarehousesWithFilters,
 } from '@/actions/actions';
 import EditWarehouseModal from '../Modal/EditWarehouseModal';
+import TableSkeleton from '../Skeleton/TableSkeleton';
 
 function WarehouseTable({
   headers,
@@ -31,6 +32,7 @@ function WarehouseTable({
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
   //const rowsToShow = rows.slice((page - 1) * pageSize, page * pageSize);
   const [isModalOpen, setModalOpen] = useState(false);
   const [editRow, setEditRow] = useState({});
@@ -61,6 +63,7 @@ function WarehouseTable({
       fetchWarehouses({ pageNum: page, pageSize }).then((res) => {
         setRows(res.list);
         setTotal(res.total);
+        setLoading(false);
       });
     }
   }, [page, pageSize, refresh, isSearchClicked]);
@@ -88,16 +91,19 @@ function WarehouseTable({
 
   return (
     <div>
+      {loading && <TableSkeleton headers={headers} />}
       <StructuredListWrapper isCondensed>
-        <StructuredListHead>
-          <StructuredListRow head>
-            {headers.map((header, index) => (
-              <StructuredListCell head key={header.key}>
-                {header.header}
-              </StructuredListCell>
-            ))}
-          </StructuredListRow>
-        </StructuredListHead>
+        {!loading && (
+          <StructuredListHead>
+            <StructuredListRow head className="headerRow">
+              {headers.map((header, index) => (
+                <StructuredListCell head key={header.key}>
+                  {header.header}
+                </StructuredListCell>
+              ))}
+            </StructuredListRow>
+          </StructuredListHead>
+        )}
         <StructuredListBody>
           {rows.map((row, index) => (
             <StructuredListRow key={row.id}>

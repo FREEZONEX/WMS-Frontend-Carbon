@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import {
   TextInput,
   Heading,
@@ -141,6 +141,7 @@ function Page() {
           <CloseOutline size={16} />
         </HeaderGlobalAction>
       </div>
+
       <div className="mt-12">
         <WarehouseTable
           headers={headers}

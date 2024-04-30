@@ -17,6 +17,7 @@ import { fetchOutbound, fetchOutboundWithFilter } from '@/actions/actions';
 import { useRouter, useSearchParams } from 'next/navigation';
 import moment from 'moment';
 import { DateTimeFormat } from '@/utils/constants';
+import TableSkeleton from '../Skeleton/TableSkeleton';
 
 function OutboundTable({
   headers,
@@ -27,6 +28,7 @@ function OutboundTable({
 }) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setModalOpen] = React.useState(false);
   const [total, setTotal] = useState(0);
   const router = useRouter();
@@ -60,6 +62,7 @@ function OutboundTable({
       fetchOutbound({ pageNum: page, pageSize }).then((res) => {
         setRows(res.list);
         setTotal(res.total);
+        setLoading(false);
       });
     }
   }, [page, pageSize, refresh, filters, isSearchClicked]);
@@ -102,19 +105,22 @@ function OutboundTable({
   // };
   return (
     <div>
+      {loading && <TableSkeleton headers={headers} />}
       <StructuredListWrapper isCondensed>
-        <StructuredListHead>
-          <StructuredListRow head className="headerRow">
-            {headers.map((header, index) => (
-              <StructuredListCell head key={header.key} onClick={() => {}}>
-                {header.header}
-                {sortKey === header.key && (
-                  <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
-                )}
-              </StructuredListCell>
-            ))}
-          </StructuredListRow>
-        </StructuredListHead>
+        {!loading && (
+          <StructuredListHead>
+            <StructuredListRow head className="headerRow">
+              {headers.map((header, index) => (
+                <StructuredListCell head key={header.key} onClick={() => {}}>
+                  {header.header}
+                  {sortKey === header.key && (
+                    <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
+                  )}
+                </StructuredListCell>
+              ))}
+            </StructuredListRow>
+          </StructuredListHead>
+        )}
         <StructuredListBody>
           {rows.map((row, index) => (
             <StructuredListRow key={index}>

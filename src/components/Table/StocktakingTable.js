@@ -18,6 +18,7 @@ import {
 import StocktakingResultModal from '../Modal/StocktakingResultModal';
 import moment from 'moment';
 import { DateTimeFormat } from '@/utils/constants';
+import TableSkeleton from '../Skeleton/TableSkeleton';
 
 function StocktakingTable({
   headers,
@@ -29,6 +30,7 @@ function StocktakingTable({
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setModalOpen] = React.useState(false);
   const [rows, setRows] = useState([]);
   const [selectedId, setSelectedId] = useState('');
@@ -58,6 +60,7 @@ function StocktakingTable({
       fetchStocktaking({ pageNum: page, pageSize }).then((res) => {
         setRows(res.list);
         setTotal(res.total);
+        setLoading(false);
       });
     }
   }, [page, pageSize, refresh, filters, isSearchClicked]);
@@ -66,23 +69,26 @@ function StocktakingTable({
 
   return (
     <div>
+      {loading && <TableSkeleton headers={headers}></TableSkeleton>}
       <StructuredListWrapper isCondensed>
-        <StructuredListHead>
-          <StructuredListRow head>
-            {headers.map((header, index) => (
-              <StructuredListCell
-                head
-                key={header.key}
-                onClick={() => handleSort(header.key)}
-              >
-                {header.header}
-                {sortKey === header.key && (
-                  <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
-                )}
-              </StructuredListCell>
-            ))}
-          </StructuredListRow>
-        </StructuredListHead>
+        {!loading && (
+          <StructuredListHead>
+            <StructuredListRow head className="headerRow">
+              {headers.map((header, index) => (
+                <StructuredListCell
+                  head
+                  key={header.key}
+                  onClick={() => handleSort(header.key)}
+                >
+                  {header.header}
+                  {sortKey === header.key && (
+                    <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
+                  )}
+                </StructuredListCell>
+              ))}
+            </StructuredListRow>
+          </StructuredListHead>
+        )}
         <StructuredListBody>
           {rows.map((row, index) => (
             <StructuredListRow key={index}>

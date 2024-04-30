@@ -20,6 +20,7 @@ import {
 } from '@/actions/actions';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import './_table.scss';
+import TableSkeleton from '../Skeleton/TableSkeleton';
 
 function MaterialTable({
   headers,
@@ -31,7 +32,7 @@ function MaterialTable({
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
-
+  const [loading, setLoading] = useState(true);
   const [editRow, setEditRow] = useState({});
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   // const [isModalOpen, setModalOpen] = useState(false);
@@ -61,6 +62,7 @@ function MaterialTable({
       fetchMaterial({ pageNum: page, pageSize }, {}).then((res) => {
         setRows(res.list);
         setTotal(res.total);
+        setLoading(false);
       });
     }
   }, [page, pageSize, refresh, isSearchClicked]);
@@ -77,16 +79,19 @@ function MaterialTable({
   };
   return (
     <div>
+      {loading && <TableSkeleton headers={headers} />}
       <StructuredListWrapper isCondensed>
-        <StructuredListHead>
-          <StructuredListRow head className="headerRow">
-            {headers.map((header, index) => (
-              <StructuredListCell head key={header.key}>
-                {header.header}
-              </StructuredListCell>
-            ))}
-          </StructuredListRow>
-        </StructuredListHead>
+        {!loading && (
+          <StructuredListHead>
+            <StructuredListRow head className="headerRow">
+              {headers.map((header, index) => (
+                <StructuredListCell head key={header.key}>
+                  {header.header}
+                </StructuredListCell>
+              ))}
+            </StructuredListRow>
+          </StructuredListHead>
+        )}
         <StructuredListBody>
           {rows.map((row, index) => (
             <StructuredListRow key={row.id}>
