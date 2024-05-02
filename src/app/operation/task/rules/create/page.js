@@ -5,7 +5,7 @@ import { Heading, Breadcrumb, BreadcrumbItem, Button } from '@carbon/react';
 import { Add } from '@carbon/icons-react';
 
 import { useRouter } from 'next/navigation';
-import RuleBoard from '@/components/Rule/RuleBoard';
+import RuleCreateCard from '@/components/Rule/RuleCreateCard';
 
 export default function Page() {
   const router = useRouter();
@@ -38,34 +38,31 @@ export default function Page() {
         >
           Rules
         </BreadcrumbItem>
-      </Breadcrumb>
-      <div className="bx--col-lg-16 flex justify-between items-center">
-        <div>
-          <Heading className="mt-2 text-[28px] font-normal">
-            Distribution Rules
-          </Heading>
-          <Heading className="mt-1 text-sm">
-            An instant snapshot of inventory, order status, and efficiency,
-            streamlining warehouse management.
-          </Heading>
-        </div>
-        <Button
-          style={{ backgroundColor: '#393939' }}
-          isExpressive
-          size="sm"
-          renderIcon={Add}
+        <BreadcrumbItem
+          className="cursor-pointer"
           onClick={() => {
             router.push(
               `${process.env.PATH_PREFIX}/operation/task/rules/create`
             );
           }}
         >
-          Create a New Rule
-        </Button>
+          Create
+        </BreadcrumbItem>
+      </Breadcrumb>
+      <div className="bx--col-lg-16 flex justify-between items-center">
+        <div>
+          <Heading className="mt-2 text-[28px] font-normal">
+            Create a New Rule
+          </Heading>
+          <Heading className="mt-1 text-sm">
+            An instant snapshot of inventory, order status, and efficiency,
+            streamlining warehouse management.
+          </Heading>
+        </div>
       </div>
 
       <div className="mt-10">
-        <RuleBoard />
+        <RuleCreateCard />
       </div>
     </div>
   );

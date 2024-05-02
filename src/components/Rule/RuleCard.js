@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 function RuleCard({ rule }) {
   return (
-    <div className="flex flex-row items-center space-x-3 w-full border-2 border-slate-300 rounded-md relative">
+    <div className="flex flex-row items-center space-x-3 w-full p-4 shadow rounded-md relative">
       <div>
         <Draggable className="w-[26px] h-[26px]" />
       </div>

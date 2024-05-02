@@ -153,7 +153,14 @@ export default function Task() {
                 <Heading className="mr-2  font-bold flex flex-row justify-between">
                   <div> List Of Putaway Tasks</div>
                   <div>
-                    <Maximize />
+                    <Maximize
+                      className="cursor-pointer"
+                      onClick={() => {
+                        router.push(
+                          `${process.env.PATH_PREFIX}/operation/task/putaway`
+                        );
+                      }}
+                    />
                   </div>
                 </Heading>
                 <div className="pt-4">
@@ -204,7 +211,14 @@ export default function Task() {
                 <Heading className="mr-2  font-bold flex flex-row justify-between">
                   <div> List Of Picking Tasks</div>
                   <div>
-                    <Maximize />
+                    <Maximize
+                      className="cursor-pointer"
+                      onClick={() => {
+                        router.push(
+                          `${process.env.PATH_PREFIX}/operation/task/picking`
+                        );
+                      }}
+                    />
                   </div>
                 </Heading>
                 <div className="pt-4">
