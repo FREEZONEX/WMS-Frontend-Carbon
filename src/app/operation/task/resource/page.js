@@ -1,7 +1,8 @@
 'use client';
 import '@/components/Task/_task.scss';
 import React, { useState, useEffect, useCallback } from 'react';
-import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
+import { Heading, Breadcrumb, BreadcrumbItem, Button } from '@carbon/react';
+import { Add } from '@carbon/icons-react';
 import '@carbon/charts/styles.css';
 import { useRouter } from 'next/navigation';
 import ResourceTable from '@/components/Table/ResourceTable';
@@ -56,6 +57,17 @@ export default function Page() {
             streamlining warehouse management.
           </Heading>
         </div>
+        <Button
+          isExpressive
+          size="sm"
+          style={{ backgroundColor: '#393939' }}
+          renderIcon={Add}
+          onClick={() => {
+            router.push(`${process.env.PATH_PREFIX}/operation/task/resource`);
+          }}
+        >
+          Create a New Resource
+        </Button>
       </div>
 
       <div className="mt-10">
