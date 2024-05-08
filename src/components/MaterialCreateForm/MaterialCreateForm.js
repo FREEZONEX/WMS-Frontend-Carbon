@@ -193,7 +193,7 @@ function MaterialCreateForm() {
           <Column sm={4} md={8} lg={16}>
             <div>
               <span className="text-xs" style={{ color: '#525252' }}>
-                Except Location
+                Expect Location
               </span>
             </div>
             <div className="flex flex-row mt-2 mb-5">
