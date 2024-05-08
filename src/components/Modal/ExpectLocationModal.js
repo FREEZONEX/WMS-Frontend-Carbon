@@ -54,12 +54,16 @@ const ExpectLocationModal = ({ isOpen, onClose, onConfirm, selectedItem }) => {
   }, [selectedWarehouseInfo]);
 
   useEffect(() => {
+    const shelvesEles = document.querySelectorAll('.shelf-area');
+    shelvesEles.forEach((t) => {
+      t.classList.remove('bg-sky-200');
+    });
+
     if (
       selectedItem &&
       selectedItem.whId == selectedWarehouseInfo?.id &&
       selectedItem.shelves.length > 0
     ) {
-      const shelvesEles = document.querySelectorAll('.shelf-area');
       shelvesEles.forEach((t) => {
         if (selectedItem.shelves.find((s) => s == t?.id)) {
           t.classList.add('bg-sky-200');

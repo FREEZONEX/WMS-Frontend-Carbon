@@ -32,6 +32,8 @@ const EditMaterialModal = ({
 
   useEffect(() => {
     if (isOpen) {
+      setSelectLocations([]);
+      setSelectItem({ whId: null, shelves: [] });
       if (materialValues.expect_wh_id) {
         fetchWarehouses({ pageNum: 1, pageSize: 99999999 }).then((res) => {
           const selectedWarehouse = res.list.find(
@@ -46,10 +48,12 @@ const EditMaterialModal = ({
         }));
       }
       if (materialValues.expect_storage_locations) {
+        const shelves = materialValues.expect_storage_locations.split(',');
         setSelectItem((prevData) => ({
           ...prevData,
-          shelves: materialValues.expect_storage_locations.split(','),
+          shelves: shelves,
         }));
+        setSelectLocations(shelves);
       }
     }
   }, [materialValues, isOpen]);
@@ -114,8 +118,8 @@ const EditMaterialModal = ({
     setSelectLocations([]);
     setFormValues((prevData) => ({
       ...prevData,
-      expact_stock_location_id: data.shelves.join(','),
       expect_wh_id: data.warehouseInfo?.id,
+      expect_storage_locations: data.shelves.join(','),
     }));
     setSelectLocations(data.shelves);
     setSelectedWarehouseInfo(data.warehouseInfo);

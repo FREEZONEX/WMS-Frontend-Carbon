@@ -94,8 +94,8 @@ function MaterialCreateForm() {
     setSelectLocations([]);
     setFormValue((prevData) => ({
       ...prevData,
-      expact_stock_location_id: data.shelves.join(','),
       expect_wh_id: data.warehouseInfo?.id,
+      expect_storage_locations: data.shelves.join(','),
     }));
     setSelectLocations(data.shelves);
     setSelectedWarehouseInfo(data.warehouseInfo);
