@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "build": "next build",
-    "dev": "RUNTIME_IDC_NAME=cn next dev",
+    "dev": "cross-env RUNTIME_IDC_NAME=local next dev",
     "start": "next start",
     "lint": "next lint",
     "ci-check": "yarn format:diff",
@@ -22,6 +22,7 @@
     "axios": "^1.6.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "cross-env": "^7.0.3",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
     "js-cookie": "^3.0.5",

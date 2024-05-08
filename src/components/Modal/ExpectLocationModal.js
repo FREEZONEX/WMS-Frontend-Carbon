@@ -3,10 +3,9 @@ import { Modal, ComboBox } from '@carbon/react';
 import { fetchWarehouses, getPlanelLocations } from '@/actions/actions';
 let mouseX = 0;
 
-const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
+const ExpectLocationModal = ({ isOpen, onClose, onConfirm, selectedItem }) => {
   const [warehouseOptions, setWarehouseOptions] = useState([]);
   const [locationDatas, setLocationDatas] = useState([]);
-
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
@@ -37,6 +36,38 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
     });
   }, []);
 
+  useEffect(() => {
+    if (selectedItem) {
+      const selectWarehouse = warehouseOptions.find(
+        (t) => t.id == selectedItem.whId
+      );
+      if (selectWarehouse) {
+        setSelectedWarehouseInfo(selectWarehouse);
+      }
+    }
+  }, [warehouseOptions, selectedItem]);
+
+  useEffect(() => {
+    if (selectedWarehouseInfo) {
+      getStorageLocation(selectedWarehouseInfo.id);
+    }
+  }, [selectedWarehouseInfo]);
+
+  useEffect(() => {
+    if (
+      selectedItem &&
+      selectedItem.whId == selectedWarehouseInfo?.id &&
+      selectedItem.shelves.length > 0
+    ) {
+      const shelvesEles = document.querySelectorAll('.shelf-area');
+      shelvesEles.forEach((t) => {
+        if (selectedItem.shelves.find((s) => s == t?.id)) {
+          t.classList.add('bg-sky-200');
+        }
+      });
+    }
+  }, [selectedItem, locationDatas, selectedWarehouseInfo]);
+
   const initPage = () => {
     let container = document.getElementById('shelf-container');
     let modal = document.getElementsByClassName('shelf-modal')[0];
@@ -50,17 +81,19 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
 
   const getStorageLocation = (warehouseId) => {
     getPlanelLocations({ warehouse_id: warehouseId }).then((res) => {
-      setLocationDatas(res.list);
+      Object.keys(res.planeNames).map((key) => {
+        return res.planeNames[key].reverse();
+      });
+      setLocationDatas(res.planeNames);
     });
-    console.log(locationDatas);
   };
+
   const onSelectWarehouse = (event) => {
     const shelvesEles = document.querySelectorAll('.shelf-area');
     shelvesEles.forEach((t) => {
       t.classList.remove('bg-sky-200');
     });
     setSelectedWarehouseInfo(event.selectedItem);
-    getStorageLocation(event.selectedItem?.id);
   };
   const handleCancelClicked = () => {
     onClose();
@@ -71,20 +104,9 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
     const shelvesEles = document.querySelectorAll('.shelf-area');
     shelvesEles.forEach(async (t) => {
       if (t.classList.contains('bg-sky-200')) {
-        // console.log('container', t);
-        const dataFlags = t.id?.split('-');
-        const shelfId = dataFlags[0];
-        const colId = dataFlags[1];
-        locationDatas.forEach((shelf) => {
-          if (shelf.shelfId == shelfId) {
-            let item = shelf.shelfCols.find(
-              (col) => col.colId == colId && col.shelfId == shelfId
-            );
-            if (item != null) {
-              shelves.push(`${shelf.shelfName}-${item.colName}`);
-            }
-          }
-        });
+        //console.log('container', t);
+        const shelfName = t.id;
+        shelves.push(shelfName);
       }
     });
     if (!selectedWarehouseInfo?.id) {
@@ -269,6 +291,7 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
               items={warehouseOptions}
               itemToString={(item) => (item ? item.name : '')}
               placeholder="Choose warehouse"
+              selectedItem={selectedWarehouseInfo}
               onChange={(selectedItem) => onSelectWarehouse(selectedItem)}
             />
             <div className="mt-1">
@@ -302,13 +325,12 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
                   onMouseMove={handleMouseMove}
                   onMouseUp={handleMouseUp}
                 >
-                  {locationDatas.map((item, index) => {
+                  {Object.keys(locationDatas).map((key, index) => {
                     return (
                       <>
                         <div
-                          key={index}
+                          key={key}
                           style={{
-                            width: '40px',
                             marginLeft: index % 2 == 0 ? '30px' : '0px',
                           }}
                           className=" relative"
@@ -325,30 +347,29 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
                                   : '4px solid #1264FF',
                             }}
                           >
-                            {item.shelfCols.map((col, colIndex) => {
+                            {locationDatas[key].map((col, colIndex) => {
                               return (
                                 <>
                                   <div
                                     className="shelf-area content-center relative"
-                                    id={`${col.shelfId}-${col.colId}`}
+                                    id={`${col}`}
                                     key={colIndex}
                                     style={{
                                       height: '60px',
+                                      width: '40px',
                                       border: '2px solid #1264FE',
                                     }}
                                     onClick={(event) =>
                                       onShelfClick(event, col)
                                     }
                                   >
-                                    {col.colName}
+                                    {col.replace('-', '')}
                                   </div>
                                 </>
                               );
                             })}
                           </div>
-                          <div className="font-semibold mt-2">
-                            {item.shelfName}
-                          </div>
+                          <div className="font-semibold mt-2">{key}</div>
                         </div>
                       </>
                     );
@@ -398,4 +419,4 @@ const AddExpectLocationModal = ({ isOpen, onClose, onConfirm }) => {
   );
 };
 
-export default AddExpectLocationModal;
+export default ExpectLocationModal;

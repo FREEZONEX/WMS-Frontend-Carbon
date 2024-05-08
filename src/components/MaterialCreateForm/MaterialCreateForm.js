@@ -5,7 +5,7 @@ import { IbmDb2Warehouse } from '@carbon/icons-react';
 import './_materialcreateform.scss';
 import { useRouter } from 'next/navigation';
 import { addMaterial } from '@/actions/actions';
-import AddExpectLocationModal from '@/components/Modal/addExpectLocationModal';
+import ExpectLocationModal from '@/components/Modal/ExpectLocationModal';
 
 function MaterialCreateForm() {
   const router = useRouter();
@@ -23,10 +23,10 @@ function MaterialCreateForm() {
     min: '',
     status: '',
     expect_wh_id: '',
-    locations: [],
     expact_stock_location_id: '',
     note: '',
   };
+  const [selectLocations, setSelectLocations] = useState([]);
   const [formValue, setFormValue] = useState(defaultFormValue);
   const [selectedWarehouseInfo, setSelectedWarehouseInfo] = useState({});
   const [isOpenExpect, setIsOpenExpect] = useState(false);
@@ -91,17 +91,15 @@ function MaterialCreateForm() {
     setIsOpenExpect(false);
   };
   const onConfirmExpectLocationModal = (data) => {
+    setSelectLocations([]);
     setFormValue((prevData) => ({
       ...prevData,
-      locations: [],
+      expact_stock_location_id: data.shelves.join(','),
+      expect_wh_id: data.warehouseInfo?.id,
     }));
-    setFormValue((prevData) => ({
-      ...prevData,
-      warehouse_id: data.warehouseInfo?.id,
-      locations: data.shelves,
-    }));
+    setSelectLocations(data.shelves);
     setSelectedWarehouseInfo(data.warehouseInfo);
-    //console.log(formValue);
+    // console.log(formValue);
     setIsOpenExpect(false);
   };
   return (
@@ -192,7 +190,7 @@ function MaterialCreateForm() {
               onChange={onFormValueChange}
             />
           </Column>
-          <Column sm={16} md={16} lg={16}>
+          <Column sm={4} md={8} lg={16}>
             <div>
               <span className="text-xs" style={{ color: '#525252' }}>
                 Except Location
@@ -212,7 +210,7 @@ function MaterialCreateForm() {
                 </Button>
               </div>
               <div className="ml-5">
-                {formValue.locations?.map((shelf, index) => {
+                {selectLocations?.map((shelf, index) => {
                   return (
                     <Tag
                       key={index}
@@ -252,11 +250,11 @@ function MaterialCreateForm() {
           Cancel
         </Button>
       </div>
-      <AddExpectLocationModal
+      <ExpectLocationModal
         isOpen={isOpenExpect}
         onClose={onCloseExpectLocationModal}
         onConfirm={onConfirmExpectLocationModal}
-      ></AddExpectLocationModal>
+      ></ExpectLocationModal>
     </div>
   );
 }

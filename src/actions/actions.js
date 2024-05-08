@@ -321,7 +321,7 @@ export async function fetchWHSLNameMap(params) {
 
 export async function getPlanelLocations(body) {
   return httpToBackend
-    .post('/wms/storagelocation/getPlaneLocations', body)
+    .post('/wms/storagelocation/plane-locations', body)
     .then((res) => {
       return res.data.data;
     });
