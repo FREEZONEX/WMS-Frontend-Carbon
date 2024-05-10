@@ -81,7 +81,11 @@ export default function AssignModal({ isOpen, onClose, onConfirm }) {
             <div className="flex w-full items-end mt-2 space-x-2">
               <MultiSelect
                 className="w-5/6"
-                label="Multiselect Label"
+                label={
+                  selectedResources && selectedResources.length > 0
+                    ? selectedResources.join(',')
+                    : 'Resource Name'
+                }
                 titleText="Resource"
                 items={resource}
                 itemToString={(item) => (item ? item : '')}
