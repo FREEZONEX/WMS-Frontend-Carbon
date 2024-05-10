@@ -6,6 +6,7 @@ import './_materialcreateform.scss';
 import { useRouter } from 'next/navigation';
 import { addMaterial } from '@/actions/actions';
 import ExpectLocationModal from '@/components/Modal/ExpectLocationModal';
+import { tagColors } from '@/utils/constants';
 
 function MaterialCreateForm() {
   const router = useRouter();
@@ -36,18 +37,6 @@ function MaterialCreateForm() {
     selectedWarehouseInfo,
     process.env.PATH_PREFIX + '/warehouse/material'
   );
-  const tagColors = [
-    'red',
-    'magenta',
-    'purple',
-    'blue',
-    'cyan',
-    'teal',
-    'green',
-    'gray',
-    'cool-gray',
-    'outline',
-  ];
 
   const onFormValueChange = (e) => {
     const { id, value } = e.target;

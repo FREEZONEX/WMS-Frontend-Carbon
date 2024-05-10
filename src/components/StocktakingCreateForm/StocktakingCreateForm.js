@@ -27,19 +27,8 @@ import {
   fetchWHSLNameMap,
 } from '@/actions/actions';
 import { useRouter } from 'next/navigation';
+import { tagColors } from '@/utils/constants';
 
-const tagColors = [
-  'red',
-  'magenta',
-  'purple',
-  'blue',
-  'cyan',
-  'teal',
-  'green',
-  'gray',
-  'cool-gray',
-  'outline',
-];
 const headers = [
   { key: 'name', header: 'Material Name' },
   { key: 'product_code', header: 'Material Code' },

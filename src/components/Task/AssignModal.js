@@ -2,6 +2,7 @@ import { Modal, ComboBox, Tag, MultiSelect } from '@carbon/react';
 import { Close } from '@carbon/icons-react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { tagColors } from '@/utils/constants';
 
 export default function AssignModal({ isOpen, onClose, onConfirm }) {
   const [msgOpen, setMsgOpen] = useState(false);
@@ -20,19 +21,6 @@ export default function AssignModal({ isOpen, onClose, onConfirm }) {
     setWorker(workers);
     setRource(resources);
   }, []);
-
-  const tagColors = [
-    'red',
-    'magenta',
-    'purple',
-    'blue',
-    'cyan',
-    'teal',
-    'green',
-    'gray',
-    'cool-gray',
-    'outline',
-  ];
 
   const onSelectWorker = (item) => {};
   const onSelectResource = (item) => {

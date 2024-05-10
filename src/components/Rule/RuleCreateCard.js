@@ -10,6 +10,7 @@ import {
 } from '@carbon/react';
 import { Close } from '@carbon/icons-react';
 import { useRouter } from 'next/navigation';
+import { tagColors } from '@/utils/constants';
 
 function RuleCreateCard() {
   const router = useRouter();
@@ -28,19 +29,6 @@ function RuleCreateCard() {
     setWorker(workers);
     setRource(resources);
   }, []);
-
-  const tagColors = [
-    'red',
-    'magenta',
-    'purple',
-    'blue',
-    'cyan',
-    'teal',
-    'green',
-    'gray',
-    'cool-gray',
-    'outline',
-  ];
 
   const onSelectWorker = (item) => {};
   const onSelectResource = (item) => {

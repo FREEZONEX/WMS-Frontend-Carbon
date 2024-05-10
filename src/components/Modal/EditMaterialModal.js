@@ -10,7 +10,7 @@ import {
 } from '@carbon/react';
 import { IbmDb2Warehouse } from '@carbon/icons-react';
 import { updateMaterial, fetchWarehouses } from '@/actions/actions';
-
+import { tagColors } from '@/utils/constants';
 import ExpectLocationModal from './ExpectLocationModal';
 
 const EditMaterialModal = ({
@@ -61,19 +61,6 @@ const EditMaterialModal = ({
   useEffect(() => {
     setFormValues(materialValues);
   }, [materialValues]);
-
-  const tagColors = [
-    'red',
-    'magenta',
-    'purple',
-    'blue',
-    'cyan',
-    'teal',
-    'green',
-    'gray',
-    'cool-gray',
-    'outline',
-  ];
 
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
