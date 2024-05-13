@@ -3,12 +3,12 @@ import { Close } from '@carbon/icons-react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { tagColors } from '@/utils/constants';
+import UserListComboBox from './UserListComboBox';
 
 export default function AssignModal({ isOpen, onClose, onConfirm }) {
   const [msgOpen, setMsgOpen] = useState(false);
   const [errMsg, setErrMsg] = useState('');
   const [selectedResources, setSelectedResources] = useState([]);
-  const [worker, setWorker] = useState([]);
   const [resource, setRource] = useState([]);
 
   useEffect(() => {
@@ -18,11 +18,12 @@ export default function AssignModal({ isOpen, onClose, onConfirm }) {
       resources.push(`Tray-${i}`);
       workers.push(`Worker-${i}`);
     }
-    setWorker(workers);
     setRource(resources);
   }, []);
 
-  const onSelectWorker = (item) => {};
+  const onSelectWorker = (item) => {
+    console.log('worker', item.selectedItem);
+  };
   const onSelectResource = (item) => {
     setSelectedResources(item.selectedItems);
   };
@@ -59,13 +60,7 @@ export default function AssignModal({ isOpen, onClose, onConfirm }) {
       >
         <div className="p-3 pb-12">
           <div style={{ width: '80%' }}>
-            <ComboBox
-              titleText="Worker"
-              items={worker}
-              itemToString={(item) => (item ? item : '')}
-              placeholder="Choose worker"
-              onChange={(selectedItem) => onSelectWorker(selectedItem)}
-            />
+            <UserListComboBox onChange={onSelectWorker}></UserListComboBox>
             <div className="flex w-full items-end mt-2 space-x-2">
               <MultiSelect
                 className="w-5/6"

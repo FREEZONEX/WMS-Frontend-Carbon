@@ -318,11 +318,25 @@ export async function fetchWHSLNameMap(params) {
       return res.data.data;
     });
 }
-
+/**
+ *
+ *Task
+ * @returns
+ */
 export async function getPlanelLocations(body) {
   return httpToBackend
     .post('/wms/storagelocation/plane-locations', body)
     .then((res) => {
       return res.data.data;
     });
+}
+export async function getUsers(body) {
+  return httpToBackend.post('/wms/sup/getUsers', body).then((res) => {
+    return res.data.data;
+  });
+}
+export async function addRule(body) {
+  return httpToBackend.post('/wms/rule/add', body).then((res) => {
+    return res.data.data;
+  });
 }
