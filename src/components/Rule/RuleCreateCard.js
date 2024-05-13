@@ -108,7 +108,7 @@ function RuleCreateCard() {
             itemToString={(item) => (item ? item.name : '')}
             placeholder="Choose Task Type"
             onChange={(selectedItem) => {
-              setTaskType(selectedItem.selectedItem);
+              setTaskType(selectedItem.selectedItem.value);
             }}
           />
         </div>
