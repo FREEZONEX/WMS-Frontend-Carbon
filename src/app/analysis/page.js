@@ -20,7 +20,8 @@ import picture145020 from '@/utils/pic/picture/Thomas.svg';
 import picture145025 from '@/utils/pic/picture/Thomas-1.svg';
 import picture145029 from '@/utils/pic/picture/Thomas-2.svg';
 // import './analysis.module.css';
-
+import Papa from 'papaparse';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
   Add,
   Apple,
@@ -36,6 +37,127 @@ import {
   fetchTodayOutbound,
   fetchTodayOutboundDone,
 } from '@/actions/actions';
+
+
+const MyLineChart = ({ csvFile }) => {
+  const [data, setData] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showLSTM, setShowLSTM] = useState(true);
+  const [showMambar, setShowMambar] = useState(true);
+
+  useEffect(() => {
+      Papa.parse(csvFile, {
+          download: true,
+          header: true,
+          complete: (results) => {
+              const parsedData = results.data.map(item => ({
+                  ...item,
+                  date: item.date,  // Ensure date is parsed if necessary
+                  storage: Number(item.storage),
+                  next_day_storage: Number(item.next_day_storage || 0),
+                  lstm: Number(item.lstm || 0),
+                  mambar: Number(item.mambar || 0)
+              }));
+              setData(parsedData);
+          }
+      });
+  }, [csvFile]);
+
+  useEffect(() => {
+      const interval = setInterval(() => {
+          setCurrentIndex(prevIndex => {
+              return (prevIndex < data.length - 1) ? prevIndex + 1 : prevIndex;
+          });
+      }, 3000); // Update every 3 seconds
+
+      return () => clearInterval(interval); // Clean up the interval on component unmount
+  }, [data]);
+
+  const startSliceIndex = Math.max(0, currentIndex - 59);
+  const currentData = data.slice(startSliceIndex, currentIndex + 1);
+  const predictionData = currentIndex < data.length - 1 ? data.slice(startSliceIndex, currentIndex + 2) : [];
+
+  return (
+      <div className="w-full">
+        <div className="flex  items-center justify-center mb-2">
+               <Heading className="mt-3 text-xl font-normal  mb-2">
+                Storage Predictions
+              </Heading>
+              </div>
+          <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={currentData}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line 
+                      type="monotone" 
+                      dataKey="storage" 
+                      stroke="#8884d8" 
+                      strokeWidth={2} 
+                      dot={false} 
+                      isAnimationActive={false}
+                  />
+                  {currentIndex > 0 && currentIndex < data.length - 1 && (
+                      <Line 
+                          type="monotone" 
+                          dataKey="next_day_storage" 
+                          stroke="#82ca9d" 
+                          strokeWidth={2} 
+                          strokeDasharray="5 5" 
+                          dot={false} 
+                          isAnimationActive={false}
+                          data={predictionData}
+                      />
+                  )}
+                  {showLSTM && (
+                      <Line 
+                          type="monotone" 
+                          dataKey="lstm" 
+                          stroke="#ff7300" 
+                          strokeWidth={2} 
+                          strokeDasharray="5 5" 
+                          dot={false} 
+                          isAnimationActive={false}
+                          key="lstmLine"
+                      />
+                  )}
+                  {showMambar && (
+                      <Line 
+                          type="monotone" 
+                          dataKey="mambar" 
+                          stroke="#387908" 
+                          strokeWidth={2} 
+                          strokeDasharray="5 5" 
+                          dot={false} 
+                          isAnimationActive={false}
+                          key="mambarLine"
+                      />
+                  )}
+              </LineChart>
+          </ResponsiveContainer>
+          <div style={{ marginTop: '10px' }}>
+              <label>
+                  <input
+                      type="checkbox"
+                      checked={showLSTM}
+                      onChange={(e) => setShowLSTM(e.target.checked)}
+                  /> Show LSTM Prediction
+              </label>
+              <label style={{ marginLeft: '20px' }}>
+                  <input
+                      type="checkbox"
+                      checked={showMambar}
+                      onChange={(e) => setShowMambar(e.target.checked)}
+                  /> Show Mambar Prediction
+              </label>
+          </div>
+      </div>
+  );
+};
+
 
 function Page() {
   // const [todayInboundCount, setTodayInboundCount] = useState(0);
@@ -347,7 +469,7 @@ function Page() {
             </div>
             <div className="bg-white p-6 shadow-md max-w-lg  relative">
               <Heading className="mt-3 text-xl font-normal ">
-                Longest awaiting time
+                Longest awaiting time1
               </Heading>
               <div className="absolute bottom-5 left-0 mb-4 ml-6">
                 <div className="flex items-baseline">
@@ -420,6 +542,11 @@ function Page() {
           </div>
         </div>
 
+
+        <div className="bg-white p-6 shadow h-128 flex w-full mt-5">
+               <MyLineChart csvFile="train_data1.csv" />
+          </div>  
+
         <div className="flex py-8 w-full h-1/2-screen">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
             <div className="bg-white p-6 shadow lg:col-span-2 h-full">
@@ -454,6 +581,7 @@ function Page() {
                   <MeterChart data={data5} options={options5}></MeterChart>
                 </div>
               </div>
+    
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-2  w-full h-1/16">
                 <div className="bg-white p-1 mt-5 relative">
                   <Image
@@ -518,7 +646,7 @@ function Page() {
             </div>
           </div>
         </div>
-
+        
         <div className="flex w-full">
           <div className="w-1/3 bg-white p-6 shadow h-128">
             <Heading className="mt-3 text-[20px] font-normal ">
@@ -671,7 +799,10 @@ function Page() {
           </div>
         </div>
       </div>
+      
+       
     </div>
+
   );
 }
 
