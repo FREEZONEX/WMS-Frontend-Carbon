@@ -1,4 +1,6 @@
 'use client';
+import './_table.scss';
+
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   StructuredListWrapper,
@@ -7,72 +9,59 @@ import {
   StructuredListCell,
   StructuredListBody,
   Pagination,
-  Tag,
-  Link,
-  Button,
-  Heading,
+  IconButton,
 } from '@carbon/react';
-import './_table.scss';
-import OperationDetailModal from '../Modal/OperationDetailModal';
-import {
-  deleteInbound,
-  fetchInbound,
-  fetchInboundWithFilter,
-} from '@/actions/actions';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { Edit, Delete } from '@carbon/icons-react';
+
 import moment from 'moment';
 import { DateTimeFormat } from '@/utils/constants';
-import { Icon, Email } from '@carbon/icons-react';
-import AssignModal from '../Task/AssignModal';
+import AddEditResourceModal from '../Task/resource/AddEditResourceModal';
 
-const rows = [
-  {
-    resource_id: 'S#24022901',
-    resource_name: 'Resource 1',
-    status: 'Active',
-    starting_time: '2021-09-01',
-    end_time: '2021-09-01',
-  },
-  {
-    resource_id: 'S#24022902',
-    resource_name: 'Resource 2',
-    status: 'Inactive',
-    starting_time: '2021-09-01',
-    end_time: '2021-09-01',
-  },
-  {
-    resource_id: 'S#24022903',
-    resource_name: 'Resource 3',
-    status: 'Active',
-    starting_time: '2021-09-01',
-    end_time: '2021-09-01',
-  },
-  {
-    resource_id: 'S#24022904',
-    resource_name: 'Resource 4',
-    status: 'Active',
-    starting_time: '2021-09-01',
-    end_time: '2021-09-01',
-  },
-  {
-    resource_id: 'S#24022905',
-    resource_name: 'Resource 5',
-    status: 'Inactive',
-    starting_time: '2021-09-01',
-    end_time: '2021-09-01',
-  },
-];
-function ResourceTable({ headers, refresh, setRefresh }) {
+import { deleteResource, getResource } from '@/actions/actions';
+function ResourceTable({ refresh, setRefresh }) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
-  const router = useRouter();
-  const handleDeleteRow = async (id) => {
-    deleteInbound({ id }).then(() => setRefresh({}));
+  const [rows, setRows] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const headers = [
+    { header: 'Resource ID', key: 'id', width: '150px' },
+    { header: 'Resource Name', key: 'name', width: 'auto' },
+    { header: 'Type', key: 'type', width: '150px' },
+    { header: 'Create Time', key: 'create_time', width: '150px' },
+    { header: 'Update Time', key: 'update_time', width: '150px' },
+    { header: 'Operation', key: 'operation', width: '100px' },
+  ];
+
+  useEffect(() => {
+    getResource({
+      pageNum: page,
+      pageSize,
+    })
+      .then((res) => {
+        setRows(res.list);
+        setTotal(res.total);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, [page, pageSize, refresh]);
+
+  const onEditRow = (row) => {
+    setSelectedItem(row);
+    console.log(row);
+    setIsOpen(true);
   };
-  //   const [rows, setRows] = useState([]);
-  //   console.log(rows);
-  useEffect(() => {}, [page, pageSize, refresh]);
+  const onDeleteRow = async (id) => {
+    deleteResource({ id }).then(() => setRefresh({}));
+  };
+
+  const handleRefresh = () => {
+    setIsOpen(false);
+    setRefresh({});
+  };
 
   return (
     <div>
@@ -87,45 +76,60 @@ function ResourceTable({ headers, refresh, setRefresh }) {
           </StructuredListRow>
         </StructuredListHead>
         <StructuredListBody>
-          {rows.map((row, index) => (
-            <StructuredListRow key={index}>
-              {headers.map((header) => {
-                if (header.key === 'status') {
-                  return (
-                    <StructuredListCell key={header.key}>
-                      <Tag
-                        type={
-                          row[header.key].toLowerCase() === 'inactive'
-                            ? 'red'
-                            : 'blue'
-                        }
+          {rows &&
+            rows.map((row, index) => (
+              <StructuredListRow key={index}>
+                {headers.map((header) => {
+                  if (
+                    header.key === 'create_time' ||
+                    header.key === 'update_time'
+                  ) {
+                    return (
+                      <StructuredListCell
+                        key={header.key}
+                        style={{ width: header.width }}
                       >
-                        {row[header.key] === null ? '' : row[header.key]}
-                      </Tag>
-                    </StructuredListCell>
-                  );
-                }
-                if (
-                  header.key === 'starting_time' ||
-                  header.key === 'end_time'
-                ) {
+                        {row[header.key] &&
+                          moment(row[header.key]).format(
+                            DateTimeFormat.shortDate
+                          )}
+                      </StructuredListCell>
+                    );
+                  }
+                  if (header.key == 'operation') {
+                    return (
+                      <StructuredListCell
+                        key={header.key}
+                        style={{ width: header.width }}
+                      >
+                        <IconButton
+                          size="xs"
+                          kind="ghost"
+                          className="mr-[0.5rem]"
+                        >
+                          <Edit size={15} onClick={() => onEditRow(row)} />
+                        </IconButton>
+                        <IconButton
+                          size="xs"
+                          kind="ghost"
+                          onClick={() => onDeleteRow(row.id)}
+                        >
+                          <Delete size={15} />
+                        </IconButton>
+                      </StructuredListCell>
+                    );
+                  }
                   return (
-                    <StructuredListCell key={header.key}>
-                      {row[header.key] &&
-                        moment(row[header.key]).format(
-                          DateTimeFormat.shortDate
-                        )}
+                    <StructuredListCell
+                      key={header.key}
+                      style={{ width: header.width }}
+                    >
+                      {row[header.key]}
                     </StructuredListCell>
                   );
-                }
-                return (
-                  <StructuredListCell key={header.key}>
-                    {row[header.key]}
-                  </StructuredListCell>
-                );
-              })}
-            </StructuredListRow>
-          ))}
+                })}
+              </StructuredListRow>
+            ))}
         </StructuredListBody>
       </StructuredListWrapper>
       <Pagination
@@ -142,6 +146,15 @@ function ResourceTable({ headers, refresh, setRefresh }) {
           setPageSize(pageSize);
         }}
       />
+      <AddEditResourceModal
+        isOpen={isOpen}
+        isEdit={true}
+        defaultValue={selectedItem}
+        onRefresh={handleRefresh}
+        onClose={() => {
+          setIsOpen(false);
+        }}
+      ></AddEditResourceModal>
     </div>
   );
 }

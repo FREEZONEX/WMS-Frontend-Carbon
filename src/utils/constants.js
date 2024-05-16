@@ -15,3 +15,8 @@ export const tagColors = [
   'cool-gray',
   'outline',
 ];
+
+export const stocktakingRource = ['PDA', 'Manual'];
+export const operationStatus = ['pending', 'done'];
+export const taskType = ['putaway', 'pickup'];
+export const resourceType = ['forklift', 'pane'];

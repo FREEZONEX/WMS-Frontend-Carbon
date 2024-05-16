@@ -318,11 +318,7 @@ export async function fetchWHSLNameMap(params) {
       return res.data.data;
     });
 }
-/**
- *
- *Task
- * @returns
- */
+
 export async function getPlanelLocations(body) {
   return httpToBackend
     .post('/wms/storagelocation/plane-locations', body)
@@ -330,13 +326,89 @@ export async function getPlanelLocations(body) {
       return res.data.data;
     });
 }
+
 export async function getUsers(body) {
   return httpToBackend.post('/wms/sup/getUsers', body).then((res) => {
     return res.data.data;
   });
 }
+
+//rule
 export async function addRule(body) {
   return httpToBackend.post('/wms/rule/add', body).then((res) => {
     return res.data.data;
   });
+}
+export async function deleteRule(body) {
+  return httpToBackend.post('/wms/rule/delete', body).then((res) => {
+    return res.data.data;
+  });
+}
+export async function updateRule(body) {
+  return httpToBackend.post('/wms/rule/update', body).then((res) => {
+    return res.data.data;
+  });
+}
+export async function getRule(params) {
+  return httpToBackend.post('/wms/rule/get', {}, { params }).then((res) => {
+    return res.data.data;
+  });
+}
+
+//resource
+export async function addResource(body) {
+  return httpToBackend.post('/wms/resource/add', body).then((res) => {
+    return res.data.data;
+  });
+}
+export async function deleteResource(body) {
+  return httpToBackend.post('/wms/resource/delete', body).then((res) => {
+    return res.data.data;
+  });
+}
+export async function updateResource(body) {
+  return httpToBackend.post('/wms/resource/update', body).then((res) => {
+    return res.data.data;
+  });
+}
+export async function getResource(params) {
+  return httpToBackend.post('/wms/resource/get', {}, { params }).then((res) => {
+    return res.data.data;
+  });
+}
+
+//task
+export async function addTask(body) {
+  return httpToBackend.post('/wms/task/add', body).then((res) => {
+    return res.data.data;
+  });
+}
+export async function deleteTask(body) {
+  return httpToBackend.post('/wms/task/delete', body).then((res) => {
+    return res.data.data;
+  });
+}
+export async function updateTask(body) {
+  return httpToBackend.post('/wms/task/update', body).then((res) => {
+    return res.data.data;
+  });
+}
+export async function getTask(params) {
+  return httpToBackend.post('/wms/task/get', {}, { params }).then((res) => {
+    return res.data.data;
+  });
+}
+export async function getTaskPendingCount(params) {
+  return httpToBackend
+    .post('/wms/task/count/pending', {}, { params })
+    .then((res) => {
+      return res.data.data;
+    });
+}
+export async function getTaskDoneCount(params) {
+  return httpToBackend
+    .post('/wms/task/count/done', {}, { params })
+    .then((res) => {
+      return res.data.data;
+    });
 }

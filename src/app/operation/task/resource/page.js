@@ -6,18 +6,20 @@ import { Add } from '@carbon/icons-react';
 import '@carbon/charts/styles.css';
 import { useRouter } from 'next/navigation';
 import ResourceTable from '@/components/Table/ResourceTable';
-
-const headers = [
-  { header: 'Resource ID', key: 'resource_id' },
-  { header: 'Resource Name', key: 'resource_name' },
-  { header: 'Status', key: 'status' },
-  { header: 'Starting Time', key: 'starting_time' },
-  { header: 'End Time', key: 'end_time' },
-];
+import AddEditResourceModal from '@/components/Task/resource/AddEditResourceModal';
 
 export default function Page() {
   const router = useRouter();
-  const [refresh, setRefresh] = useState({});
+  const [refresh, setRefresh] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const onCreate = () => {
+    setIsOpen(true);
+  };
+  const handleRefresh = () => {
+    setIsOpen(false);
+    setRefresh({});
+  };
   return (
     <div>
       <Breadcrumb>
@@ -62,9 +64,7 @@ export default function Page() {
           size="sm"
           style={{ backgroundColor: '#393939' }}
           renderIcon={Add}
-          onClick={() => {
-            router.push(`${process.env.PATH_PREFIX}/operation/task/resource`);
-          }}
+          onClick={onCreate}
         >
           Create a New Resource
         </Button>
@@ -72,11 +72,17 @@ export default function Page() {
 
       <div className="mt-10">
         <ResourceTable
-          headers={headers}
           refresh={refresh}
           setRefresh={setRefresh}
         ></ResourceTable>
       </div>
+      <AddEditResourceModal
+        isOpen={isOpen}
+        onRefresh={handleRefresh}
+        onClose={() => {
+          setIsOpen(false);
+        }}
+      ></AddEditResourceModal>
     </div>
   );
 }
