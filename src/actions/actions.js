@@ -328,7 +328,7 @@ export async function getPlanelLocations(body) {
 }
 
 export async function getUsers(body) {
-  return httpToBackend.post('/wms/sup/getUsers', body).then((res) => {
+  return httpToBackend.post('/wms/user/get', body).then((res) => {
     return res.data.data;
   });
 }

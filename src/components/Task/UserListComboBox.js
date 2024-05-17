@@ -12,7 +12,6 @@ export default function UserListComboBox({ defaultValue, onChange }) {
   }, []);
 
   const onSelectWorker = (event) => {
-    console.log(event);
     if (onChange) {
       onChange({ selectedItem: event.selectedItem });
     }

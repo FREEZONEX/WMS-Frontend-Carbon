@@ -1,6 +1,6 @@
 import { Modal, ComboBox, TextInput } from '@carbon/react';
 import { useEffect, useState } from 'react';
-import { resourceType } from '@/utils/constants';
+import { resourceTypes } from '@/utils/constants';
 import { addResource, updateResource } from '@/actions/actions';
 
 export default function AddEditResourceModal({
@@ -73,7 +73,7 @@ export default function AddEditResourceModal({
         <div className="p-3 pb-12">
           <ComboBox
             titleText="Resource Type"
-            items={resourceType}
+            items={resourceTypes}
             itemToString={(item) => item || ''}
             placeholder="Choose Resource Type"
             selectedItem={selectedType}

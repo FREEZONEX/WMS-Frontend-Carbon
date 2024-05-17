@@ -6,7 +6,8 @@ import { Heading, TextInput, MultiSelect, Button, Tag } from '@carbon/react';
 import { Close } from '@carbon/icons-react';
 import { useRouter } from 'next/navigation';
 import { tagColors } from '@/utils/constants';
-import { addRule, fetchWarehouses } from '@/actions/actions';
+import { addRule, fetchWarehouses, getResource } from '@/actions/actions';
+import { taskTypes } from '@/utils/constants';
 
 function RuleCreateCard() {
   const router = useRouter();
@@ -16,23 +17,16 @@ function RuleCreateCard() {
   const [selectWarehouse, setSelectWarehouse] = useState('1');
   const [locationExpression, setLocationExpression] = useState();
   const [selectedResources, setSelectedResources] = useState([]);
-  const [resource, setRource] = useState([]);
+  const [resources, setRources] = useState([]);
   const [worker, setWorker] = useState();
-  const [taskType, setTaskType] = useState(1);
-
-  const taskTypes = [
-    { name: 'Inbound', value: 1 },
-    { name: 'Outbound', value: 2 },
-  ];
+  const [taskType, setTaskType] = useState(null);
 
   useEffect(() => {
-    let resources = [];
-    for (let i = 0; i < 5; i++) {
-      resources.push(`Tray-${i}`);
-    }
-    setRource(resources);
     fetchWarehouses({ pageNum: 1, pageSize: 99999999 }).then((res) => {
       setWarehouses(res.list);
+    });
+    getResource({ pageNum: 1, pageSize: 99999999 }).then((res) => {
+      setRources(res.list);
     });
   }, []);
 
@@ -60,12 +54,13 @@ function RuleCreateCard() {
       location_expression: locationExpression,
       name: ruleName,
       people_name: worker,
-      resource_id_list: selectedResources.join(','),
+      resource_id_list: selectedResources.map((t) => t.id).join(','),
       warehouse_id: selectWarehouse?.id,
       task_type: taskType,
     })
       .then(() => {
         console.log('success');
+        router.push(`${process.env.PATH_PREFIX}/operation/task/rules`);
       })
       .catch((e) => {
         console.log(e);
@@ -89,6 +84,8 @@ function RuleCreateCard() {
           light
           style={{ width: '300px' }}
           placeholder="Enter location name"
+          value={locationExpression}
+          onChange={(e) => setLocationExpression(e.target?.value)}
         />
       </div>
       <div className="gap-4 mt-4 flex items-center">
@@ -105,10 +102,10 @@ function RuleCreateCard() {
           <ComboBox
             titleText="Task Type"
             items={taskTypes}
-            itemToString={(item) => (item ? item.name : '')}
+            itemToString={(item) => item || ''}
             placeholder="Choose Task Type"
             onChange={(selectedItem) => {
-              setTaskType(selectedItem.selectedItem.value);
+              setTaskType(selectedItem.selectedItem);
             }}
           />
         </div>
@@ -129,12 +126,12 @@ function RuleCreateCard() {
             <MultiSelect
               label={
                 selectedResources && selectedResources.length > 0
-                  ? selectedResources.join(',')
-                  : 'Resource Name'
+                  ? selectedResources.map((t) => t.name).join(',')
+                  : 'Resource Names'
               }
               titleText="Resource"
-              items={resource}
-              itemToString={(item) => (item ? item : '')}
+              items={resources}
+              itemToString={(item) => (item ? item.name : '')}
               selectionFeedback="top-after-reopen"
               selectedItems={selectedResources}
               onChange={(selectedItem) => onSelectResource(selectedItem)}
@@ -150,7 +147,7 @@ function RuleCreateCard() {
                 className="ml-0"
               >
                 <div className="flex ">
-                  {item}
+                  {item.name}
                   <Close
                     className="ml-1"
                     size={16}
