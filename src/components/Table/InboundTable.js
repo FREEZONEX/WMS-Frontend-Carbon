@@ -133,11 +133,12 @@ function InboundTable({
           {rows.map((row, index) => (
             <StructuredListRow key={index}>
               {headers.map((header) => {
-                if (header.key === 'inbound_status') {
+                if (header.key === 'status') {
                   return (
                     <StructuredListCell key={header.key}>
                       <Tag
                         type={
+                          row[header.key] &&
                           row[header.key].toLowerCase() === 'pending'
                             ? 'red'
                             : 'blue'
@@ -148,27 +149,13 @@ function InboundTable({
                     </StructuredListCell>
                   );
                 }
-                // if (header.key === 'storage_location') {
-                //   return (
-                //     <StructuredListCell
-                //       key={header.key}
-                //       className="truncate"
-                //       title={row[header.key]}
-                //       onClick={(e) => {
-                //         e.currentTarget.classList.toggle('expanded');
-                //       }}
-                //     >
-                //       {detailRows[row.id]?.storage_location || ''}
-                //     </StructuredListCell>
-                //   );
-                // }
-                if (header.key === 'material') {
+                if (header.key === 'details') {
                   return (
                     <StructuredListCell key={header.key}>
                       <Link
                         onClick={() => {
                           setModalOpen(true);
-                          setSelectedId(row['inbound_id']);
+                          // setSelectedId(row['inbound_id']);
                         }}
                       >
                         More
@@ -183,7 +170,7 @@ function InboundTable({
                         size="sm"
                         kind="secondary"
                         disabled={
-                          row['inbound_status'].toLowerCase() === 'pending'
+                          row['status']?.toLowerCase() === 'pending'
                             ? false
                             : true
                         }
@@ -202,7 +189,7 @@ function InboundTable({
                 }
                 if (
                   header.key === 'create_time' ||
-                  header.key === 'inbound_delivery_date'
+                  header.key === 'delivery_date'
                 ) {
                   return (
                     <StructuredListCell key={header.key}>

@@ -164,7 +164,7 @@ export async function deleteInbound(body) {
 }
 
 export async function fetchInboundDetails(body) {
-  return httpToBackend.post('/wms/inbound/detail', body).then((res) => {
+  return httpToBackend.post('/wms/inbound/get', body).then((res) => {
     console.log(res);
     return res.data.data;
   });
@@ -223,7 +223,7 @@ export async function deleteOutbound(body) {
 }
 
 export async function fetchOutboundDetails(body) {
-  return httpToBackend.post('/wms/outbound/detail', body).then((res) => {
+  return httpToBackend.post('/wms/outbound/get', body).then((res) => {
     console.log(res);
     return res.data.data;
   });
@@ -393,8 +393,8 @@ export async function updateTask(body) {
     return res.data.data;
   });
 }
-export async function getTask(params) {
-  return httpToBackend.post('/wms/task/get', {}, { params }).then((res) => {
+export async function getTask(params, body) {
+  return httpToBackend.post('/wms/task/get', body, { params }).then((res) => {
     return res.data.data;
   });
 }

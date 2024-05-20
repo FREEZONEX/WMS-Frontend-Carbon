@@ -13,9 +13,8 @@ import {
   Heading,
 } from '@carbon/react';
 import './_table.scss';
-import OperationDetailModal from '../Modal/OperationDetailModal';
-import { deleteOutbound, fetchOutboundWithFilter } from '@/actions/actions';
-import { useRouter, useSearchParams } from 'next/navigation';
+import MaterialModal from '../Task/MaterialModal';
+import { getTask } from '@/actions/actions';
 import moment from 'moment';
 import { DateTimeFormat } from '@/utils/constants';
 import { Icon, Email } from '@carbon/icons-react';
@@ -28,34 +27,18 @@ function PickingTable({ headers, refresh, setRefresh }) {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setModalOpen] = React.useState(false);
   const [total, setTotal] = useState(0);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const handleDeleteRow = async (id) => {
-    deleteOutbound({ id }).then(() => setRefresh({}));
-  };
-  const [selectedId, setSelectedId] = useState('');
+  const [selectedMaterials, setSelectedMaterials] = useState('');
+
   const [rows, setRows] = useState([]);
   console.log(rows);
   useEffect(() => {
-    const body = { outbound_status: 'pending' };
-    fetchOutboundWithFilter(body, {
-      pageNum: page,
-      pageSize,
-    }).then((res) => {
+    getTask({ pageNum: page, pageSize }, { type: 'pickup' }).then((res) => {
       setRows(res.list);
       setTotal(res.total);
       setLoading(false);
     });
   }, [page, pageSize, refresh]);
-  const createQueryString = useCallback(
-    (name, value) => {
-      const params = new URLSearchParams(searchParams);
-      params.set(name, value);
 
-      return params.toString();
-    },
-    [searchParams]
-  );
   const [assignModalOpen, setAssignModalOpen] = useState(false);
   const handleAssignModalOpen = () => {
     setAssignModalOpen(true);
@@ -66,34 +49,7 @@ function PickingTable({ headers, refresh, setRefresh }) {
   const handleAssignModalConfirm = () => {
     setAssignModalOpen(false);
   };
-  const [sortKey, setSortKey] = useState('');
-  const [sortDirection, setSortDirection] = useState('desc');
-  // const sortedRows = React.useMemo(() => {
-  //   if (!sortKey) {
-  //     return rows;
-  //   }
 
-  //   const sortedRows = [...rows];
-  //   sortedRows.sort((a, b) => {
-  //     if (a[sortKey] < b[sortKey]) {
-  //       return sortDirection === 'asc' ? -1 : 1;
-  //     }
-  //     if (a[sortKey] > b[sortKey]) {
-  //       return sortDirection === 'asc' ? 1 : -1;
-  //     }
-  //     return 0;
-  //   });
-  //   return sortedRows;
-  // }, [rows, sortKey, sortDirection]);
-  // const rowsToShow = sortedRows.slice((page - 1) * pageSize, page * pageSize);
-  // const handleSort = (key) => {
-  //   if (sortKey === key) {
-  //     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-  //   } else {
-  //     setSortKey(key);
-  //     setSortDirection('asc');
-  //   }
-  // };
   return (
     <div>
       {loading && <TableSkeleton headers={headers}></TableSkeleton>}
@@ -131,27 +87,16 @@ function PickingTable({ headers, refresh, setRefresh }) {
                     </StructuredListCell>
                   );
                 }
-                // if (header.key === 'storage_location') {
-                //   return (
-                //     <StructuredListCell
-                //       key={header.key}
-                //       className="truncate"
-                //       title={row[header.key]}
-                //       onClick={(e) => {
-                //         e.currentTarget.classList.toggle('expanded');
-                //       }}
-                //     >
-                //       {detailRows[row.id]?.storage_location || ''}
-                //     </StructuredListCell>
-                //   );
-                // }
-                if (header.key === 'material') {
+                if (header.key === 'materials') {
                   return (
                     <StructuredListCell key={header.key}>
+                      {row[header.key] &&
+                        Object.keys(row[header.key]).join(',')}
                       <Link
+                        className="ml-2"
                         onClick={() => {
                           setModalOpen(true);
-                          setSelectedId(row['outbound_id']);
+                          setSelectedMaterials(row[header.key]);
                         }}
                       >
                         More
@@ -172,10 +117,11 @@ function PickingTable({ headers, refresh, setRefresh }) {
                     </StructuredListCell>
                   );
                 }
-                if (header.key === 'resource') {
+                if (header.key === 'resources') {
                   return (
                     <StructuredListCell key={header.key}>
-                      {'xxxxx'}
+                      {row[header.key] &&
+                        Object.keys(row[header.key]).join(',')}
                     </StructuredListCell>
                   );
                 }
@@ -190,18 +136,6 @@ function PickingTable({ headers, refresh, setRefresh }) {
                         <Heading className="mt-1 ml-2 text-[13px]">
                           Click
                         </Heading>
-                      </Button>
-                    </StructuredListCell>
-                  );
-                }
-                if (header.key === 'automation') {
-                  return (
-                    <StructuredListCell key={header.key}>
-                      <Button size="xs" kind="secondary" onClick={() => {}}>
-                        <div className="mt-1.5 ml-[-8px] flex align-middle space-x-1">
-                          <Email></Email>
-                          <Heading className="text-[13px]">EmailRule</Heading>
-                        </div>
                       </Button>
                     </StructuredListCell>
                   );
@@ -230,11 +164,11 @@ function PickingTable({ headers, refresh, setRefresh }) {
           setPageSize(pageSize);
         }}
       />
-      <OperationDetailModal
-        id={selectedId}
+      <MaterialModal
+        materials={selectedMaterials}
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
-      ></OperationDetailModal>
+      ></MaterialModal>
       <AssignModal
         isOpen={assignModalOpen}
         onClose={handleAssignModalClose}

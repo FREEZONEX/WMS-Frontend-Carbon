@@ -20,13 +20,13 @@ import { useRouter } from 'next/navigation';
 import moment from 'moment';
 
 const headers = [
-  { key: 'inbound_id', header: 'ID' },
-  { key: 'inbound_purchase_order_no', header: 'Purchase Order No.' },
-  { key: 'inbound_supplier', header: 'Supplier' },
-  { key: 'inbound_status', header: 'Status' },
+  { key: 'id', header: 'ID' },
+  { key: 'purchase_order_no', header: 'Purchase Order No.' },
+  { key: 'supplier', header: 'Supplier' },
+  { key: 'status', header: 'Status' },
   { key: 'operator', header: 'Inbounder' },
-  { key: 'material', header: 'Material' },
-  { key: 'inbound_delivery_date', header: 'Delivery Date' },
+  { key: 'details', header: 'Material' },
+  { key: 'delivery_date', header: 'Delivery Date' },
   { key: 'create_time', header: 'Create Time' },
   { key: 'operate', header: 'Operate' },
   { key: 'note', header: 'Note' },

@@ -7,14 +7,13 @@ import { useRouter } from 'next/navigation';
 import PutawayTable from '@/components/Table/PutawayTable';
 
 const headers = [
-  { header: 'Task Id', key: 'task_id' },
+  { header: 'Task Id', key: 'id' },
   { header: 'Creation Time', key: 'create_time' },
-  { header: 'Material', key: 'material' },
-  { header: 'Quantity', key: 'quantity' },
-  { header: 'Inbound ID', key: 'inbound_id' },
-  { header: 'Resource', key: 'resource' },
+  { header: 'Material', key: 'materials' },
+  { header: 'Inbound ID', key: 'operation_id' },
+  { header: 'Worker', key: 'people_name' },
+  { header: 'Resource', key: 'resources' },
   { header: 'Assigned To', key: 'assigned_to' },
-  { header: 'Automation', key: 'automation' },
 ];
 
 export default function Page() {

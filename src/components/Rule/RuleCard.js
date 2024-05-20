@@ -24,7 +24,7 @@ function RuleCard({ rule, setRefresh }) {
         <div>
           <Draggable className="w-[26px] h-[26px]" />
         </div>
-        <div className="space-y-3 w-full">
+        <div className="w-full space-y-2">
           <div className="flex flex-row justify-between">
             <Heading className="font-medium text-[20px]">{rule.name}</Heading>
             <Button
@@ -34,20 +34,32 @@ function RuleCard({ rule, setRefresh }) {
               Edit
             </Button>
           </div>
-          <Heading className="font-normal text-[14px]">
-            Conditions:
-            {/* TaskType:{rule.task_type} & WarehouseId:
-            {rule.warehouse_id} & Location include:{rule.location_expression} */}
-          </Heading>
-          <div>
-            <div>Task Type:{rule.task_type}</div>
-            <div>Warehouse:{rule.warehouse_id}</div>
-            <div>Locations:{rule.location_expression}</div>
+          <Heading className="font-bold text-[14px]">Conditions</Heading>
+          <div className="flex space-x-6">
+            <div>
+              <span className="mr-2 ml-4 font-semibold">Task Type:</span>
+              {rule.task_type}
+            </div>
+            <div>
+              <span className="mr-2 ml-4 font-semibold">Warehouse:</span>
+              {rule.warehouse_name}
+            </div>
           </div>
-          <Heading className="font-normal text-[14px]">
-            Action: Assign to Worker[{rule.people_name}] and can use resources:[
-            {rule.resource_id_list}].
-          </Heading>
+          <div>
+            <span className="mr-2 ml-4 font-semibold">Locations:</span>
+            {rule.location_expression}
+          </div>
+          <Heading className="font-bold text-[14px]">Actions</Heading>
+          <div>
+            <div>
+              <span className="mr-2 ml-4 font-semibold">Assign to:</span>
+              {rule.people_name}
+            </div>
+            <div>
+              <span className="mr-2 ml-4 font-semibold">resources:</span>
+              {rule.resource_name_list}
+            </div>
+          </div>
         </div>
       </div>
       {isOpen && (

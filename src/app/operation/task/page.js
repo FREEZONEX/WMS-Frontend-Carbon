@@ -17,6 +17,7 @@ import { CaretRight, CaretLeft, Maximize } from '@carbon/icons-react';
 import moment from 'moment';
 import { DateTimeFormat } from '@/utils/constants';
 import TaskTable from '@/components/Task/TaskTable';
+import { getTask } from '@/actions/actions';
 
 const lineStyle = {
   width: '260px',
@@ -26,42 +27,50 @@ const lineStyle = {
   transform: 'rotate(45deg)',
 };
 
-const headerData = [
+const putawayHeaderData = [
   {
     header: 'Creation Time',
     key: 'create_time',
   },
   {
     header: 'Material',
-    key: 'material',
+    key: 'materials',
   },
   {
-    header: 'Quantity',
-    key: 'quantity',
+    header: 'InboundId',
+    key: 'operation_id',
+  },
+  {
+    header: 'Worker',
+    key: 'people_name',
   },
   {
     header: 'Resource',
-    key: 'resource',
-  },
-  {
-    header: 'Assigned To',
-    key: 'assigned_to',
+    key: 'resources',
   },
 ];
-
-const rowData = () => {
-  let datas = [];
-  for (let i = 0; i < 6; i++) {
-    datas.push({
-      create_time: moment().format(DateTimeFormat.shortDate),
-      material: 'Planks',
-      quantity: '100',
-      resource: 'Resource',
-      assigned_to: null,
-    });
-  }
-  return datas;
-};
+const pickupHeaderData = [
+  {
+    header: 'Creation Time',
+    key: 'create_time',
+  },
+  {
+    header: 'Material',
+    key: 'materials',
+  },
+  {
+    header: 'OutboundId',
+    key: 'operation_id',
+  },
+  {
+    header: 'Worker',
+    key: 'people_name',
+  },
+  {
+    header: 'Resource',
+    key: 'resources',
+  },
+];
 
 const ProgressDatas = () => {
   let datas = [];
@@ -77,6 +86,17 @@ const ProgressDatas = () => {
 
 export default function Task() {
   const router = useRouter();
+  const [putawayDatas, setPutawayDatas] = useState([]);
+  const [pickupDatas, setPickupDatas] = useState([]);
+
+  useEffect(() => {
+    getTask({ pageNum: 1, pageSize: 6 }, { type: 'putaway' }).then((res) => {
+      setPutawayDatas(res.list);
+    });
+    getTask({ pageNum: 1, pageSize: 6 }, { type: 'pickup' }).then((res) => {
+      setPickupDatas(res.list);
+    });
+  }, []);
   return (
     <div>
       <Breadcrumb>
@@ -139,7 +159,7 @@ export default function Task() {
                 <div className="absolute bottom-[70px] left-6">
                   <p className="text-[70px] font-[300]">50</p>
                   <p className="relative top-[-20px]  font-[600]">
-                    task pending
+                    has been done
                   </p>
                 </div>
                 <div className=" absolute bottom-6 w-[100%] pl-3 pr-3">
@@ -164,7 +184,10 @@ export default function Task() {
                   </div>
                 </Heading>
                 <div className="pt-4">
-                  <TaskTable rows={rowData()} headers={headerData}></TaskTable>
+                  <TaskTable
+                    rows={putawayDatas}
+                    headers={putawayHeaderData}
+                  ></TaskTable>
                 </div>
               </div>
             </div>
@@ -197,7 +220,7 @@ export default function Task() {
                 <div className="absolute bottom-[70px] left-6">
                   <p className="text-[70px] font-[300]">50</p>
                   <p className="relative top-[-20px]  font-[600]">
-                    task pending
+                    has been done
                   </p>
                 </div>
                 <div className=" absolute bottom-6 w-[100%] pl-3 pr-3">
@@ -222,7 +245,10 @@ export default function Task() {
                   </div>
                 </Heading>
                 <div className="pt-4">
-                  <TaskTable rows={rowData()} headers={headerData}></TaskTable>
+                  <TaskTable
+                    rows={pickupDatas}
+                    headers={pickupHeaderData}
+                  ></TaskTable>
                 </div>
               </div>
             </div>
