@@ -33,7 +33,8 @@ import WMSDataTable from '../Table/DataTable';
 const headers = [
   { key: 'name', header: 'Storage Location' },
   { key: 'occupied', header: 'Occupied' },
-  { key: 'materials', header: 'Material' },
+  { key: 'material_name', header: 'Material' },
+  { key: 'quantity', header: 'Quantity' },
 ];
 
 function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
@@ -74,14 +75,17 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
   }, [isModalOpen, warehouse_info, page, pageSize]);
 
   const handleAddShelfLocation = () => {
-    console.log();
     addStorageLocation({
       warehouse_id: warehouse_info.id,
       name: formValue.name,
+      material: formValue.material,
+      quantity: formValue.quantity,
     }).then(() => {
       setIsCreate(false);
       setFormValues({
         name: '',
+        material: '',
+        quantity: '',
       });
       fetchStorageLocationsByWId(
         {
@@ -203,21 +207,20 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
                               </TableCell>
                             );
                           }
-                          if (cell.id.split(':')[1] === 'materials') {
-                            console.log(cell.value);
-                            return (
-                              <TableCell key={header.key}>
-                                <Link
-                                  onClick={() => {
-                                    setShowMaterial(true);
-                                    setSelectedRowMaterial(cell.value);
-                                  }}
-                                >
-                                  More
-                                </Link>
-                              </TableCell>
-                            );
-                          }
+                          // if (cell.id.split(':')[1] === 'materials') {
+                          //   console.log('cell', cell.value);
+                          //   return (
+                          //     <TableCell key={header.key}>
+                          //       <Link
+                          //         onClick={() => {
+                          //           setShowMaterial(true);
+                          //           setSelectedRowMaterial(cell.value);
+                          //         }}>
+                          //         More
+                          //       </Link>
+                          //     </TableCell>
+                          //   );
+                          // }
                           return (
                             <TableCell key={header.key}>
                               {cell ? cell.value : ''}
@@ -252,13 +255,30 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
           <Heading className="text-sm font-normal leading-tight tracking-tight mb-3">
             Add a Storage Location
           </Heading>
-          <TextInput
-            labelText="Name"
-            id="name"
-            placeholder="Name"
-            value={formValue.name}
-            onChange={onFormValueChange}
-          />
+          <div className="flex gap-2">
+            <TextInput
+              labelText="Name"
+              id="name"
+              placeholder="Name"
+              value={formValue.name}
+              onChange={onFormValueChange}
+            />
+            <TextInput
+              labelText="Material"
+              id="material"
+              placeholder="Material"
+              value={formValue.material}
+              onChange={onFormValueChange}
+            />
+            <TextInput
+              labelText="Quantity"
+              id="quantity"
+              placeholder="Quantity"
+              value={formValue.quantity}
+              onChange={onFormValueChange}
+            />
+          </div>
+
           <div className="flex space-x-4 mt-4 justify-center ">
             <Button size="sm" onClick={handleAddShelfLocation}>
               Save
@@ -275,7 +295,7 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
           </div>
         </div>
       )}
-      {showMaterial && (
+      {/* {showMaterial && (
         <div>
           <Heading className="text-sm font-normal leading-tight tracking-tight mb-3">
             All materials at this Location
@@ -305,7 +325,7 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
             </Button>
           </div>
         </div>
-      )}
+      )} */}
     </Modal>
   );
 }

@@ -40,7 +40,7 @@ function InboundTable({
   const handleDeleteRow = async (id) => {
     deleteInbound({ id }).then(() => setRefresh({}));
   };
-  const [selectedId, setSelectedId] = useState('');
+  const [materials, setMaterials] = useState('');
   const [rows, setRows] = useState([]);
   const [detailRows, setDetailRows] = useState({});
 
@@ -83,34 +83,6 @@ function InboundTable({
     },
     [searchParams]
   );
-  const [sortKey, setSortKey] = useState('');
-  const [sortDirection, setSortDirection] = useState('desc');
-  // const sortedRows = React.useMemo(() => {
-  //   if (!sortKey) {
-  //     return rows;
-  //   }
-
-  //   const sortedRows = [...rows];
-  //   sortedRows.sort((a, b) => {
-  //     if (a[sortKey] < b[sortKey]) {
-  //       return sortDirection === 'asc' ? -1 : 1;
-  //     }
-  //     if (a[sortKey] > b[sortKey]) {
-  //       return sortDirection === 'asc' ? 1 : -1;
-  //     }
-  //     return 0;
-  //   });
-  //   return sortedRows;
-  // }, [rows, sortKey, sortDirection]);
-  // const rowsToShow = sortedRows.slice((page - 1) * pageSize, page * pageSize);
-  // const handleSort = (key) => {
-  //   if (sortKey === key) {
-  //     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-  //   } else {
-  //     setSortKey(key);
-  //     setSortDirection('asc');
-  //   }
-  // };
   return (
     <div>
       {loading && <TableSkeleton headers={headers} />}
@@ -121,9 +93,6 @@ function InboundTable({
               {headers.map((header, index) => (
                 <StructuredListCell head key={header.key} onClick={() => {}}>
                   {header.header}
-                  {sortKey === header.key && (
-                    <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
-                  )}
                 </StructuredListCell>
               ))}
             </StructuredListRow>
@@ -152,10 +121,14 @@ function InboundTable({
                 if (header.key === 'details') {
                   return (
                     <StructuredListCell key={header.key}>
+                      {row[header.key] &&
+                        row[header.key].map((m) => {
+                          return m.material_name;
+                        })}
                       <Link
                         onClick={() => {
                           setModalOpen(true);
-                          // setSelectedId(row['inbound_id']);
+                          setMaterials(row[header.key]);
                         }}
                       >
                         More
@@ -226,7 +199,7 @@ function InboundTable({
         }}
       />
       <OperationDetailModal
-        id={selectedId}
+        materials={materials}
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
       ></OperationDetailModal>

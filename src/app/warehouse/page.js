@@ -22,6 +22,7 @@ const headers = [
   { key: 'department', header: 'Department' },
   { key: 'email', header: 'Email' },
   { key: 'storage_location', header: 'Storage Location' },
+  { key: 'operation', header: '' },
 ];
 
 function Page() {

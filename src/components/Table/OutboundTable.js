@@ -34,7 +34,7 @@ function OutboundTable({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [selectedId, setSelectedId] = useState('');
+  const [materials, setMaterials] = useState('');
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
@@ -154,13 +154,18 @@ function OutboundTable({
                     </StructuredListCell>
                   );
                 }
-                if (header.key === 'material') {
+                if (header.key === 'materials') {
                   return (
                     <StructuredListCell key={header.key}>
+                      {row[header.key] &&
+                        row[header.key].map((m) => {
+                          return m.material_name;
+                        })}
                       <Link
+                        className="ml-2"
                         onClick={() => {
                           setModalOpen(true);
-                          setSelectedId(row['outbound_id']);
+                          setMaterials(row[header.key]);
                         }}
                       >
                         More
@@ -230,7 +235,7 @@ function OutboundTable({
         }}
       />
       <OperationDetailModal
-        id={selectedId}
+        materials={materials}
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
       ></OperationDetailModal>

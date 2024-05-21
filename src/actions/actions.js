@@ -39,7 +39,7 @@ export async function updateWarehouse(body) {
 
 export async function fetchStorageLocationsByWId(body, params) {
   return httpToBackend
-    .post('/wms/storagelocation/get', body, { params })
+    .post('/wms/storage-location/get', body, { params })
     .then((res) => {
       console.log(res);
       return res.data.data;
@@ -47,17 +47,19 @@ export async function fetchStorageLocationsByWId(body, params) {
 }
 
 export async function addStorageLocation(body) {
-  return httpToBackend.post('/wms/storagelocation/add', body).then((res) => {
+  return httpToBackend.post('/wms/storage-location/add', body).then((res) => {
     console.log(res);
     return res.data.data;
   });
 }
 
 export async function deleteStorageLocation(body) {
-  return httpToBackend.post('/wms/storagelocation/delete', body).then((res) => {
-    console.log(res);
-    return res.data.data;
-  });
+  return httpToBackend
+    .post('/wms/storage-location/delete', body)
+    .then((res) => {
+      console.log(res);
+      return res.data.data;
+    });
 }
 // wms/material
 export async function fetchMaterial(params, body) {

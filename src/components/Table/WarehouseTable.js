@@ -66,7 +66,7 @@ function WarehouseTable({
         setLoading(false);
       });
     }
-  }, [page, pageSize, refresh, isSearchClicked]);
+  }, [page, pageSize, refresh, isSearchClicked, filters]);
 
   const handleEditModalClose = () => {
     setEditModalOpen(false);
@@ -125,24 +125,32 @@ function WarehouseTable({
                     </StructuredListCell>
                   );
                 }
+                if (header.key == 'operation') {
+                  return (
+                    <StructuredListCell key={header.key} className="w-[100px]">
+                      <IconButton
+                        size="sm"
+                        kind="ghost"
+                        className="mr-[0.5rem]"
+                      >
+                        <Edit size={15} onClick={() => handleEditRow(row)} />
+                      </IconButton>
+                      <IconButton
+                        size="sm"
+                        kind="ghost"
+                        onClick={() => handleDeleteRow(row.id)}
+                      >
+                        <Delete size={15} />
+                      </IconButton>
+                    </StructuredListCell>
+                  );
+                }
                 return (
                   <StructuredListCell key={header.key}>
                     {row[header.key]}
                   </StructuredListCell>
                 );
               })}
-              <StructuredListCell>
-                <IconButton size="xs" kind="ghost" className="mr-[0.5rem]">
-                  <Edit size={15} onClick={() => handleEditRow(row)} />
-                </IconButton>
-                <IconButton
-                  size="xs"
-                  kind="ghost"
-                  onClick={() => handleDeleteRow(row.id)}
-                >
-                  <Delete size={15} />
-                </IconButton>
-              </StructuredListCell>
             </StructuredListRow>
           ))}
         </StructuredListBody>
