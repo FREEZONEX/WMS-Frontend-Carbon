@@ -59,7 +59,7 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
         }}
         className="cursor-pointer"
       >
-        WMS
+        Supply Chain Management System
       </HeaderName>
       <Theme theme={theme.sideNavTheme}>
         <SideNav
