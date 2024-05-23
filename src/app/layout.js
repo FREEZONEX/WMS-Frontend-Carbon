@@ -1,9 +1,11 @@
 import './globals.scss';
 import Providers from './providers';
 import { ThemeProvider } from '@/utils/ThemeContext';
+import { sysTitle, sysSubTitle } from '@/utils/constants';
+
 export const metadata = {
-  title: 'SUPCON WMS',
-  description: 'SUPCON WMS',
+  title: sysTitle,
+  description: sysSubTitle,
 };
 
 export default function RootLayout({ children }) {

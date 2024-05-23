@@ -3,6 +3,9 @@ export const DateTimeFormat = {
   longDate: 'DD/MM/yyyy HH:mm:ss',
 };
 
+export const sysTitle = 'Supply Chain Management';
+export const sysSubTitle = 'Supply Chain Management';
+
 export const tagColors = [
   'red',
   'magenta',

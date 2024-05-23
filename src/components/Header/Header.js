@@ -33,6 +33,7 @@ import {
 import { usePathname } from 'next/navigation';
 import { ThemeContext } from '@/utils/ThemeContext';
 import { useRouter } from 'next/navigation';
+import { sysTitle } from '@/utils/constants';
 
 export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
   const router = useRouter();
@@ -44,7 +45,7 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
   console.log(isExpanded);
 
   return (
-    <Header aria-label="SUPCON WMS">
+    <Header aria-label={sysTitle}>
       <SkipToContent />
       <HeaderMenuButton
         aria-label={isExpanded ? 'Close menu' : 'Open menu'}
@@ -53,11 +54,11 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
         aria-expanded={isExpanded}
       />
       <HeaderName
-        prefix="SUPCON"
+        prefix={sysTitle}
         onClick={() => {
           router.push(`${process.env.PATH_PREFIX}/home`);
         }}
-        className="cursor-pointer"
+        className="cursor-pointer uppercase"
       >
         WMS
       </HeaderName>
