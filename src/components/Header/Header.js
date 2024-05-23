@@ -54,13 +54,13 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
         aria-expanded={isExpanded}
       />
       <HeaderName
-        prefix={sysTitle}
+        prefix="SUPCON"
         onClick={() => {
           router.push(`${process.env.PATH_PREFIX}/home`);
         }}
         className="cursor-pointer uppercase"
       >
-        Supply Chain Management System
+        {sysTitle}
       </HeaderName>
       <Theme theme={theme.sideNavTheme}>
         <SideNav
