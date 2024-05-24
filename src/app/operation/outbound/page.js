@@ -28,8 +28,8 @@ const headers = [
   { key: 'material', header: 'Material' },
   { key: 'outbound_delivery_date', header: 'Delivery Date' },
   { key: 'create_time', header: 'Create Time' },
-  { key: 'operate', header: 'Operate' },
   { key: 'note', header: 'Note' },
+  { key: 'operate', header: 'Operation' },
 ];
 
 function Page() {

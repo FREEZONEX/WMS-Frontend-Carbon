@@ -14,18 +14,22 @@ function MaterialCreateForm() {
     codeInvalid: false,
     nameInvalid: false,
   });
+
   const defaultFormValue = {
-    product_code: '',
-    name: '',
-    product_type: '',
-    unit: '',
-    specification: '',
+    expect_storage_locations: '',
+    expect_wh_id: '',
+    id: '',
+    material_code: '',
+    material_type: '',
     max: '',
     min: '',
-    status: '',
-    expect_wh_id: '',
-    expact_stock_location_id: '',
+    name: '',
     note: '',
+    specification: '',
+    status: '',
+    suggested_storage_location_id: '',
+    suggested_storage_location_name: '',
+    unit: '',
   };
   const [selectLocations, setSelectLocations] = useState([]);
   const [formValue, setFormValue] = useState(defaultFormValue);
@@ -49,7 +53,7 @@ function MaterialCreateForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newValidation = {
-      codeInvalid: formValue.product_code === '',
+      codeInvalid: formValue.material_code === '',
       nameInvalid: formValue.name === '',
     };
     setFieldValidation(newValidation);
@@ -60,10 +64,11 @@ function MaterialCreateForm() {
     }
     addMaterial(formValue).then(() => {
       setFormValue({
-        product_code: '',
+        material_code: '',
+        material_type: '',
+        max: '',
+        min: '',
         name: '',
-        product_type: '',
-        unit: '',
         note: '',
       });
       setFieldValidation({
@@ -99,11 +104,11 @@ function MaterialCreateForm() {
             <TextInput
               className="mb-8"
               labelText="Material Code"
-              id="product_code"
+              id="material_code"
               placeholder="Material Code"
               invalid={fieldValidation.codeInvalid}
               invalidText="This field cannot be empty"
-              value={formValue.product_code}
+              value={formValue.material_code}
               onChange={onFormValueChange}
             />
           </Column>
@@ -123,9 +128,9 @@ function MaterialCreateForm() {
             <TextInput
               className="mb-8"
               labelText="Material Type"
-              id="product_type"
+              id="material_type"
               placeholder="Material Type"
-              value={formValue.product_type}
+              value={formValue.material_type}
               onChange={onFormValueChange}
             />
           </Column>

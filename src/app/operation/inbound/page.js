@@ -28,8 +28,8 @@ const headers = [
   { key: 'details', header: 'Material' },
   { key: 'delivery_date', header: 'Delivery Date' },
   { key: 'create_time', header: 'Create Time' },
-  { key: 'operate', header: 'Operate' },
   { key: 'note', header: 'Note' },
+  { key: 'operate', header: 'Operation' },
 ];
 
 function Page() {
@@ -64,52 +64,6 @@ function Page() {
     }));
   };
   const [isSearchClicked, setIsSearchClicked] = useState(false);
-  // useEffect(() => {
-  //   if (typeof window !== undefined) {
-  //     fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
-  //       .then((res) => {
-  //         const map = res.list.reduce((acc, curr) => {
-  //           acc[curr.id] = curr.name;
-  //           return acc;
-  //         }, {});
-
-  //         localStorage.setItem('whNameMap', JSON.stringify(map));
-  //       })
-  //       .catch((error) => {
-  //         console.error('Failed to fetch WH name map:', error);
-  //       });
-  //     fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
-  //       .then((res) => {
-  //         const map = res.list.reduce((acc, curr) => {
-  //           acc[curr.id] = curr.name;
-  //           return acc;
-  //         }, {});
-
-  //         localStorage.setItem('slNameMap', JSON.stringify(map));
-  //       })
-  //       .catch((error) => {
-  //         console.error('Failed to fetch SL name map:', error);
-  //       });
-  //     fetchWHSLNameMap({ pageNum: 1, pageSize: 999999 })
-  //       .then((res) => {
-  //         const locationMap = new Map();
-
-  //         res.list.forEach((warehouse) => {
-  //           warehouse.warehouseNamemap.forEach((location) => {
-  //             locationMap.set(location.id, warehouse.id);
-  //           });
-  //         });
-
-  //         const locationMapString = JSON.stringify(
-  //           Array.from(locationMap.entries())
-  //         );
-  //         localStorage.setItem('location', locationMapString);
-  //       })
-  //       .catch((error) => {
-  //         console.error('Error fetching warehouse data:', error);
-  //       });
-  //   }
-  // }, []);
   return (
     <div>
       <Breadcrumb>

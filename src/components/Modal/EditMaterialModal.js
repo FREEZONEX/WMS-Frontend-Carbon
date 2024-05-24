@@ -80,7 +80,7 @@ const EditMaterialModal = ({
 
   const handleSubmit = async () => {
     const newValidation = {
-      codeInvalid: !formValue.product_code || formValue.product_code === '',
+      codeInvalid: !formValue.material_code || formValue.material_code === '',
       nameInvalid: !formValue.name || formValue.name === '',
     };
     setFieldValidation(newValidation);
@@ -129,13 +129,13 @@ const EditMaterialModal = ({
           <Column sm={2} md={4} lg={8}>
             <TextInput
               className="mb-5"
-              id="product_code"
+              id="material_code"
               labelText="Material Code"
               placeholder="Material Code"
               required
               invalid={fieldValidation.codeInvalid}
               invalidText="This field cannot be empty"
-              value={formValue.product_code}
+              value={formValue.material_code}
               onChange={onFormValueChange}
             />
           </Column>
@@ -167,11 +167,11 @@ const EditMaterialModal = ({
           <Column sm={2} md={4} lg={8}>
             <TextInput
               className="mb-5"
-              id="product_type"
+              id="material_type"
               labelText="Type"
               placeholder="type"
               required
-              value={formValue.product_type}
+              value={formValue.material_type}
               onChange={onFormValueChange}
             />
           </Column>

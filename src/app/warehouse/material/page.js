@@ -22,6 +22,7 @@ const headers = [
   { key: 'min', header: 'Min Stock' },
   { key: 'status', header: 'Status' },
   { key: 'note', header: 'Note' },
+  { key: 'operation', header: 'Operation' },
 ];
 
 function Page() {

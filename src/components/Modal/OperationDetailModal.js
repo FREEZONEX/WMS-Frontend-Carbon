@@ -4,7 +4,7 @@ import { Modal, Heading } from '@carbon/react';
 import WMSDataTable from '../Table/DataTable';
 
 const headers = [
-  { key: 'name', header: 'Name' },
+  { key: 'material_name', header: 'Name' },
   { key: 'quantity', header: 'Quantity' },
   { key: 'stock_quantity', header: 'Stock Quantity' },
   { key: 'rfid', header: 'RFID' },

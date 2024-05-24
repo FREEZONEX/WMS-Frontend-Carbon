@@ -138,7 +138,7 @@ function InboundTable({
                 }
                 if (header.key === 'operate') {
                   return (
-                    <StructuredListCell key={header.key}>
+                    <StructuredListCell key={header.key} className="w-[100px]">
                       <Button
                         size="sm"
                         kind="secondary"

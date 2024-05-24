@@ -305,7 +305,7 @@ export async function fetchWHNameMap(params) {
 
 export async function fetchSLNameMap(params) {
   return httpToBackend
-    .post('/wms/storagelocation/namemap', {}, { params })
+    .post('/wms/storage-location/namemap', {}, { params })
     .then((res) => {
       console.log(res);
       return res.data.data;
@@ -323,7 +323,7 @@ export async function fetchWHSLNameMap(params) {
 
 export async function getPlanelLocations(body) {
   return httpToBackend
-    .post('/wms/storagelocation/plane-locations', body)
+    .post('/wms/storage-location/plane-locations', body)
     .then((res) => {
       return res.data.data;
     });

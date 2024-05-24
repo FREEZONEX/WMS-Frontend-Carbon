@@ -17,7 +17,11 @@ import { CaretRight, CaretLeft, Maximize } from '@carbon/icons-react';
 import moment from 'moment';
 import { DateTimeFormat } from '@/utils/constants';
 import TaskTable from '@/components/Task/TaskTable';
-import { getTask } from '@/actions/actions';
+import {
+  getTask,
+  getTaskDoneCount,
+  getTaskPendingCount,
+} from '@/actions/actions';
 
 const lineStyle = {
   width: '260px',
@@ -88,6 +92,12 @@ export default function Task() {
   const router = useRouter();
   const [putawayDatas, setPutawayDatas] = useState([]);
   const [pickupDatas, setPickupDatas] = useState([]);
+  const [taskCount, setTaskCount] = useState({
+    putawayPending: 0,
+    putawayDone: 0,
+    pickupPending: 0,
+    pickupDone: 0,
+  });
 
   useEffect(() => {
     getTask({ pageNum: 1, pageSize: 6 }, { type: 'putaway' }).then((res) => {
@@ -96,7 +106,24 @@ export default function Task() {
     getTask({ pageNum: 1, pageSize: 6 }, { type: 'pickup' }).then((res) => {
       setPickupDatas(res.list);
     });
+
+    getTaskPendingCount().then((res) => {
+      setTaskCount((prevDatas) => ({
+        ...prevDatas,
+        putawayPending: res.putaway,
+        pickupPending: res.pickup,
+      }));
+    });
+    getTaskDoneCount().then((res) => {
+      console.log(res);
+      setTaskCount((prevDatas) => ({
+        ...prevDatas,
+        putawayDone: res.putaway,
+        pickupDone: res.pickup,
+      }));
+    });
   }, []);
+
   return (
     <div>
       <Breadcrumb>
@@ -151,13 +178,17 @@ export default function Task() {
                 </div>
                 <div style={lineStyle}></div>
                 <div className="absolute left-[127px] top-[70px] text-[#4A85F6]">
-                  <p className="text-[70px] font-[300]">27 </p>
+                  <p className="text-[70px] font-[300]">
+                    {taskCount.putawayPending}
+                  </p>
                   <p className="relative top-[-20px]  font-[600]">
                     task pending
                   </p>
                 </div>
                 <div className="absolute bottom-[70px] left-6">
-                  <p className="text-[70px] font-[300]">50</p>
+                  <p className="text-[70px] font-[300]">
+                    {taskCount.putawayDone}
+                  </p>
                   <p className="relative top-[-20px]  font-[600]">
                     has been done
                   </p>
@@ -212,13 +243,17 @@ export default function Task() {
                 </div>
                 <div style={lineStyle}></div>
                 <div className="absolute left-[127px] top-[70px] text-[#4A85F6]">
-                  <p className="text-[70px] font-[300]">27 </p>
+                  <p className="text-[70px] font-[300]">
+                    {taskCount.pickupPending}{' '}
+                  </p>
                   <p className="relative top-[-20px]  font-[600]">
                     task pending
                   </p>
                 </div>
                 <div className="absolute bottom-[70px] left-6">
-                  <p className="text-[70px] font-[300]">50</p>
+                  <p className="text-[70px] font-[300]">
+                    {taskCount.pickupDone}
+                  </p>
                   <p className="relative top-[-20px]  font-[600]">
                     has been done
                   </p>

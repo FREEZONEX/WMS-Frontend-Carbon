@@ -12,6 +12,7 @@ import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import WarehouseTable from '@/components/Table/WarehouseTable';
 import CreateWarehouseModal from '@/components/Modal/CreateWarehouseModal';
 import { useRouter } from 'next/navigation';
+import ShowMessageModal from '@/components/Modal/ShowMessageModal';
 
 const headers = [
   { key: 'name', header: 'Name' },
@@ -22,7 +23,7 @@ const headers = [
   { key: 'department', header: 'Department' },
   { key: 'email', header: 'Email' },
   { key: 'storage_location', header: 'Storage Location' },
-  { key: 'operation', header: '' },
+  { key: 'operation', header: 'Operation' },
 ];
 
 function Page() {
@@ -48,10 +49,15 @@ function Page() {
     setCreateModalOpen(false);
   };
 
+  // const [isMsgOpen, setIsMsgOpen] = useState(false);
   const [refresh, setRefresh] = useState({});
   const [isSearchClicked, setIsSearchClicked] = useState(false);
   return (
     <div>
+      {/* <button
+        onClick={ ()=>ShowMessageModal.open({message:"test11111"})}>
+        test
+      </button> */}
       <Breadcrumb>
         <BreadcrumbItem className="cursor-pointer">
           <a
@@ -153,6 +159,12 @@ function Page() {
           isSearchClicked={isSearchClicked}
         />
       </div>
+      {/* <ShowMessageModal
+        message="Are you sure to delete?"
+        isOpen={isMsgOpen}
+        onClose={() => {
+          setIsMsgOpen(false);
+        }}></ShowMessageModal> */}
     </div>
   );
 }
