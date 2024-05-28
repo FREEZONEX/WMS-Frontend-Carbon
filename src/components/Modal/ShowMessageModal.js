@@ -2,7 +2,6 @@ import { Modal, Heading } from '@carbon/react';
 import { createRoot } from 'react-dom/client';
 
 import { useEffect, useState } from 'react';
-import { duration } from 'moment';
 export function MessageDialog({
   isOpen,
   type = 'success',
@@ -66,36 +65,37 @@ const ShowMessageModal = {
   },
   showSuccess(message = 'Successfully') {
     this.options = { ...this.options, isOpen: true, type: 'success' };
-    this.open(message, () => {
-      this.removeDom();
+    this._open(message, () => {
+      this._close();
     });
     setTimeout(() => {
-      this.options.isOpen = false;
-      this.open(message);
+      this._close();
     }, 1000);
   },
   showInfo(message) {
     this.options = { ...this.options, isOpen: true, type: 'info' };
-    this.open(message, () => {
-      this.removeDom();
+    this._open(message, () => {
+      this._close();
     });
   },
   showError(message) {
     this.options = { ...this.options, isOpen: true, type: 'error' };
-    this.open(message, () => {
-      this.removeDom();
+    this._open(message, () => {
+      this._close();
     });
   },
   showConfirm(message, callback) {
     this.options.isOpen = true;
     this.options.type = 'confirm';
-    this.open(message, () => {
+    this._open(message, () => {
       callback();
-      this.removeDom();
+      this._close();
     });
   },
-  open(message, callback) {
-    this.removeDom();
+  _open(message, callback) {
+    if (this.dom) {
+      this._removeDom();
+    }
     this.dom = document.createElement('div');
     document.body.appendChild(this.dom);
     const root = createRoot(this.dom);
@@ -108,7 +108,18 @@ const ShowMessageModal = {
       />
     );
   },
-  removeDom() {
+  _close() {
+    if (this.dom) {
+      this._removeDom();
+    }
+    this.dom = document.createElement('div');
+    document.body.appendChild(this.dom);
+    const root = createRoot(this.dom);
+    this.options.isOpen = false;
+    root.render(<MessageDialog isOpen={this.options.isOpen} />);
+    this._removeDom();
+  },
+  _removeDom() {
     this.dom && this.dom.remove();
   },
 };

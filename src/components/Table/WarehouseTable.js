@@ -21,6 +21,7 @@ import {
 } from '@/actions/actions';
 import EditWarehouseModal from '../Modal/EditWarehouseModal';
 import TableSkeleton from '../Skeleton/TableSkeleton';
+import ShowMessageModal from '../Modal/ShowMessageModal';
 
 function WarehouseTable({
   headers,
@@ -77,7 +78,9 @@ function WarehouseTable({
   };
 
   const handleDeleteRow = async (id) => {
-    deleteWarehouse(id).then((res) => setRefresh({}));
+    ShowMessageModal.showConfirm('Are you sure to delete?', () => {
+      deleteWarehouse(id).then((res) => setRefresh({}));
+    });
   };
   const handleShowShelves = (id, warehouse_id, name) => {
     setSelectedWarehouseInfo({
