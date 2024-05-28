@@ -38,12 +38,95 @@ import {
   fetchTodayOutboundDone,
 } from '@/actions/actions';
 
+const MyLineChart1 = () => {
+  const [data, setData] = useState([]);
+
+  const fetchData = () => {
+    // Load and parse the CSV data
+    fetch('/prediction.csv')
+      .then(response => response.text())
+      .then(csvData => {
+        const parsedData = Papa.parse(csvData, {
+          header: true,
+          skipEmptyLines: true
+        }).data.filter(d => 
+          d.warehouse_name === "Aluminum Foil" && 
+          new Date(d.date) <= new Date('7/28/2024')
+        );
+
+        // Fetch additional data from the API
+        fetch('http://localhost:5000/get_predictions')
+          .then(response => response.json())
+          .then(apiData => {
+            const additionalData = [];
+            const details = apiData.test["Aluminum Foil"];
+            if (details) {
+              additionalData.push({
+                date: '7/29/2024',
+                storage: details.currentdata[0], // Current data for 7/29/2024
+                warehouse_name: "Aluminum Foil"
+              });
+              additionalData.push({
+                date: '7/30/2024',
+                storage: details.prediction[0], // Prediction for 7/30/2024
+                warehouse_name: "Aluminum Foil"
+              });
+            }
+            // Combine CSV data and API data then update the state
+            setData([...parsedData, ...additionalData]);
+          })
+          .catch(error => {
+            console.error("Failed to fetch API data, using CSV data only:", error);
+            setData(parsedData);  // Use only CSV data if API call fails
+          });
+      })
+      .catch(error => {
+        console.error("Error loading or parsing CSV:", error);
+      });
+  };
+
+  useEffect(() => {
+    fetchData();  // Initial fetch
+    const interval = setInterval(fetchData, 10000);  // Fetch data every 30 seconds
+
+    return () => clearInterval(interval);  // Cleanup interval when component unmounts
+  }, []);
+  return (
+    
+
+    <div  className="w-full">
+    <div className="flex  items-center justify-center mb-2">
+      <Heading className="mt-3 text-xl font-normal  mb-2">
+                Real-time Predictions
+              </Heading>
+              </div>
+    <ResponsiveContainer width="100%" height={300}>
+    <LineChart
+      data={data}
+      margin={{
+        top: 5, right: 30, left: 20, bottom: 5,
+      }}
+    >
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="date" />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+      <Line type="monotone" dataKey="storage" stroke="#8884d8" activeDot={{ r: 8 }} />
+    </LineChart>
+    </ResponsiveContainer>
+    </div>
+
+  );
+};
+
+
 
 const MyLineChart = ({ csvFile }) => {
   const [data, setData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showLSTM, setShowLSTM] = useState(true);
-  const [showMambar, setShowMambar] = useState(true);
+  const [showMamba, setShowMamba] = useState(true);
 
   useEffect(() => {
       Papa.parse(csvFile, {
@@ -56,7 +139,7 @@ const MyLineChart = ({ csvFile }) => {
                   storage: Number(item.storage),
                   next_day_storage: Number(item.next_day_storage || 0),
                   lstm: Number(item.lstm || 0),
-                  mambar: Number(item.mambar || 0)
+                  mamba: Number(item.mamba || 0)
               }));
               setData(parsedData);
           }
@@ -124,16 +207,16 @@ const MyLineChart = ({ csvFile }) => {
                           key="lstmLine"
                       />
                   )}
-                  {showMambar && (
+                  {showMamba && (
                       <Line 
                           type="monotone" 
-                          dataKey="mambar" 
+                          dataKey="mamba" 
                           stroke="#387908" 
                           strokeWidth={2} 
                           strokeDasharray="5 5" 
                           dot={false} 
                           isAnimationActive={false}
-                          key="mambarLine"
+                          key="mambaLine"
                       />
                   )}
               </LineChart>
@@ -149,9 +232,9 @@ const MyLineChart = ({ csvFile }) => {
               <label style={{ marginLeft: '20px' }}>
                   <input
                       type="checkbox"
-                      checked={showMambar}
-                      onChange={(e) => setShowMambar(e.target.checked)}
-                  /> Show Mambar Prediction
+                      checked={showMamba}
+                      onChange={(e) => setShowMamba(e.target.checked)}
+                  /> Show Mamba Prediction
               </label>
           </div>
       </div>
@@ -469,7 +552,7 @@ function Page() {
             </div>
             <div className="bg-white p-6 shadow-md max-w-lg  relative">
               <Heading className="mt-3 text-xl font-normal ">
-                Longest awaiting time1
+                Longest awaiting time
               </Heading>
               <div className="absolute bottom-5 left-0 mb-4 ml-6">
                 <div className="flex items-baseline">
@@ -542,6 +625,9 @@ function Page() {
           </div>
         </div>
 
+        <div className="bg-white p-6 shadow h-128 flex w-full mt-5">
+               <MyLineChart1 csvFile="prediction.csv" />
+          </div>  
 
         <div className="bg-white p-6 shadow h-128 flex w-full mt-5">
                <MyLineChart csvFile="train_data1.csv" />
