@@ -60,7 +60,7 @@ const ShowMessageModal = {
     isOpen: true,
   },
   setOptions(options) {
-    console.log(options);
+    // console.log(options);
     this.options = options || {};
   },
   showSuccess(message = 'Successfully') {
@@ -85,8 +85,7 @@ const ShowMessageModal = {
     });
   },
   showConfirm(message, callback) {
-    this.options.isOpen = true;
-    this.options.type = 'confirm';
+    this.options = { ...this.options, isOpen: true, type: 'confirm' };
     this._open(message, () => {
       callback();
       this._close();

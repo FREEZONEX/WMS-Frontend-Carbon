@@ -29,6 +29,7 @@ import {
   fetchStorageLocationsByWId,
 } from '@/actions/actions';
 import WMSDataTable from '../Table/DataTable';
+import ShowMessageModal from './ShowMessageModal';
 
 const headers = [
   { key: 'name', header: 'Storage Location' },
@@ -97,20 +98,29 @@ function ShelfLocationModal({ isModalOpen, setModalOpen, warehouse_info }) {
   };
   const handleDeleteSelectedRows = () => {
     console.log(selectedRows);
-    const deletePromises = selectedRows.map((row) =>
-      deleteStorageLocation({ id: row.id })
-    );
+    if (!selectedRows || selectedRows.length == 0) {
+      ShowMessageModal.showInfo('Please select one item at least.');
+      return;
+    }
+    ShowMessageModal.showConfirm(
+      'Are you sure to delete selected items?',
+      () => {
+        const deletePromises = selectedRows.map((row) =>
+          deleteStorageLocation({ id: row.id })
+        );
 
-    Promise.all(deletePromises)
-      .then(() => {
-        setSelectedRows([]);
-        fetchStorageLocationsByWId({
-          warehouse_id: warehouse_info.id,
-        }).then((res) => setRows(res.list));
-      })
-      .catch((error) => {
-        console.error('Delete Storage Location Error:', error);
-      });
+        Promise.all(deletePromises)
+          .then(() => {
+            setSelectedRows([]);
+            fetchStorageLocationsByWId({
+              warehouse_id: warehouse_info.id,
+            }).then((res) => setRows(res.list));
+          })
+          .catch((error) => {
+            console.error('Delete Storage Location Error:', error);
+          });
+      }
+    );
   };
 
   return (

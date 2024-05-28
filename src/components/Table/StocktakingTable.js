@@ -123,7 +123,7 @@ function StocktakingTable({
                     </StructuredListCell>
                   );
                 }
-                if (header.key === 'create_time') {
+                if (header.key === 'update_time') {
                   return (
                     <StructuredListCell key={header.key}>
                       {row[header.key] &&

@@ -105,7 +105,7 @@ function RuleEditModal({ isOpen, onClose, defaultValue }) {
       onRequestClose={onCancel}
       onRequestSubmit={onSave}
       isFullWidth={true}
-      size="lg"
+      size="md"
     >
       <div className="p-4 shadow rounded-md bg-white">
         <div className="flex items-center space-x-2">

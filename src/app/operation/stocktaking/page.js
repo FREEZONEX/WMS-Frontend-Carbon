@@ -16,13 +16,13 @@ import { useRouter } from 'next/navigation';
 
 const headers = [
   { key: 'id', header: 'ID' },
-  // { key: 'ref_id', header: 'Ref ID' },
   { key: 'type', header: 'Type' },
   { key: 'operator', header: 'Operator' },
   { key: 'source', header: 'Source' },
+  { key: 'details', header: 'Result' },
   { key: 'status', header: 'Status' },
-  { key: 'result', header: 'Result' },
-  { key: 'create_time', header: 'Create Time' },
+  { key: 'supplier', header: 'Supplier' },
+  { key: 'update_time', header: 'Create Time' },
   { key: 'note', header: 'Note' },
 ];
 
