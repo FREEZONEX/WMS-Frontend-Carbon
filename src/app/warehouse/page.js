@@ -13,7 +13,6 @@ import WarehouseTable from '@/components/Table/WarehouseTable';
 import CreateWarehouseModal from '@/components/Modal/CreateWarehouseModal';
 import { useRouter } from 'next/navigation';
 import ShowMessageModal from '@/components/Modal/ShowMessageModal';
-
 const headers = [
   { key: 'name', header: 'Name' },
   { key: 'warehouse_id', header: 'ID' },
@@ -49,15 +48,12 @@ function Page() {
     setCreateModalOpen(false);
   };
 
-  // const [isMsgOpen, setIsMsgOpen] = useState(false);
+  const [isMsgOpen, setIsMsgOpen] = useState(false);
   const [refresh, setRefresh] = useState({});
   const [isSearchClicked, setIsSearchClicked] = useState(false);
   return (
     <div>
-      {/* <button
-        onClick={ ()=>ShowMessageModal.open({message:"test11111"})}>
-        test
-      </button> */}
+      <button onClick={() => ShowMessageModal.showSuccess()}>test</button>
       <Breadcrumb>
         <BreadcrumbItem className="cursor-pointer">
           <a
@@ -159,12 +155,6 @@ function Page() {
           isSearchClicked={isSearchClicked}
         />
       </div>
-      {/* <ShowMessageModal
-        message="Are you sure to delete?"
-        isOpen={isMsgOpen}
-        onClose={() => {
-          setIsMsgOpen(false);
-        }}></ShowMessageModal> */}
     </div>
   );
 }

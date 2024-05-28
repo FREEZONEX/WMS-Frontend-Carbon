@@ -8,6 +8,7 @@ import {
   Grid,
 } from '@carbon/react';
 import { AddWarehouses } from '@/actions/actions';
+import ShowMessageModal from '@/components/Modal/ShowMessageModal';
 
 const CreateWarehouseModal = ({ isOpen, onClose, setRefresh }) => {
   const [fieldValidation, setFieldValidation] = useState({
@@ -87,6 +88,7 @@ const CreateWarehouseModal = ({ isOpen, onClose, setRefresh }) => {
         });
       })
       .then(() => {
+        ShowMessageModal.showSuccess();
         onClose();
         setRefresh({});
       });
