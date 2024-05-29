@@ -125,12 +125,12 @@ function OutboundTable({
           {rows.map((row, index) => (
             <StructuredListRow key={index}>
               {headers.map((header) => {
-                if (header.key === 'outbound_status') {
+                if (header.key === 'status') {
                   return (
                     <StructuredListCell key={header.key}>
                       <Tag
                         type={
-                          row[header.key].toLowerCase() === 'pending'
+                          row[header.key]?.toLowerCase() === 'pending'
                             ? 'red'
                             : 'blue'
                         }
@@ -154,13 +154,16 @@ function OutboundTable({
                     </StructuredListCell>
                   );
                 }
-                if (header.key === 'materials') {
+                if (header.key === 'details') {
                   return (
-                    <StructuredListCell key={header.key}>
-                      {row[header.key] &&
-                        row[header.key].map((m) => {
-                          return m.material_name;
-                        })}
+                    <StructuredListCell key={header.key} className="flex">
+                      <div className="w-[100px] text-nowrap whitespace-nowrap overflow-hidden text-ellipsis">
+                        {row[header.key] &&
+                          row[header.key].map((m) => {
+                            return m.material_name;
+                          })}
+                      </div>
+
                       <Link
                         className="ml-2"
                         onClick={() => {
@@ -180,7 +183,7 @@ function OutboundTable({
                         size="sm"
                         kind="secondary"
                         disabled={
-                          row['outbound_status'].toLowerCase() === 'pending'
+                          row['status']?.toLowerCase() === 'pending'
                             ? false
                             : true
                         }
@@ -199,7 +202,7 @@ function OutboundTable({
                 }
                 if (
                   header.key === 'create_time' ||
-                  header.key === 'outbound_delivery_date'
+                  header.key === 'delivery_date'
                 ) {
                   return (
                     <StructuredListCell key={header.key}>

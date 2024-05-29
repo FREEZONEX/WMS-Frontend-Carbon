@@ -21,6 +21,7 @@ import {
   getTask,
   getTaskDoneCount,
   getTaskPendingCount,
+  getUtilization,
 } from '@/actions/actions';
 
 const lineStyle = {
@@ -76,18 +77,6 @@ const pickupHeaderData = [
   },
 ];
 
-const ProgressDatas = () => {
-  let datas = [];
-  for (let i = 0; i < 4; i++) {
-    datas.push({
-      label: `Forklift-${i}`,
-      subLabel: `1h2m9s`,
-      value: Math.floor(Math.random() * 100),
-    });
-  }
-  return datas;
-};
-
 export default function Task() {
   const router = useRouter();
   const [putawayDatas, setPutawayDatas] = useState([]);
@@ -99,7 +88,19 @@ export default function Task() {
     pickupDone: 0,
   });
 
+  const [statistics, setStatistics] = useState({});
+  const [pageIndexOfOccupy, setPageIndexOfOccupy] = useState(1);
+  const [pageIndexOfIdle, setPageIndexOfIdle] = useState(1);
+  const [pageSize, setPageSize] = useState(4);
+
+  const [occupy, setOccupy] = useState([]);
+  const [idle, setIdle] = useState([]);
+
   useEffect(() => {
+    initData();
+  }, []);
+
+  const initData = () => {
     getTask({ pageNum: 1, pageSize: 6 }, { type: 'putaway' }).then((res) => {
       setPutawayDatas(res.list);
     });
@@ -122,8 +123,16 @@ export default function Task() {
         pickupDone: res.pickup,
       }));
     });
-  }, []);
+    getTask({ pageNum: 1, pageSize: 6 }, { type: 'pickup' }).then((res) => {
+      setPickupDatas(res.list);
+    });
+    getUtilization().then((res) => {
+      setStatistics(res);
+    });
+  };
 
+  const handlePrevPageOfIdle = () => {};
+  const handleAfterPageOfIdle = () => {};
   return (
     <div>
       <Breadcrumb>
@@ -291,8 +300,8 @@ export default function Task() {
           <div className="w-1/5 flex flex-col gap-4">
             <div className="h-[160px]  p-4  pl-6  pr-6 shadow  bg-white">
               <Heading className="font-bold ">Average Time To Process</Heading>
-              <div className="mt-6 flex items-center text-[50px]">
-                <div>2m34s</div>
+              <div className="mt-6 flex items-center text-[30px]">
+                <div>{statistics.averageTime}</div>
                 <Image
                   className="ml-6"
                   src={Time}
@@ -316,15 +325,19 @@ export default function Task() {
                   </div>
                 </Heading>
                 <div className="h-[230px]">
-                  {ProgressDatas().map((item, index) => {
+                  {statistics?.occupy?.slice(0, 4).map((item, index) => {
                     return (
                       <ProgressBar
                         className="mt-4"
                         size="small"
                         key={index}
-                        label={item.label}
-                        helperText={item.subLabel}
-                        value={item.value}
+                        label={item.name}
+                        helperText={item?.occupyTotalTime}
+                        value={
+                          item.occupyMaxRate != 0
+                            ? item?.occupyRate / item.occupyMaxRate
+                            : 0
+                        }
                       />
                     );
                   })}
@@ -336,12 +349,24 @@ export default function Task() {
                 <div className="flex flex-row justify-between">
                   <div>Time Of Resource Idle</div>
                   <div className="flex">
-                    <CaretLeft /> <CaretRight />
+                    <CaretLeft onClick={handlePrevPageOfIdle} />
+                    <CaretRight onClick={handleAfterPageOfIdle} />
                   </div>
                 </div>
               </Heading>
               <div className="bg-white mt-4 text-[14px]">
-                <div className="flex flex-row justify-between">
+                {statistics?.idle?.slice(0, 4).map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="flex flex-row justify-between mb-2"
+                    >
+                      <div className="italic font-[400]">{item.name}</div>
+                      <div>{item.idleTotalTime}</div>
+                    </div>
+                  );
+                })}
+                {/* <div className="flex flex-row justify-between">
                   <div className="italic font-[400]">Forklift 05</div>
                   <div>1h2min9s</div>
                 </div>
@@ -356,7 +381,7 @@ export default function Task() {
                 <div className="flex flex-row justify-between mt-2 ">
                   <div className="italic font-[400]">Forklift 05</div>
                   <div>1h2min9s</div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

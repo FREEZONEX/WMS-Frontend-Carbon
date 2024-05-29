@@ -378,7 +378,11 @@ export async function getResource(params) {
     return res.data.data;
   });
 }
-
+export async function getUtilization() {
+  return httpToBackend.post('/wms/resource/getUtilization').then((res) => {
+    return res.data.data;
+  });
+}
 //task
 export async function addTask(body) {
   return httpToBackend.post('/wms/task/add', body).then((res) => {

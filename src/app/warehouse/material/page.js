@@ -14,9 +14,9 @@ import { useRouter } from 'next/navigation';
 
 const headers = [
   { key: 'id', header: 'ID' },
-  { key: 'product_code', header: 'Material Code' },
+  { key: 'material_code', header: 'Material Code' },
   { key: 'name', header: 'Material Name' },
-  { key: 'product_type', header: 'Material Type' },
+  { key: 'material_type', header: 'Material Type' },
   { key: 'unit', header: 'Unit' },
   { key: 'max', header: 'Max Stock' },
   { key: 'min', header: 'Min Stock' },

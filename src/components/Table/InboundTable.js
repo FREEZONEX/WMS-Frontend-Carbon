@@ -120,11 +120,13 @@ function InboundTable({
                 }
                 if (header.key === 'details') {
                   return (
-                    <StructuredListCell key={header.key}>
-                      {row[header.key] &&
-                        row[header.key].map((m) => {
-                          return m.material_name;
-                        })}
+                    <StructuredListCell key={header.key} className="flex">
+                      <div className="w-[100px] text-nowrap whitespace-nowrap overflow-hidden text-ellipsis">
+                        {row[header.key] &&
+                          row[header.key].map((m) => {
+                            return m.material_name;
+                          })}
+                      </div>
                       <Link
                         onClick={() => {
                           setModalOpen(true);
