@@ -6,16 +6,6 @@ import '@carbon/charts/styles.css';
 import { useRouter } from 'next/navigation';
 import PutawayTable from '@/components/Table/PutawayTable';
 
-const headers = [
-  { header: 'Task Id', key: 'id' },
-  { header: 'Creation Time', key: 'create_time' },
-  { header: 'Material', key: 'materials' },
-  { header: 'Inbound ID', key: 'operation_id' },
-  { header: 'Worker', key: 'people_name' },
-  { header: 'Resource', key: 'resources' },
-  { header: 'Assigned To', key: 'assigned_to' },
-];
-
 export default function Page() {
   const router = useRouter();
   const [refresh, setRefresh] = useState({});
@@ -71,11 +61,7 @@ export default function Page() {
       </div>
 
       <div className="mt-10">
-        <PutawayTable
-          headers={headers}
-          refresh={refresh}
-          setRefresh={setRefresh}
-        ></PutawayTable>
+        <PutawayTable refresh={refresh} setRefresh={setRefresh}></PutawayTable>
       </div>
     </div>
   );

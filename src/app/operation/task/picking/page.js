@@ -6,17 +6,6 @@ import '@carbon/charts/styles.css';
 import { useRouter } from 'next/navigation';
 import PickingTable from '@/components/Table/PickingTable';
 
-const headers = [
-  { header: 'Task Id', key: 'task_id' },
-  { header: 'Creation Time', key: 'create_time' },
-  { header: 'Material', key: 'material' },
-  { header: 'Quantity', key: 'quantity' },
-  { header: 'Outbound ID', key: 'outbound_id' },
-  { header: 'Resource', key: 'resource' },
-  { header: 'Assigned To', key: 'assigned_to' },
-  { header: 'Automation', key: 'automation' },
-];
-
 export default function Page() {
   const router = useRouter();
   const [refresh, setRefresh] = useState({});
@@ -72,11 +61,7 @@ export default function Page() {
       </div>
 
       <div className="mt-10">
-        <PickingTable
-          headers={headers}
-          refresh={refresh}
-          setRefresh={setRefresh}
-        ></PickingTable>
+        <PickingTable refresh={refresh} setRefresh={setRefresh}></PickingTable>
       </div>
     </div>
   );

@@ -22,7 +22,17 @@ import { Icon, Email } from '@carbon/icons-react';
 import AssignModal from '../Task/AssignModal';
 import TableSkeleton from '../Skeleton/TableSkeleton';
 
-function PutawayTable({ headers, refresh, setRefresh }) {
+const headers = [
+  { header: 'Task Id', key: 'id' },
+  { header: 'Creation Time', key: 'create_time' },
+  { header: 'Material', key: 'materials' },
+  { header: 'Inbound ID', key: 'operation_id' },
+  { header: 'Worker', key: 'people_name' },
+  { header: 'Resource', key: 'resources' },
+  { header: 'Assigned To', key: 'assigned_to' },
+];
+
+function PutawayTable({ refresh, setRefresh }) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [isModalOpen, setModalOpen] = React.useState(false);
@@ -93,11 +103,16 @@ function PutawayTable({ headers, refresh, setRefresh }) {
                 }
                 if (header.key === 'materials') {
                   return (
-                    <StructuredListCell key={header.key}>
-                      {row[header.key] &&
-                        Object.keys(row[header.key]).join(',')}
+                    <StructuredListCell
+                      key={header.key}
+                      className="flex justify-between"
+                    >
+                      <div className="w-[150px] whitespace-nowrap text-nowrap text-ellipsis">
+                        {row[header.key] &&
+                          Object.keys(row[header.key]).join(',')}
+                      </div>
                       <Link
-                        className="ml-2"
+                        className="ml-2 pr-6"
                         onClick={() => {
                           setSelectedMaterials(row[header.key]);
                           setModalOpen(true);
@@ -147,9 +162,12 @@ function PutawayTable({ headers, refresh, setRefresh }) {
                 }
                 if (header.key === 'resources') {
                   return (
-                    <StructuredListCell key={header.key}>
+                    <StructuredListCell
+                      key={header.key}
+                      className="whitespace-nowrap text-nowrap text-ellipsis"
+                    >
                       {row[header.key] &&
-                        Object.keys(row[header.key]).join(',')}
+                        Object.values(row[header.key]).join(',')}
                     </StructuredListCell>
                   );
                 }

@@ -21,7 +21,36 @@ import { Icon, Email } from '@carbon/icons-react';
 import AssignModal from '../Task/AssignModal';
 import TableSkeleton from '../Skeleton/TableSkeleton';
 
-function PickingTable({ headers, refresh, setRefresh }) {
+const headers = [
+  {
+    header: 'Task ID',
+    key: 'id',
+  },
+  {
+    header: 'Creation Time',
+    key: 'create_time',
+  },
+  {
+    header: 'Material',
+    key: 'materials',
+  },
+  {
+    header: 'Outbound ID',
+    key: 'operation_id',
+  },
+  {
+    header: 'Worker',
+    key: 'people_name',
+  },
+  {
+    header: 'Resource',
+    key: 'resources',
+  },
+  { header: 'Assigned To', key: 'assigned_to' },
+  { header: 'Automation', key: 'automation' },
+];
+
+function PickingTable({ refresh, setRefresh }) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(true);
@@ -30,7 +59,7 @@ function PickingTable({ headers, refresh, setRefresh }) {
   const [selectedMaterials, setSelectedMaterials] = useState('');
 
   const [rows, setRows] = useState([]);
-  console.log(rows);
+
   useEffect(() => {
     getTask({ pageNum: page, pageSize }, { type: 'pickup' }).then((res) => {
       setRows(res?.list);
@@ -60,9 +89,9 @@ function PickingTable({ headers, refresh, setRefresh }) {
               {headers.map((header, index) => (
                 <StructuredListCell head key={header.key} onClick={() => {}}>
                   {header.header}
-                  {sortKey === header.key && (
+                  {/* {sortKey === header.key && (
                     <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
-                  )}
+                  )} */}
                 </StructuredListCell>
               ))}
             </StructuredListRow>
@@ -89,11 +118,16 @@ function PickingTable({ headers, refresh, setRefresh }) {
                 }
                 if (header.key === 'materials') {
                   return (
-                    <StructuredListCell key={header.key}>
-                      {row[header.key] &&
-                        Object.keys(row[header.key]).join(',')}
+                    <StructuredListCell
+                      key={header.key}
+                      className="flex justify-between"
+                    >
+                      <div className="w-[150px] whitespace-nowrap text-nowrap text-ellipsis">
+                        {row[header.key] &&
+                          Object.keys(row[header.key]).join(',')}
+                      </div>
                       <Link
-                        className="ml-2"
+                        className="ml-2 pr-6"
                         onClick={() => {
                           setModalOpen(true);
                           setSelectedMaterials(row[header.key]);
@@ -120,8 +154,10 @@ function PickingTable({ headers, refresh, setRefresh }) {
                 if (header.key === 'resources') {
                   return (
                     <StructuredListCell key={header.key}>
-                      {row[header.key] &&
-                        Object.keys(row[header.key]).join(',')}
+                      <div className="w-[100%] whitespace-nowrap text-nowrap text-ellipsis">
+                        {row[header.key] &&
+                          Object.values(row[header.key]).join(',')}
+                      </div>
                     </StructuredListCell>
                   );
                 }
