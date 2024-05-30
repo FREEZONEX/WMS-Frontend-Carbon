@@ -239,16 +239,7 @@ export async function addStocktakingRecord(body) {
   });
 }
 
-export async function fetchStocktaking(params) {
-  return httpToBackend
-    .post('/wms/stocktaking/get', {}, { params })
-    .then((res) => {
-      console.log(res);
-      return res.data.data;
-    });
-}
-
-export async function fetchStocktakingWithFilter(body, params) {
+export async function fetchStocktaking(body, params) {
   return httpToBackend
     .post('/wms/stocktaking/get', body, { params })
     .then((res) => {

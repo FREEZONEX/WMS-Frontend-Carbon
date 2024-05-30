@@ -36,6 +36,7 @@ const putawayHeaderData = [
   {
     header: 'Creation Time',
     key: 'create_time',
+    width: '120px',
   },
   {
     header: 'Material',
@@ -89,50 +90,95 @@ export default function Task() {
   });
 
   const [statistics, setStatistics] = useState({});
-  const [pageIndexOfOccupy, setPageIndexOfOccupy] = useState(1);
-  const [pageIndexOfIdle, setPageIndexOfIdle] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
+  const [pageIndexOfOccupy, setPageIndexOfOccupy] = useState(0);
+  const [pageIndexOfIdle, setPageIndexOfIdle] = useState(0);
+  const pageSize = 4;
 
-  const [occupy, setOccupy] = useState([]);
-  const [idle, setIdle] = useState([]);
+  const [occupys, setOccupys] = useState([]);
+  const [idles, setIdles] = useState([]);
+  const [totalPage, setTotalPage] = useState({ occupy: 0, idle: 0 });
 
   useEffect(() => {
     initData();
   }, []);
 
+  useEffect(() => {
+    const filter = statistics.idle?.slice(
+      pageIndexOfIdle * pageSize,
+      pageSize + pageSize * pageIndexOfIdle
+    );
+    setIdles(filter);
+  }, [statistics, pageIndexOfIdle]);
+
   const initData = () => {
     getTask({ pageNum: 1, pageSize: 6 }, { type: 'putaway' }).then((res) => {
-      setPutawayDatas(res.list);
+      if (res) {
+        setPutawayDatas(res.list);
+      }
     });
     getTask({ pageNum: 1, pageSize: 6 }, { type: 'pickup' }).then((res) => {
-      setPickupDatas(res.list);
+      if (res) {
+        setPickupDatas(res.list);
+      }
     });
 
     getTaskPendingCount().then((res) => {
-      setTaskCount((prevDatas) => ({
-        ...prevDatas,
-        putawayPending: res.putaway,
-        pickupPending: res.pickup,
-      }));
+      if (res) {
+        setTaskCount((prevDatas) => ({
+          ...prevDatas,
+          putawayPending: res.putaway,
+          pickupPending: res.pickup,
+        }));
+      }
     });
     getTaskDoneCount().then((res) => {
-      console.log(res);
-      setTaskCount((prevDatas) => ({
-        ...prevDatas,
-        putawayDone: res.putaway,
-        pickupDone: res.pickup,
-      }));
+      if (res) {
+        setTaskCount((prevDatas) => ({
+          ...prevDatas,
+          putawayDone: res.putaway,
+          pickupDone: res.pickup,
+        }));
+      }
     });
     getTask({ pageNum: 1, pageSize: 6 }, { type: 'pickup' }).then((res) => {
-      setPickupDatas(res.list);
+      if (res) {
+        setPickupDatas(res.list);
+      }
     });
     getUtilization().then((res) => {
-      setStatistics(res);
+      if (res) {
+        setStatistics(res);
+        setOccupys(res.occupy?.slice(0, pageSize));
+        setIdles(res.idle?.slice(0, pageSize));
+        setTotalPage({
+          occupy: Math.ceil(res?.occupy.length / pageSize) - 1,
+          idle: Math.ceil(res?.idle.length / pageSize) - 1,
+        });
+      }
     });
   };
 
-  const handlePrevPageOfIdle = () => {};
-  const handleAfterPageOfIdle = () => {};
+  const handlePrevPageOfIdle = () => {
+    if (pageIndexOfIdle > 0) {
+      setPageIndexOfIdle(pageIndexOfIdle - 1);
+    }
+  };
+  const handleAfterPageOfIdle = () => {
+    if (pageIndexOfIdle < totalPage.idle) {
+      setPageIndexOfIdle(pageIndexOfIdle + 1);
+    }
+    console.log(pageIndexOfIdle);
+  };
+  const handlePrevPageOfOccupy = () => {
+    if (pageIndexOfOccupy > 0) {
+      setPageIndexOfIdle(pageIndexOfOccupy - 1);
+    }
+  };
+  const handleAfterPageOfOccupy = () => {
+    if (pageIndexOfOccupy < totalPage.occupy) {
+      setPageIndexOfIdle(pageIndexOfOccupy + 1);
+    }
+  };
   return (
     <div>
       <Breadcrumb>
@@ -186,19 +232,19 @@ export default function Task() {
                   />
                 </div>
                 <div style={lineStyle}></div>
-                <div className="absolute left-[127px] top-[70px] text-[#4A85F6]">
-                  <p className="text-[70px] font-[300]">
+                <div className="absolute left-[127px] top-[60px] text-[#4A85F6]">
+                  <p className="text-[60px] font-[300]">
                     {taskCount.putawayPending}
                   </p>
-                  <p className="relative top-[-20px]  font-[600]">
+                  <p className="relative top-[-10px]  font-[600]">
                     task pending
                   </p>
                 </div>
-                <div className="absolute bottom-[70px] left-6">
-                  <p className="text-[70px] font-[300]">
+                <div className="absolute bottom-[60px] left-6">
+                  <p className="text-[60px] font-[300]">
                     {taskCount.putawayDone}
                   </p>
-                  <p className="relative top-[-20px]  font-[600]">
+                  <p className="relative top-[-10px]  font-[600]">
                     has been done
                   </p>
                 </div>
@@ -251,19 +297,19 @@ export default function Task() {
                   />
                 </div>
                 <div style={lineStyle}></div>
-                <div className="absolute left-[127px] top-[70px] text-[#4A85F6]">
-                  <p className="text-[70px] font-[300]">
-                    {taskCount.pickupPending}{' '}
+                <div className="absolute left-[127px] top-[60px] text-[#4A85F6]">
+                  <p className="text-[60px] font-[300]">
+                    {taskCount.pickupPending}
                   </p>
                   <p className="relative top-[-20px]  font-[600]">
                     task pending
                   </p>
                 </div>
-                <div className="absolute bottom-[70px] left-6">
-                  <p className="text-[70px] font-[300]">
+                <div className="absolute bottom-[60px] left-6">
+                  <p className="text-[60px] font-[300]">
                     {taskCount.pickupDone}
                   </p>
-                  <p className="relative top-[-20px]  font-[600]">
+                  <p className="relative top-[-10px]  font-[600]">
                     has been done
                   </p>
                 </div>
@@ -301,7 +347,7 @@ export default function Task() {
             <div className="h-[160px]  p-4  pl-6  pr-6 shadow  bg-white">
               <Heading className="font-bold ">Average Time To Process</Heading>
               <div className="mt-6 flex items-center text-[30px]">
-                <div>{statistics.averageTime}</div>
+                <div>{statistics?.averageTime}</div>
                 <Image
                   className="ml-6"
                   src={Time}
@@ -320,12 +366,25 @@ export default function Task() {
                   <div className="flex flex-row justify-between">
                     <div> Time Of Resource In Use</div>
                     <div className="flex">
-                      <CaretLeft /> <CaretRight />
+                      <CaretLeft
+                        onClick={handlePrevPageOfOccupy}
+                        className={
+                          pageIndexOfOccupy == 0 ? 'text-gray-400' : ''
+                        }
+                      />
+                      <CaretRight
+                        onClick={handleAfterPageOfOccupy}
+                        className={
+                          pageIndexOfOccupy >= totalPage.occupy
+                            ? 'text-gray-400'
+                            : ''
+                        }
+                      />
                     </div>
                   </div>
                 </Heading>
                 <div className="h-[230px]">
-                  {statistics?.occupy?.slice(0, 4).map((item, index) => {
+                  {occupys?.slice(0, 4).map((item, index) => {
                     return (
                       <ProgressBar
                         className="mt-4"
@@ -349,13 +408,21 @@ export default function Task() {
                 <div className="flex flex-row justify-between">
                   <div>Time Of Resource Idle</div>
                   <div className="flex">
-                    <CaretLeft onClick={handlePrevPageOfIdle} />
-                    <CaretRight onClick={handleAfterPageOfIdle} />
+                    <CaretLeft
+                      onClick={handlePrevPageOfIdle}
+                      className={pageIndexOfIdle == 0 ? 'text-gray-400' : ''}
+                    />
+                    <CaretRight
+                      onClick={handleAfterPageOfIdle}
+                      className={
+                        pageIndexOfIdle >= totalPage.idle ? 'text-gray-400' : ''
+                      }
+                    />
                   </div>
                 </div>
               </Heading>
               <div className="bg-white mt-4 text-[14px]">
-                {statistics?.idle?.slice(0, 4).map((item, index) => {
+                {idles?.map((item, index) => {
                   return (
                     <div
                       key={index}
@@ -366,22 +433,6 @@ export default function Task() {
                     </div>
                   );
                 })}
-                {/* <div className="flex flex-row justify-between">
-                  <div className="italic font-[400]">Forklift 05</div>
-                  <div>1h2min9s</div>
-                </div>
-                <div className="flex flex-row justify-between mt-2 ">
-                  <div className="italic font-[400]">Forklift 05</div>
-                  <div>1h2min9s</div>
-                </div>
-                <div className="flex flex-row justify-between mt-2 ">
-                  <div className="italic font-[400]">Trays 05</div>
-                  <div>1h2min9s</div>
-                </div>
-                <div className="flex flex-row justify-between mt-2 ">
-                  <div className="italic font-[400]">Forklift 05</div>
-                  <div>1h2min9s</div>
-                </div> */}
               </div>
             </div>
           </div>

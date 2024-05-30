@@ -35,8 +35,8 @@ function PutawayTable({ headers, refresh, setRefresh }) {
 
   useEffect(() => {
     getTask({ pageNum: page, pageSize }, { type: 'putaway' }).then((res) => {
-      setRows(res.list);
-      setTotal(res.total);
+      setRows(res?.list);
+      setTotal(res?.total);
       setLoading(false);
     });
   }, [page, pageSize, refresh]);
@@ -73,7 +73,7 @@ function PutawayTable({ headers, refresh, setRefresh }) {
           </StructuredListHead>
         )}
         <StructuredListBody>
-          {rows.map((row, index) => (
+          {rows?.map((row, index) => (
             <StructuredListRow key={index}>
               {headers.map((header) => {
                 if (header.key === 'inbound_status') {

@@ -8,13 +8,14 @@ import { useRouter } from 'next/navigation';
 import { tagColors } from '@/utils/constants';
 import { addRule, fetchWarehouses, getResource } from '@/actions/actions';
 import { taskTypes } from '@/utils/constants';
+import ShowMessageModal from '../Modal/ShowMessageModal';
 
 function RuleCreateCard() {
   const router = useRouter();
 
   const [ruleName, setRuleName] = useState('');
   const [wareHouses, setWarehouses] = useState([]);
-  const [selectWarehouse, setSelectWarehouse] = useState('1');
+  const [selectWarehouse, setSelectWarehouse] = useState({});
   const [locationExpression, setLocationExpression] = useState();
   const [selectedResources, setSelectedResources] = useState([]);
   const [resources, setRources] = useState([]);
@@ -23,10 +24,14 @@ function RuleCreateCard() {
 
   useEffect(() => {
     fetchWarehouses({ pageNum: 1, pageSize: 99999999 }).then((res) => {
-      setWarehouses(res.list);
+      if (res) {
+        setWarehouses(res.list);
+      }
     });
     getResource({ pageNum: 1, pageSize: 99999999 }).then((res) => {
-      setRources(res.list);
+      if (res) {
+        setRources(res.list);
+      }
     });
   }, []);
 
@@ -47,7 +52,9 @@ function RuleCreateCard() {
   };
 
   const onSelectWarehouse = (e) => {
-    setSelectWarehouse(e.selectedItem);
+    if (e) {
+      setSelectWarehouse(e.selectedItem);
+    }
   };
   const onSave = async () => {
     addRule({
@@ -125,8 +132,8 @@ function RuleCreateCard() {
           <div style={{ width: '60%', marginLeft: '10px' }}>
             <MultiSelect
               label={
-                selectedResources && selectedResources.length > 0
-                  ? selectedResources.map((t) => t.name).join(',')
+                selectedResources && selectedResources?.length > 0
+                  ? selectedResources?.map((t) => t.name).join(',')
                   : 'Resource Names'
               }
               titleText="Resource"

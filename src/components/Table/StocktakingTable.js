@@ -11,10 +11,7 @@ import {
   Link,
 } from '@carbon/react';
 import './_table.scss';
-import {
-  fetchStocktaking,
-  fetchStocktakingWithFilter,
-} from '@/actions/actions';
+import { fetchStocktaking } from '@/actions/actions';
 import StocktakingResultModal from '../Modal/StocktakingResultModal';
 import moment from 'moment';
 import { DateTimeFormat } from '@/utils/constants';
@@ -33,11 +30,12 @@ function StocktakingTable({
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setModalOpen] = React.useState(false);
   const [rows, setRows] = useState([]);
-  const [selectedId, setSelectedId] = useState('');
+  const [details, setDetails] = useState([]);
 
   useEffect(() => {
+    let filteredFormValue = {};
     if (isSearchClicked) {
-      const filteredFormValue = Object.entries(filters).reduce(
+      filteredFormValue = Object.entries(filters).reduce(
         (acc, [key, value]) => {
           if (value !== '') {
             acc[key] = value;
@@ -46,23 +44,16 @@ function StocktakingTable({
         },
         {}
       );
-      if (Object.entries(filteredFormValue).length > 0) {
-        console.log(filteredFormValue);
-        fetchStocktakingWithFilter(filteredFormValue, {
-          pageNum: page,
-          pageSize,
-        }).then((res) => {
+    }
+    fetchStocktaking(filteredFormValue, { pageNum: page, pageSize }).then(
+      (res) => {
+        if (res) {
           setRows(res.list);
           setTotal(res.total);
-        });
+          setLoading(false);
+        }
       }
-    } else {
-      fetchStocktaking({ pageNum: page, pageSize }).then((res) => {
-        setRows(res.list);
-        setTotal(res.total);
-        setLoading(false);
-      });
-    }
+    );
   }, [page, pageSize, refresh, filters, isSearchClicked]);
   const [sortKey, setSortKey] = useState('');
   const [sortDirection, setSortDirection] = useState('desc');
@@ -78,19 +69,19 @@ function StocktakingTable({
                 <StructuredListCell
                   head
                   key={header.key}
-                  onClick={() => handleSort(header.key)}
+                  // onClick={() => handleSort(header.key)}
                 >
                   {header.header}
-                  {sortKey === header.key && (
+                  {/* {sortKey === header.key && (
                     <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
-                  )}
+                  )} */}
                 </StructuredListCell>
               ))}
             </StructuredListRow>
           </StructuredListHead>
         )}
         <StructuredListBody>
-          {rows.map((row, index) => (
+          {rows?.map((row, index) => (
             <StructuredListRow key={index}>
               {headers.map((header) => {
                 if (header.key === 'status') {
@@ -98,7 +89,7 @@ function StocktakingTable({
                     <StructuredListCell key={header.key}>
                       <Tag
                         type={
-                          row[header.key].toLowerCase() === 'pending'
+                          row[header.key]?.toLowerCase() === 'pending'
                             ? 'red'
                             : 'blue'
                         }
@@ -109,27 +100,54 @@ function StocktakingTable({
                   );
                 }
 
-                if (header.key === 'result') {
+                if (header.key === 'details') {
                   return (
-                    <StructuredListCell key={header.key}>
-                      <Link
-                        onClick={() => {
-                          setModalOpen(true);
-                          setSelectedId(row['id']);
-                        }}
-                      >
-                        View Detail
-                      </Link>
-                    </StructuredListCell>
+                    <Link
+                      key={header.key}
+                      className="ml-2"
+                      onClick={() => {
+                        setModalOpen(true);
+                        setDetails(row[header.key]);
+                      }}
+                    >
+                      View Detail
+                    </Link>
                   );
                 }
-                if (header.key === 'update_time') {
+                if (
+                  header.key === 'create_time' ||
+                  header.key == 'delivery_date'
+                ) {
                   return (
                     <StructuredListCell key={header.key}>
                       {row[header.key] &&
                         moment(row[header.key]).format(
                           DateTimeFormat.shortDate
                         )}
+                    </StructuredListCell>
+                  );
+                }
+                if (header.key === 'details') {
+                  return (
+                    <StructuredListCell
+                      key={header.key}
+                      className="flex justify-between"
+                    >
+                      <div className="w-[100px] text-nowrap whitespace-nowrap overflow-hidden text-ellipsis">
+                        {row[header.key] &&
+                          row[header.key].map((m) => {
+                            return m.material_name;
+                          })}
+                      </div>
+                      <Link
+                        className="ml-2 mr-2"
+                        onClick={() => {
+                          setModalOpen(true);
+                          setMaterials(row[header.key]);
+                        }}
+                      >
+                        More
+                      </Link>
                     </StructuredListCell>
                   );
                 }
@@ -158,9 +176,9 @@ function StocktakingTable({
         }}
       />
       <StocktakingResultModal
-        id={selectedId}
         isModalOpen={isModalOpen}
         setModalOpen={setModalOpen}
+        details={details}
       ></StocktakingResultModal>
     </div>
   );

@@ -17,7 +17,7 @@ function OperationDetailModal({ isModalOpen, setModalOpen, materials }) {
       modalHeading="All Material"
       passiveModal
       onRequestClose={() => setModalOpen(false)}
-      size="lg"
+      size="md"
     >
       <Heading className="text-sm font-normal leading-tight tracking-tight mb-3">
         The following meterils entered the designated warehouse in this task.

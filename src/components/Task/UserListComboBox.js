@@ -7,7 +7,9 @@ export default function UserListComboBox({ defaultValue, onChange }) {
 
   useEffect(() => {
     getUsers().then((res) => {
-      setWorkers(res.map((t) => t.personname));
+      if (res) {
+        setWorkers(res.map((t) => t.personname));
+      }
     });
   }, []);
 

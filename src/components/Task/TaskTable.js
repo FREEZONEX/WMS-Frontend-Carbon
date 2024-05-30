@@ -57,7 +57,7 @@ function TaskTable({ headers, rows }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, i) => (
+            {rows?.map((row, i) => (
               <TableRow key={i}>
                 {headers.map((header) => {
                   // if (header.key == 'assigned_to') {
@@ -81,7 +81,10 @@ function TaskTable({ headers, rows }) {
                   // }
                   if (header.key == 'create_time') {
                     return (
-                      <TableCell key={header.key}>
+                      <TableCell
+                        key={header.key}
+                        style={{ width: header.width }}
+                      >
                         {row[header.key] &&
                           moment(row[header.key]).format(
                             DateTimeFormat.shortDate
@@ -91,31 +94,45 @@ function TaskTable({ headers, rows }) {
                   }
                   if (header.key == 'materials') {
                     return (
-                      <TableCell key={header.key}>
-                        {row[header.key] &&
-                          Object.keys(row[header.key]).join(',')}
-                        <Link
-                          className="ml-2"
-                          onClick={() => {
-                            setModalOpen(true);
-                            setSelectedMaterials(row[header.key]);
-                          }}
-                        >
-                          More
-                        </Link>
+                      <TableCell
+                        key={header.key}
+                        style={{ width: header.width }}
+                      >
+                        <div className="flex justify-between">
+                          <div className="w-[100px] text-nowrap whitespace-nowrap overflow-hidden text-ellipsis">
+                            {row[header.key] &&
+                              Object.keys(row[header.key]).join(',')}
+                          </div>
+                          <Link
+                            className="ml-2"
+                            onClick={() => {
+                              setModalOpen(true);
+                              setSelectedMaterials(row[header.key]);
+                            }}
+                          >
+                            More
+                          </Link>
+                        </div>
                       </TableCell>
                     );
                   }
                   if (header.key == 'resources') {
                     return (
-                      <TableCell key={header.key}>
-                        {row[header.key] &&
-                          Object.keys(row[header.key]).join(',')}
+                      <TableCell
+                        key={header.key}
+                        style={{ width: header.width }}
+                      >
+                        <div className="overflow-hidden text-nowrap  whitespace-nowrap text-ellipsis">
+                          {row[header.key] &&
+                            Object.values(row[header.key]).join(',')}
+                        </div>
                       </TableCell>
                     );
                   }
                   return (
-                    <TableCell key={header.key}>{row[header.key]}</TableCell>
+                    <TableCell key={header.key} style={{ width: header.width }}>
+                      {row[header.key]}
+                    </TableCell>
                   );
                 })}
               </TableRow>

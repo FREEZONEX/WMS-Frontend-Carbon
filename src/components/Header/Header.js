@@ -29,6 +29,7 @@ import {
   WatsonHealth3DCursor,
   DocumentTasks,
   GroupResource,
+  IbmEngineeringSystemsDesignRhapsodySn2,
 } from '@carbon/icons-react';
 import { usePathname } from 'next/navigation';
 import { ThemeContext } from '@/utils/ThemeContext';
@@ -138,6 +139,17 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
               isActive={isCurrentPath('/operation/task')}
             >
               Task
+            </SideNavLink>
+            <SideNavLink
+              isSideNavExpanded={isExpanded}
+              renderIcon={IbmEngineeringSystemsDesignRhapsodySn2}
+              onClick={() => {
+                router.push(`${process.env.PATH_PREFIX}/operation/task/rules`);
+              }}
+              className="cursor-pointer"
+              isActive={isCurrentPath('/operation/task/resource')}
+            >
+              Rule
             </SideNavLink>
             <SideNavLink
               isSideNavExpanded={isExpanded}

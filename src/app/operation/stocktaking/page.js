@@ -22,7 +22,8 @@ const headers = [
   { key: 'details', header: 'Result' },
   { key: 'status', header: 'Status' },
   { key: 'supplier', header: 'Supplier' },
-  { key: 'update_time', header: 'Create Time' },
+  { key: 'create_time', header: 'Create Time' },
+  { key: 'delivery_date', header: 'Deliver Time' },
   { key: 'note', header: 'Note' },
 ];
 
@@ -44,54 +45,6 @@ function Page() {
       [id]: value,
     }));
   };
-  // useEffect(() => {
-  //   if (typeof window !== undefined) {
-  //     fetchWHNameMap({ pageNum: 1, pageSize: 999999 })
-  //       .then((res) => {
-  //         const map = res.list.reduce((acc, curr) => {
-  //           acc[curr.id] = curr.name;
-  //           return acc;
-  //         }, {});
-
-  //         localStorage.setItem('whNameMap', JSON.stringify(map));
-  //       })
-  //       .catch((error) => {
-  //         console.error('Failed to fetch WH name map:', error);
-  //       });
-  //     fetchSLNameMap({ pageNum: 1, pageSize: 999999 })
-  //       .then((res) => {
-  //         const map = res.list.reduce((acc, curr) => {
-  //           acc[curr.id] = curr.name;
-  //           return acc;
-  //         }, {});
-
-  //         localStorage.setItem('slNameMap', JSON.stringify(map));
-  //       })
-  //       .catch((error) => {
-  //         console.error('Failed to fetch SL name map:', error);
-  //       });
-  //     fetchWHSLNameMap({ pageNum: 1, pageSize: 999999 })
-  //       .then((res) => {
-  //         const warehouseListString = JSON.stringify(res.list);
-  //         localStorage.setItem('whslNameMap', warehouseListString);
-  //         const locationMap = new Map();
-
-  //         res.list.forEach((warehouse) => {
-  //           warehouse.warehouseNamemap.forEach((location) => {
-  //             locationMap.set(location.id, warehouse.id);
-  //           });
-  //         });
-
-  //         const locationMapString = JSON.stringify(
-  //           Array.from(locationMap.entries())
-  //         );
-  //         localStorage.setItem('location', locationMapString);
-  //       })
-  //       .catch((error) => {
-  //         console.error('Error fetching warehouse data:', error);
-  //       });
-  //   }
-  // }, []);
 
   return (
     <div>
@@ -143,14 +96,6 @@ function Page() {
         </Button>
       </div>
       <div className="flex mt-20 space-x-4 items-end">
-        {/* <TextInput
-          className="flex-auto "
-          labelText="Id"
-          id="id"
-          placeholder="Id"
-          value={formValue.id}
-          onChange={onFormValueChange}
-        /> */}
         <TextInput
           className="flex-auto "
           labelText="Ref Id"
@@ -169,8 +114,8 @@ function Page() {
           required
         >
           <SelectItem disabled hidden value="" text="Choose an option" />
-          <SelectItem value="Dynamic" text="Dynamic" />
-          <SelectItem value="Static" text="Static" />
+          <SelectItem value="Dynamic Stocktaking" text="Dynamic" />
+          <SelectItem value="Static Stocktaking" text="Static" />
         </Select>
         <Select
           className="flex-auto"
@@ -179,7 +124,6 @@ function Page() {
           labelText="Status"
           value={formValue.status}
           onChange={onFormValueChange}
-          disabled
           required
         >
           <SelectItem disabled hidden value="" text="Choose an option" />
