@@ -110,6 +110,14 @@ export default function Task() {
     setIdles(filter);
   }, [statistics, pageIndexOfIdle]);
 
+  useEffect(() => {
+    const filter = statistics.occupy?.slice(
+      pageIndexOfOccupy * pageSize,
+      pageSize + pageSize * pageIndexOfOccupy
+    );
+    setOccupys(filter);
+  }, [statistics, pageIndexOfOccupy]);
+
   const initData = () => {
     getTask({ pageNum: 1, pageSize: 6 }, { type: 'putaway' }).then((res) => {
       if (res) {
@@ -167,16 +175,15 @@ export default function Task() {
     if (pageIndexOfIdle < totalPage.idle) {
       setPageIndexOfIdle(pageIndexOfIdle + 1);
     }
-    console.log(pageIndexOfIdle);
   };
   const handlePrevPageOfOccupy = () => {
     if (pageIndexOfOccupy > 0) {
-      setPageIndexOfIdle(pageIndexOfOccupy - 1);
+      setPageIndexOfOccupy(pageIndexOfOccupy - 1);
     }
   };
   const handleAfterPageOfOccupy = () => {
     if (pageIndexOfOccupy < totalPage.occupy) {
-      setPageIndexOfIdle(pageIndexOfOccupy + 1);
+      setPageIndexOfOccupy(pageIndexOfOccupy + 1);
     }
   };
   return (
@@ -369,15 +376,17 @@ export default function Task() {
                       <CaretLeft
                         onClick={handlePrevPageOfOccupy}
                         className={
-                          pageIndexOfOccupy == 0 ? 'text-gray-400' : ''
+                          pageIndexOfOccupy == 0
+                            ? 'text-gray-400 cursor-not-allowed'
+                            : 'cursor-pointer'
                         }
                       />
                       <CaretRight
                         onClick={handleAfterPageOfOccupy}
                         className={
                           pageIndexOfOccupy >= totalPage.occupy
-                            ? 'text-gray-400'
-                            : ''
+                            ? 'text-gray-400 cursor-not-allowed'
+                            : 'cursor-pointer'
                         }
                       />
                     </div>
@@ -410,12 +419,18 @@ export default function Task() {
                   <div className="flex">
                     <CaretLeft
                       onClick={handlePrevPageOfIdle}
-                      className={pageIndexOfIdle == 0 ? 'text-gray-400' : ''}
+                      className={
+                        pageIndexOfIdle == 0
+                          ? 'text-gray-400 cursor-not-allowed'
+                          : 'cursor-pointer'
+                      }
                     />
                     <CaretRight
                       onClick={handleAfterPageOfIdle}
                       className={
-                        pageIndexOfIdle >= totalPage.idle ? 'text-gray-400' : ''
+                        pageIndexOfIdle >= totalPage.idle
+                          ? 'text-gray-400 cursor-not-allowed'
+                          : 'cursor-pointer'
                       }
                     />
                   </div>
