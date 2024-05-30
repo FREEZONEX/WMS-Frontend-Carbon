@@ -44,6 +44,28 @@ const MyLineChart1 = () => {
   const [selectedWarehouse, setSelectedWarehouse] = useState('Aluminum Foil');
   const [warehouseNames, setWarehouseNames] = useState([]);
 
+  const fetchApiData = () => {
+    fetch('http://supcononenorth.fortiddns.com:30051/get_predictions')
+      .then(response => response.json())
+      .then(apiData => {
+        const apiDetails = apiData.test[selectedWarehouse];
+        const additionalData = apiDetails ? [{
+          date: '2023-11-29',
+          storage: apiDetails.currentdata[0],
+          warehouse_name: selectedWarehouse
+        }, {
+          date: '2023-11-30',
+          storage: apiDetails.prediction[0],
+          warehouse_name: selectedWarehouse
+        }] : [];
+
+        setData(prevData => prevData.filter(d => new Date(d.date) <= new Date('2023-11-28')).concat(additionalData)); // Update only prediction data
+      })
+      .catch(error => {
+        console.error("Failed to fetch API data:", error);
+      });
+  };
+
   useEffect(() => {
     // Load and parse the CSV data
     fetch('/prediction.csv')
@@ -58,45 +80,28 @@ const MyLineChart1 = () => {
         setWarehouseNames(warehouseOptions);
 
         const filteredCsvData = allData.filter(d => d.warehouse_name === selectedWarehouse);
-
         let enhancedCsvData = filteredCsvData.map(d => ({
           ...d,
-          storage: new Date(d.date) <= new Date('7/28/2024') ? d.storage : null
+          storage: new Date(d.date) <= new Date('2023-11-28') ? d.storage : null
         }));
-        enhancedCsvData.push({ date: '7/29/2024', storage: null, warehouse_name: selectedWarehouse });
-        enhancedCsvData.push({ date: '7/30/2024', storage: null, warehouse_name: selectedWarehouse });
-        setCsvOnlyData(enhancedCsvData); // Store enhanced CSV-only data for the selected warehouse
 
-        // Fetch additional data from the API, and assume it includes similar warehouse data filtering
-        fetch('http://localhost:5000/get_predictions')
-          .then(response => response.json())
-          .then(apiData => {
-            const apiDetails = apiData.test[selectedWarehouse];
-            const additionalData = apiDetails ? [{
-              date: '7/29/2024',
-              storage: apiDetails.currentdata[0], // Assuming currentdata array matches dates
-              warehouse_name: selectedWarehouse
-            }, {
-              date: '7/30/2024',
-              storage: apiDetails.prediction[0], // Assuming prediction array matches dates
-              warehouse_name: selectedWarehouse
-            }] : [];
+        setCsvOnlyData(enhancedCsvData);
+        setData(filteredCsvData);
 
-            setData([...filteredCsvData, ...additionalData]); // Combine CSV data and API data for the primary line
-          })
-          .catch(error => {
-            console.error("Failed to fetch API data:", error);
-            setData(filteredCsvData); // Use only CSV data if API call fails
-          });
+        fetchApiData(); // Initial fetch for API data
       })
       .catch(error => {
         console.error("Error loading or parsing CSV:", error);
       });
+
+    const interval = setInterval(fetchApiData, 5000); // Fetch API data every 5 seconds
+    return () => clearInterval(interval); // Clean up the interval on component unmount
   }, [selectedWarehouse]);
 
   const handleWarehouseChange = (event) => {
     setSelectedWarehouse(event.target.value);
   };
+
 
   return (
     <div className="w-full">
@@ -104,7 +109,7 @@ const MyLineChart1 = () => {
       <div className="flex items-center justify-center mb-2">
         <Heading className="mt-3 text-xl font-normal mb-2">Real-time Predictions</Heading>
       </div>  
-      
+
       <div className="flex items-center justify-center mb-2">
         <select onChange={handleWarehouseChange} value={selectedWarehouse}>
           {warehouseNames.map(name => (
@@ -125,7 +130,7 @@ const MyLineChart1 = () => {
             <Tooltip />
             <Legend />
             <Line xAxisId="allData" data={data} type="monotone" dataKey="storage" stroke="#82ca9d" dot={null} activeDot={{ r: 8 }} strokeDasharray="5 5" name="Prediction"/>
-            <Line xAxisId="csvData" data={csvOnlyData} type="monotone" dataKey="storage" stroke="#8884d8" dot={null} activeDot={{ r: 8 }} />
+            <Line xAxisId="csvData" data={csvOnlyData} type="monotone" dataKey="storage" stroke="#8884d8" dot={null} activeDot={{ r: 8 }} name="Storage"/>
           </LineChart>
         </ResponsiveContainer>
       </div>
