@@ -50,16 +50,16 @@ const MyLineChart1 = () => {
       .then(apiData => {
         const apiDetails = apiData.test[selectedWarehouse];
         const additionalData = apiDetails ? [{
-          date: '2023-11-29',
+          date: '2024-06-04',
           storage: apiDetails.currentdata[0],
           warehouse_name: selectedWarehouse
         }, {
-          date: '2023-11-30',
+          date: '2024-06-05',
           storage: apiDetails.prediction[0],
           warehouse_name: selectedWarehouse
         }] : [];
 
-        setData(prevData => prevData.filter(d => new Date(d.date) <= new Date('2023-11-28')).concat(additionalData)); // Update only prediction data
+        setData(prevData => prevData.filter(d => new Date(d.date) <= new Date('2024-06-03')).concat(additionalData)); // Update only prediction data
       })
       .catch(error => {
         console.error("Failed to fetch API data:", error);
@@ -68,7 +68,7 @@ const MyLineChart1 = () => {
 
   useEffect(() => {
     // Load and parse the CSV data
-    fetch('/prediction.csv')
+    fetch('/realdatepre.csv')
       .then(response => response.text())
       .then(csvData => {
         const allData = Papa.parse(csvData, {
@@ -82,7 +82,7 @@ const MyLineChart1 = () => {
         const filteredCsvData = allData.filter(d => d.warehouse_name === selectedWarehouse);
         let enhancedCsvData = filteredCsvData.map(d => ({
           ...d,
-          storage: new Date(d.date) <= new Date('2023-11-28') ? d.storage : null
+          storage: new Date(d.date) <= new Date('2024-06-03') ? d.storage : null
         }));
 
         setCsvOnlyData(enhancedCsvData);
@@ -643,11 +643,11 @@ function Page() {
         </div>
 
         <div className="bg-white p-6 shadow h-128 flex w-full mt-5">
-               <MyLineChart1 csvFile="prediction.csv" />
+               <MyLineChart1 csvFile="realdatepre.csv" />
           </div>
 
         <div className="bg-white p-6 shadow h-128 flex w-full mt-5">
-               <MyLineChart csvFile="train_data1.csv" />
+               <MyLineChart csvFile="realdatetrain.csv" />
           </div>
 
         <div className="flex py-8 w-full h-1/2-screen">
