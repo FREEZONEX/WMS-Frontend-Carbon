@@ -20,7 +20,7 @@ function RuleCard({ rule, setRefresh }) {
   };
   return (
     <>
-      <div className="flex flex-row items-center space-x-3 w-full p-4 shadow rounded-md relative">
+      <div className="flex flex-row items-center space-x-3 w-full p-4 shadow rounded-md relative bg-white">
         <div>
           <Draggable className="w-[26px] h-[26px]" />
         </div>
