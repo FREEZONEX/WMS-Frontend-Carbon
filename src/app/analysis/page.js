@@ -143,7 +143,7 @@ const MyLineChart = ({ csvFile }) => {
   const [data, setData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showLSTM, setShowLSTM] = useState(true);
-  const [showMamba, setShowMamba] = useState(true);
+  const [showGRU, setShowGRU] = useState(true);
 
   useEffect(() => {
       Papa.parse(csvFile, {
@@ -156,7 +156,7 @@ const MyLineChart = ({ csvFile }) => {
                   storage: Number(item.storage),
                   next_day_storage: Number(item.next_day_storage || 0),
                   lstm: Number(item.lstm || 0),
-                  mamba: Number(item.mamba || 0)
+                  GRU: Number(item.mamba || 0)
               }));
               setData(parsedData);
           }
@@ -224,16 +224,16 @@ const MyLineChart = ({ csvFile }) => {
                           key="lstmLine"
                       />
                   )}
-                  {showMamba && (
+                  {showGRU && (
                       <Line 
                           type="monotone" 
-                          dataKey="mamba" 
+                          dataKey="GRU" 
                           stroke="#387908" 
                           strokeWidth={2} 
                           strokeDasharray="5 5" 
                           dot={false} 
                           isAnimationActive={false}
-                          key="mambaLine"
+                          key="GRULine"
                       />
                   )}
               </LineChart>
@@ -249,9 +249,9 @@ const MyLineChart = ({ csvFile }) => {
               <label style={{ marginLeft: '20px' }}>
                   <input
                       type="checkbox"
-                      checked={showMamba}
-                      onChange={(e) => setShowMamba(e.target.checked)}
-                  /> Show Mamba Prediction
+                      checked={showGRU}
+                      onChange={(e) => setShowGRU(e.target.checked)}
+                  /> Show GRU Prediction
               </label>
           </div>
       </div>
