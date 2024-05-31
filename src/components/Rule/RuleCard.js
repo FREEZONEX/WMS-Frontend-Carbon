@@ -56,7 +56,7 @@ function RuleCard({ rule, setRefresh }) {
               {rule.people_name}
             </div>
             <div>
-              <span className="mr-2 ml-4 font-semibold">resources:</span>
+              <span className="mr-2 ml-4 font-semibold">Resources:</span>
               {rule.resource_name_list}
             </div>
           </div>

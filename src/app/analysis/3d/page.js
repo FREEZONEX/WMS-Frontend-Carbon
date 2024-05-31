@@ -32,15 +32,15 @@ function Page() {
             router.push(`${process.env.PATH_PREFIX}/analysis/3d`);
           }}
         >
-          3D-Modeling
+          Simulation
         </BreadcrumbItem>
       </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
-          <Heading className="mt-2 text-[28px] font-normal">
-            3D-Modeling
+          <Heading className="mt-2 text-[28px] font-normal">Simulation</Heading>
+          <Heading className="mt-1 text-sm">
+            Simulation of the warehouse gose here.
           </Heading>
-          <Heading className="mt-1 text-sm">3D-Modeling simulation.</Heading>
         </div>
       </div>
       <div className="mt-5 flex items-center justify-center h-auto">
