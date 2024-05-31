@@ -38,12 +38,112 @@ import {
   fetchTodayOutboundDone,
 } from '@/actions/actions';
 
+const MyLineChart1 = () => {
+  const [data, setData] = useState([]);
+  const [csvOnlyData, setCsvOnlyData] = useState([]);
+  const [selectedWarehouse, setSelectedWarehouse] = useState('Aluminum Foil');
+  const [warehouseNames, setWarehouseNames] = useState([]);
+
+  const fetchApiData = () => {
+    fetch('http://supcononenorth.fortiddns.com:30051/get_predictions')
+      .then(response => response.json())
+      .then(apiData => {
+        const apiDetails = apiData.test[selectedWarehouse];
+        const additionalData = apiDetails ? [{
+          date: '2023-11-29',
+          storage: apiDetails.currentdata[0],
+          warehouse_name: selectedWarehouse
+        }, {
+          date: '2023-11-30',
+          storage: apiDetails.prediction[0],
+          warehouse_name: selectedWarehouse
+        }] : [];
+
+        setData(prevData => prevData.filter(d => new Date(d.date) <= new Date('2023-11-28')).concat(additionalData)); // Update only prediction data
+      })
+      .catch(error => {
+        console.error("Failed to fetch API data:", error);
+      });
+  };
+
+  useEffect(() => {
+    // Load and parse the CSV data
+    fetch('/prediction.csv')
+      .then(response => response.text())
+      .then(csvData => {
+        const allData = Papa.parse(csvData, {
+          header: true,
+          skipEmptyLines: true
+        }).data;
+
+        const warehouseOptions = Array.from(new Set(allData.map(item => item.warehouse_name))).sort();
+        setWarehouseNames(warehouseOptions);
+
+        const filteredCsvData = allData.filter(d => d.warehouse_name === selectedWarehouse);
+        let enhancedCsvData = filteredCsvData.map(d => ({
+          ...d,
+          storage: new Date(d.date) <= new Date('2023-11-28') ? d.storage : null
+        }));
+
+        setCsvOnlyData(enhancedCsvData);
+        setData(filteredCsvData);
+
+        fetchApiData(); // Initial fetch for API data
+      })
+      .catch(error => {
+        console.error("Error loading or parsing CSV:", error);
+      });
+
+    const interval = setInterval(fetchApiData, 5000); // Fetch API data every 5 seconds
+    return () => clearInterval(interval); // Clean up the interval on component unmount
+  }, [selectedWarehouse]);
+
+  const handleWarehouseChange = (event) => {
+    setSelectedWarehouse(event.target.value);
+  };
+
+
+  return (
+    <div className="w-full">
+
+      <div className="flex items-center justify-center mb-2">
+        <Heading className="mt-3 text-xl font-normal mb-2">Real-time Predictions</Heading>
+      </div>
+
+      <div className="flex items-center justify-center mb-2">
+        <select onChange={handleWarehouseChange} value={selectedWarehouse}>
+          {warehouseNames.map(name => (
+            <option key={name} value={name}>{name}</option>
+          ))}
+        </select>
+      </div>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart
+            margin={{
+              top: 5, right: 30, left: 20, bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" xAxisId="allData" />
+            <XAxis hide={true} dataKey="date" xAxisId="csvData" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line xAxisId="allData" data={data} type="monotone" dataKey="storage" stroke="#82ca9d" dot={null} activeDot={{ r: 8 }} strokeDasharray="5 5" name="Prediction"/>
+            <Line xAxisId="csvData" data={csvOnlyData} type="monotone" dataKey="storage" stroke="#8884d8" dot={null} activeDot={{ r: 8 }} name="Storage"/>
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+  );
+};
+
 
 const MyLineChart = ({ csvFile }) => {
   const [data, setData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showLSTM, setShowLSTM] = useState(true);
-  const [showMambar, setShowMambar] = useState(true);
+  const [showGRU, setShowGRU] = useState(true);
 
   useEffect(() => {
       Papa.parse(csvFile, {
@@ -56,7 +156,7 @@ const MyLineChart = ({ csvFile }) => {
                   storage: Number(item.storage),
                   next_day_storage: Number(item.next_day_storage || 0),
                   lstm: Number(item.lstm || 0),
-                  mambar: Number(item.mambar || 0)
+                  GRU: Number(item.mamba || 0)
               }));
               setData(parsedData);
           }
@@ -92,48 +192,48 @@ const MyLineChart = ({ csvFile }) => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line 
-                      type="monotone" 
-                      dataKey="storage" 
-                      stroke="#8884d8" 
-                      strokeWidth={2} 
-                      dot={false} 
+                  <Line
+                      type="monotone"
+                      dataKey="storage"
+                      stroke="#8884d8"
+                      strokeWidth={2}
+                      dot={false}
                       isAnimationActive={false}
                   />
                   {currentIndex > 0 && currentIndex < data.length - 1 && (
-                      <Line 
-                          type="monotone" 
-                          dataKey="next_day_storage" 
-                          stroke="#82ca9d" 
-                          strokeWidth={2} 
-                          strokeDasharray="5 5" 
-                          dot={false} 
+                      <Line
+                          type="monotone"
+                          dataKey="next_day_storage"
+                          stroke="#82ca9d"
+                          strokeWidth={2}
+                          strokeDasharray="5 5"
+                          dot={false}
                           isAnimationActive={false}
                           data={predictionData}
                       />
                   )}
                   {showLSTM && (
-                      <Line 
-                          type="monotone" 
-                          dataKey="lstm" 
-                          stroke="#ff7300" 
-                          strokeWidth={2} 
-                          strokeDasharray="5 5" 
-                          dot={false} 
+                      <Line
+                          type="monotone"
+                          dataKey="lstm"
+                          stroke="#ff7300"
+                          strokeWidth={2}
+                          strokeDasharray="5 5"
+                          dot={false}
                           isAnimationActive={false}
                           key="lstmLine"
                       />
                   )}
-                  {showMambar && (
-                      <Line 
-                          type="monotone" 
-                          dataKey="mambar" 
-                          stroke="#387908" 
-                          strokeWidth={2} 
-                          strokeDasharray="5 5" 
-                          dot={false} 
+                  {showGRU && (
+                      <Line
+                          type="monotone"
+                          dataKey="GRU"
+                          stroke="#387908"
+                          strokeWidth={2}
+                          strokeDasharray="5 5"
+                          dot={false}
                           isAnimationActive={false}
-                          key="mambarLine"
+                          key="GRULine"
                       />
                   )}
               </LineChart>
@@ -149,9 +249,9 @@ const MyLineChart = ({ csvFile }) => {
               <label style={{ marginLeft: '20px' }}>
                   <input
                       type="checkbox"
-                      checked={showMambar}
-                      onChange={(e) => setShowMambar(e.target.checked)}
-                  /> Show Mambar Prediction
+                      checked={showGRU}
+                      onChange={(e) => setShowGRU(e.target.checked)}
+                  /> Show GRU Prediction
               </label>
           </div>
       </div>
@@ -469,7 +569,7 @@ function Page() {
             </div>
             <div className="bg-white p-6 shadow-md max-w-lg  relative">
               <Heading className="mt-3 text-xl font-normal ">
-                Longest awaiting time1
+                Longest awaiting time
               </Heading>
               <div className="absolute bottom-5 left-0 mb-4 ml-6">
                 <div className="flex items-baseline">
@@ -542,10 +642,13 @@ function Page() {
           </div>
         </div>
 
+        <div className="bg-white p-6 shadow h-128 flex w-full mt-5">
+               <MyLineChart1 csvFile="prediction.csv" />
+          </div>
 
         <div className="bg-white p-6 shadow h-128 flex w-full mt-5">
                <MyLineChart csvFile="train_data1.csv" />
-          </div>  
+          </div>
 
         <div className="flex py-8 w-full h-1/2-screen">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
@@ -581,7 +684,7 @@ function Page() {
                   <MeterChart data={data5} options={options5}></MeterChart>
                 </div>
               </div>
-    
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-2  w-full h-1/16">
                 <div className="bg-white p-1 mt-5 relative">
                   <Image
@@ -646,7 +749,7 @@ function Page() {
             </div>
           </div>
         </div>
-        
+
         <div className="flex w-full">
           <div className="w-1/3 bg-white p-6 shadow h-128">
             <Heading className="mt-3 text-[20px] font-normal ">
@@ -799,8 +902,8 @@ function Page() {
           </div>
         </div>
       </div>
-      
-       
+
+
     </div>
 
   );
