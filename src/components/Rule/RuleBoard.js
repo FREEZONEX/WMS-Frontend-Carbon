@@ -21,17 +21,22 @@ function RuleBoard() {
   }, [refresh, page]);
 
   return (
-    <div className="flex flex-col items-center">
-      <Grid className="w-full p-4 bg-white">
+    <div className="flex flex-col items-center ">
+      <div className="w-full p-0 flex justify-between flex-wrap">
         {rules?.map((rule, index) => {
           return (
-            <Column className="m-6" key={index} xm={2} md={4} lg={8}>
+            <div
+              className="w-[50%] pt-4"
+              style={index % 2 == 1 ? { paddingLeft: '15px' } : {}}
+              key={index}
+            >
               <RuleCard rule={rule} setRefresh={setRefresh} />
-            </Column>
+            </div>
           );
         })}
-      </Grid>
+      </div>
       <PaginationNav
+        className="mt-4"
         itemShown={pageSize}
         page={page}
         totalItems={total}
