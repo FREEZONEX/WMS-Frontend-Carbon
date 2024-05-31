@@ -45,7 +45,7 @@ const MyLineChart1 = () => {
   const [warehouseNames, setWarehouseNames] = useState([]);
 
   const fetchApiData = () => {
-    fetch('http://supcononenorth.fortiddns.com:30051/get_predictions')
+    fetch('https://supos.app:8081/get_predictions')
       .then(response => response.json())
       .then(apiData => {
         const apiDetails = apiData.test[selectedWarehouse];
