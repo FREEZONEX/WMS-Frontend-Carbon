@@ -39,7 +39,7 @@ function Page() {
         <div>
           <Heading className="mt-2 text-[28px] font-normal">Simulation</Heading>
           <Heading className="mt-1 text-sm">
-            Simulation of the warehouse gose here.
+            Simulation of the warehouse goes here.
           </Heading>
         </div>
       </div>
