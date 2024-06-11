@@ -13,6 +13,7 @@ import {
 import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import StocktakingTable from '@/components/Table/StocktakingTable';
 import { useRouter } from 'next/navigation';
+import '@/app/page.scss';
 
 const headers = [
   { key: 'id', header: 'ID' },
@@ -83,6 +84,7 @@ function Page() {
           </Heading>
         </div>
         <Button
+          className="cds--btn-customize"
           onClick={() => {
             router.push(
               `${process.env.PATH_PREFIX}/operation/stocktaking/create`

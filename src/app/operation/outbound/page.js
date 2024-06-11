@@ -18,6 +18,7 @@ import { Add, Search, CloseOutline, Cost } from '@carbon/icons-react';
 import OutboundTable from '@/components/Table/OutboundTable';
 import { useRouter } from 'next/navigation';
 import moment from 'moment';
+import '@/app/page.scss';
 
 const headers = [
   { key: 'id', header: 'ID' },
@@ -103,6 +104,7 @@ function Page() {
           </Heading>
         </div>
         <Button
+          className="cds--btn-customize"
           onClick={() => {
             router.push(`${process.env.PATH_PREFIX}/operation/outbound/create`);
           }}

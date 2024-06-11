@@ -1,5 +1,5 @@
 'use client';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   Header,
   HeaderContainer,
@@ -34,7 +34,7 @@ import {
 import { usePathname } from 'next/navigation';
 import { ThemeContext } from '@/utils/ThemeContext';
 import { useRouter } from 'next/navigation';
-import { sysTitle } from '@/utils/constants';
+import { sysTitle, sysTitleShort } from '@/utils/constants';
 
 export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
   const router = useRouter();
@@ -44,7 +44,7 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
     return process.env.PATH_PREFIX + path === pathname;
   };
   console.log(isExpanded);
-
+  let screenWidth = window.innerWidth;
   return (
     <Header aria-label={sysTitle}>
       <SkipToContent />
@@ -61,7 +61,7 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
         }}
         className="cursor-pointer uppercase"
       >
-        {sysTitle}
+        {screenWidth < 640 ? sysTitleShort : sysTitle}
       </HeaderName>
       <Theme theme={theme.sideNavTheme}>
         <SideNav
@@ -147,7 +147,7 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
                 router.push(`${process.env.PATH_PREFIX}/operation/task/rules`);
               }}
               className="cursor-pointer"
-              isActive={isCurrentPath('/operation/task/resource')}
+              isActive={isCurrentPath('/operation/task/rules')}
             >
               Rule
             </SideNavLink>

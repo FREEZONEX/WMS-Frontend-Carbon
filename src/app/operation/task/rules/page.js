@@ -6,6 +6,7 @@ import { Add } from '@carbon/icons-react';
 
 import { useRouter } from 'next/navigation';
 import RuleBoard from '@/components/Rule/RuleBoard';
+import '@/app/page.scss';
 
 export default function Page() {
   const router = useRouter();
@@ -50,6 +51,7 @@ export default function Page() {
           </Heading>
         </div>
         <Button
+          className="cds--btn-customize"
           style={{ backgroundColor: '#393939' }}
           isExpressive
           size="sm"

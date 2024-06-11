@@ -5,6 +5,7 @@ import { Heading, Breadcrumb, BreadcrumbItem, Button } from '@carbon/react';
 import '@carbon/charts/styles.css';
 import { useRouter } from 'next/navigation';
 import PutawayTable from '@/components/Table/PutawayTable';
+import '@/app/page.scss';
 
 export default function Page() {
   const router = useRouter();
@@ -49,6 +50,7 @@ export default function Page() {
           </Heading>
         </div>
         <Button
+          className="cds--btn-customize"
           isExpressive
           size="sm"
           style={{ backgroundColor: '#393939' }}

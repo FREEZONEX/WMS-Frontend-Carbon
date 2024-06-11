@@ -18,6 +18,7 @@ import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import InboundTable from '@/components/Table/InboundTable';
 import { useRouter } from 'next/navigation';
 import moment from 'moment';
+import '@/app/page.scss';
 
 const headers = [
   { key: 'id', header: 'ID' },
@@ -104,7 +105,7 @@ function Page() {
           onClick={() => {
             router.push(`${process.env.PATH_PREFIX}/operation/inbound/create`);
           }}
-          className="cursor-pointer"
+          className="cursor-pointer cds--btn-customize"
           isExpressive
           size="sm"
           renderIcon={Add}

@@ -11,6 +11,7 @@ import {
 import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import MaterialTable from '@/components/Table/MaterialTable';
 import { useRouter } from 'next/navigation';
+import '@/app/page.scss';
 
 const headers = [
   { key: 'id', header: 'ID' },
@@ -81,6 +82,7 @@ function Page() {
         </div>
         <div>
           <Button
+            className="cds--btn-customize"
             onClick={() => {
               router.push(`${process.env.PATH_PREFIX}/warehouse/material/rfid`);
             }}
@@ -92,6 +94,7 @@ function Page() {
             RFID Tag
           </Button>
           <Button
+            className="cds--btn-customize"
             onClick={() => {
               router.push(
                 `${process.env.PATH_PREFIX}/warehouse/material/create`

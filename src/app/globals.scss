@@ -20,6 +20,20 @@
   color: black;
 }
 
+.cds--content {
+  padding: 2rem;
+  padding-top: 5rem;
+  color: var(--cds-text-primary, #161616);
+  will-change: margin-left;
+}
+
+.cds--data-table-container,
+.cds--structured-list {
+  overflow-x: auto;
+  width: 100%;
+  display: block;
+}
+
 .cds--date-picker-container,
 .cds--date-picker-input__wrapper,
 .cds--date-picker__input,

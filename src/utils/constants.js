@@ -4,6 +4,7 @@ export const DateTimeFormat = {
 };
 
 export const sysTitle = 'Supply Chain Management';
+export const sysTitleShort = 'SCM';
 export const sysSubTitle = 'Supply Chain Management';
 
 export const tagColors = [

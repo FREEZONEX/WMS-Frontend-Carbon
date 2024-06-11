@@ -7,11 +7,15 @@ import {
   BreadcrumbItem,
   Button,
   HeaderGlobalAction,
+  Grid,
+  Column,
 } from '@carbon/react';
 import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import WarehouseTable from '@/components/Table/WarehouseTable';
 import CreateWarehouseModal from '@/components/Modal/CreateWarehouseModal';
 import { useRouter } from 'next/navigation';
+import '@/app/page.scss';
+
 const headers = [
   { key: 'name', header: 'Name' },
   { key: 'warehouse_id', header: 'ID' },
@@ -78,6 +82,7 @@ function Page() {
           </Heading>
         </div>
         <Button
+          className="cds--btn-customize"
           onClick={() => {
             setCreateModalOpen(true);
           }}
@@ -93,55 +98,68 @@ function Page() {
           setRefresh={setRefresh}
         />
       </div>
-      <div className="flex mt-20 space-x-4 items-end">
-        <TextInput
-          className="flex-auto w-5"
-          labelText="Warehouse Id"
-          id="warehouse_id"
-          placeholder="Id"
-          value={formValue.warehouse_id}
-          onChange={onFormValueChange}
-        />
-        <TextInput
-          className="flex-auto w-20"
-          labelText="Name"
-          id="name"
-          placeholder="Name"
-          value={formValue.name}
-          onChange={onFormValueChange}
-        />
-        <TextInput
-          className="flex-auto w-20"
-          labelText="Type"
-          id="type"
-          placeholder="Type"
-          value={formValue.type}
-          onChange={onFormValueChange}
-        />
-        <TextInput
-          className="flex-auto w-20"
-          labelText="Manager"
-          id="manager"
-          placeholder="Manager"
-          value={formValue.manager}
-          onChange={onFormValueChange}
-        />
-        <HeaderGlobalAction
-          aria-label="Search"
-          onClick={() => setIsSearchClicked(true)}
-        >
-          <Search size={16} />
-        </HeaderGlobalAction>
-        <HeaderGlobalAction
-          aria-label="Remove Filters"
-          onClick={() => {
-            setIsSearchClicked(false);
-            setFormValue(defaultFormValue);
-          }}
-        >
-          <CloseOutline size={16} />
-        </HeaderGlobalAction>
-      </div>
+
+      <Grid className="p-0 mt-[50px] gap-[9px]">
+        <Column className="ml-0 " sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto"
+            labelText="Warehouse Id"
+            id="warehouse_id"
+            placeholder="Id"
+            value={formValue.warehouse_id}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0 " sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto"
+            labelText="Name"
+            id="name"
+            placeholder="Name"
+            value={formValue.name}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0 " sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto"
+            labelText="Type"
+            id="type"
+            placeholder="Type"
+            value={formValue.type}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0 " sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto"
+            labelText="Manager"
+            id="manager"
+            placeholder="Manager"
+            value={formValue.manager}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0 " sm={1} md={1} lg={1}>
+          <HeaderGlobalAction
+            aria-label="Search"
+            onClick={() => setIsSearchClicked(true)}
+          >
+            <Search size={16} />
+          </HeaderGlobalAction>
+        </Column>
+        <Column className="ml-0 " sm={1} md={1} lg={1}>
+          <HeaderGlobalAction
+            aria-label="Remove Filters"
+            onClick={() => {
+              setIsSearchClicked(false);
+              setFormValue(defaultFormValue);
+            }}
+          >
+            <CloseOutline size={16} />
+          </HeaderGlobalAction>
+        </Column>
+      </Grid>
 
       <div className="mt-12">
         <WarehouseTable
