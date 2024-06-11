@@ -2,6 +2,7 @@ import { Modal, ComboBox, TextInput } from '@carbon/react';
 import { useEffect, useState } from 'react';
 import { resourceTypes } from '@/utils/constants';
 import { addResource, updateResource } from '@/actions/actions';
+import ShowMessageModal from '@/components/Modal/ShowMessageModal';
 
 export default function AddEditResourceModal({
   isOpen,
@@ -35,6 +36,7 @@ export default function AddEditResourceModal({
       })
         .then(() => {
           onRefresh();
+          ShowMessageModal.showSuccess();
         })
         .catch((e) => {
           console.log(e);
@@ -48,6 +50,7 @@ export default function AddEditResourceModal({
           onRefresh();
           setSelectedType('');
           setResourceName('');
+          ShowMessageModal.showSuccess();
         })
         .catch((e) => {
           console.log(e);

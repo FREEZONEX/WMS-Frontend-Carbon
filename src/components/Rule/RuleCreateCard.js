@@ -66,7 +66,7 @@ function RuleCreateCard() {
       task_type: taskType,
     })
       .then(() => {
-        console.log('success');
+        ShowMessageModal.showSuccess();
         router.push(`${process.env.PATH_PREFIX}/operation/task/rules`);
       })
       .catch((e) => {

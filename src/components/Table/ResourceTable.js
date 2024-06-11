@@ -18,6 +18,7 @@ import { DateTimeFormat } from '@/utils/constants';
 import AddEditResourceModal from '../Task/resource/AddEditResourceModal';
 
 import { deleteResource, getResource } from '@/actions/actions';
+import ShowMessageModal from '../Modal/ShowMessageModal';
 function ResourceTable({ refresh, setRefresh }) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -55,7 +56,12 @@ function ResourceTable({ refresh, setRefresh }) {
     setIsOpen(true);
   };
   const onDeleteRow = async (id) => {
-    deleteResource({ id }).then(() => setRefresh({}));
+    ShowMessageModal.showConfirm('Are you sure to delete?', () => {
+      deleteResource({ id }).then(() => {
+        setRefresh({});
+        ShowMessageModal.showSuccess();
+      });
+    });
   };
 
   const handleRefresh = () => {

@@ -147,7 +147,7 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
                 router.push(`${process.env.PATH_PREFIX}/operation/task/rules`);
               }}
               className="cursor-pointer"
-              isActive={isCurrentPath('/operation/task/resource')}
+              isActive={isCurrentPath('/operation/task/rules')}
             >
               Rule
             </SideNavLink>
