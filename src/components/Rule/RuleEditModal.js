@@ -7,6 +7,7 @@ import { Close } from '@carbon/icons-react';
 import { tagColors } from '@/utils/constants';
 import { updateRule, fetchWarehouses, getResource } from '@/actions/actions';
 import { taskTypes } from '@/utils/constants';
+import ShowMessageModal from '../Modal/ShowMessageModal';
 
 function RuleEditModal({ isOpen, onClose, defaultValue }) {
   const [ruleName, setRuleName] = useState('');
@@ -84,7 +85,7 @@ function RuleEditModal({ isOpen, onClose, defaultValue }) {
       task_type: taskType,
     })
       .then(() => {
-        console.log('success');
+        ShowMessageModal.showSuccess();
         onClose(true);
       })
       .catch((e) => {

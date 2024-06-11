@@ -21,6 +21,7 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import './_table.scss';
 import TableSkeleton from '../Skeleton/TableSkeleton';
+import ShowMessageModal from '../Modal/ShowMessageModal';
 
 function MaterialTable({
   headers,
@@ -35,8 +36,6 @@ function MaterialTable({
   const [loading, setLoading] = useState(true);
   const [editRow, setEditRow] = useState({});
   const [isEditModalOpen, setEditModalOpen] = useState(false);
-  // const [isModalOpen, setModalOpen] = useState(false);
-  // const [selectedMaterial, setSelectedMaterial] = useState([]);
   const [rows, setRows] = useState([]);
   useEffect(() => {
     if (isSearchClicked) {
@@ -65,7 +64,7 @@ function MaterialTable({
         setLoading(false);
       });
     }
-  }, [page, pageSize, refresh, isSearchClicked]);
+  }, [page, pageSize, refresh, isSearchClicked, filters]);
 
   const handleEditModalClose = () => {
     setEditModalOpen(false);
@@ -75,7 +74,9 @@ function MaterialTable({
     setEditModalOpen(true);
   };
   const handleDeleteRow = async (id) => {
-    deleteMaterial({ id }).then((res) => setRefresh({}));
+    ShowMessageModal.showConfirm('Are you sure to delete this item?', () => {
+      deleteMaterial({ id }).then((res) => setRefresh({}));
+    });
   };
   return (
     <div>
