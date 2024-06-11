@@ -26,7 +26,7 @@ function RuleBoard() {
         {rules?.map((rule, index) => {
           return (
             <div
-              className="w-[50%] pt-4"
+              className="pt-4 sm:w-[100%] md:w-[50%] lg:w-[25%]"
               style={index % 2 == 1 ? { paddingLeft: '15px' } : {}}
               key={index}
             >
