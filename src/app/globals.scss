@@ -27,11 +27,13 @@
   will-change: margin-left;
 }
 
-.cds--data-table-container,
-.cds--structured-list {
-  overflow-x: auto;
-  width: 100%;
-  display: block;
+@media screen and (max-width: 450px) {
+  .cds--data-table-container,
+  .cds--structured-list {
+    overflow-x: auto;
+    width: 100%;
+    display: block;
+  }
 }
 
 .cds--date-picker-container,
