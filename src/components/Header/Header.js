@@ -1,5 +1,5 @@
 'use client';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Header,
   HeaderContainer,
@@ -43,8 +43,23 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
   const isCurrentPath = (path) => {
     return process.env.PATH_PREFIX + path === pathname;
   };
-  console.log(isExpanded);
-  let screenWidth = window.innerWidth;
+
+  const [screenWidth, setScreenWidth] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <Header aria-label={sysTitle}>
       <SkipToContent />
@@ -224,10 +239,6 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
         <HeaderGlobalAction aria-label="Info" tooltipAlignment="end">
           <Information size={20} />
         </HeaderGlobalAction>
-        <HeaderGlobalAction
-          aria-label="Info"
-          tooltipAlignment="end"
-        ></HeaderGlobalAction>
       </HeaderGlobalBar>
     </Header>
   );
