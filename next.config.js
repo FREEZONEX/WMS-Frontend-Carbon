@@ -12,7 +12,7 @@ const nextConfig = {
         destination = 'http://127.0.0.1:8085/:slug*'; // Local development destination
         break;
       case 'sg':
-        destination = 'http://wms-server-service.wms:8085/:slug*'; // Production destination in China
+        destination = 'http://supcononenorth.fortiddns.com:30086/:slug*'; // Production destination in China
         break;
       case 'cn':
         destination = 'http://office.unibutton.com:6585//:slug*'; // Example destination for Singapore

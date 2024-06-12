@@ -26,7 +26,9 @@ function RuleCard({ rule, setRefresh }) {
         </div>
         <div className="w-full space-y-2">
           <div className="flex flex-row justify-between">
-            <Heading className="font-medium text-[20px]">{rule.name}</Heading>
+            <Heading className="font-medium md:text-[20px] sm:text-sm">
+              {rule.name}
+            </Heading>
             <Button
               className="bg-[#E0E0E0] w-[57px] h-[24px] rounded-none text-[#525252] hover:text-white"
               onClick={() => onEdit()}
@@ -37,27 +39,43 @@ function RuleCard({ rule, setRefresh }) {
           <Heading className="font-bold text-[14px]">Conditions</Heading>
           <div className="flex space-x-6">
             <div>
-              <span className="mr-2 ml-4 font-semibold">Task Type:</span>
-              {rule.task_type}
+              <span className="mr-2 ml-4 font-semibold text-[14px]">
+                Task Type:
+              </span>
+              <span className="mr-2 ml-4 text-[14px]">{rule.task_type}</span>
             </div>
             <div>
-              <span className="mr-2 ml-4 font-semibold">Warehouse:</span>
-              {rule.warehouse_name}
+              <span className="mr-2 ml-4 font-semibold text-[14px]">
+                Warehouse:
+              </span>
+              <span className="mr-2 ml-4 text-[14px]">
+                {rule.warehouse_name}
+              </span>
             </div>
           </div>
           <div>
-            <span className="mr-2 ml-4 font-semibold">Locations:</span>
-            {rule.location_expression}
+            <span className="mr-2 ml-4 font-semibold text-[14px]">
+              Locations:
+            </span>
+            <span className="mr-2 ml-4 text-[14px]">
+              {rule.location_expression}
+            </span>
           </div>
-          <Heading className="font-bold text-[14px]">Actions</Heading>
+          <Heading className="font-bold text-[14px] ">Actions</Heading>
           <div>
             <div>
-              <span className="mr-2 ml-4 font-semibold">Assign to:</span>
-              {rule.people_name}
+              <span className="mr-2 ml-4 font-semibold text-[14px]">
+                Assign to:
+              </span>
+              <span className="mr-2 ml-4 text-[14px]">{rule.people_name}</span>
             </div>
             <div>
-              <span className="mr-2 ml-4 font-semibold">Resources:</span>
-              {rule.resource_name_list}
+              <span className="mr-2 ml-4 font-semibold text-[14px]">
+                Resources:
+              </span>
+              <span className="mr-2 ml-4 text-[14px]">
+                {rule.resource_name_list}
+              </span>
             </div>
           </div>
         </div>

@@ -22,12 +22,12 @@ function RuleBoard() {
 
   return (
     <div className="flex flex-col items-center ">
-      <div className="w-full p-0 flex justify-between flex-wrap">
+      <div className="w-full p-0 flex flex-wrap">
         {rules?.map((rule, index) => {
           return (
             <div
-              className="pt-4 sm:w-[100%] md:w-[50%] lg:w-[25%]"
-              style={index % 2 == 1 ? { paddingLeft: '15px' } : {}}
+              className="pt-4 sm:w-[100%] md:w-[100%] lg:w-[50%] lg:pl-[15px] 3xl:w-[25%] 3xl:pl-[15px]"
+              // style={index % 2 == 1 ? { paddingLeft: '15px' } : {}}
               key={index}
             >
               <RuleCard rule={rule} setRefresh={setRefresh} />

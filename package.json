@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "build": "next build",
-    "dev": "cross-env RUNTIME_IDC_NAME=local next dev",
+    "dev": "cross-env RUNTIME_IDC_NAME=sg next dev",
     "start": "next start",
     "lint": "next lint",
     "ci-check": "yarn format:diff",
