@@ -305,7 +305,7 @@ export async function fetchSLNameMap(params) {
 
 export async function fetchWHSLNameMap(params) {
   return httpToBackend
-    .post('/wms/warehousestoragelocation/idmap', {}, { params })
+    .post('/wms/warehouse/storagelocation/idmap', {}, { params })
     .then((res) => {
       console.log(res);
       return res.data.data;

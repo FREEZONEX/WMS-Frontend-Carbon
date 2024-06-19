@@ -13,7 +13,6 @@ import {
   TableToolbarSearch,
   IconButton,
   Checkbox,
-  ComboBox,
 } from '@carbon/react';
 import { Add, Subtract, CheckmarkFilled } from '@carbon/icons-react';
 import {
@@ -28,12 +27,12 @@ import { usePathname } from 'next/navigation';
 function TaskListTable({ headers, rows, setRows }) {
   const defaultDetailValue = {
     name: '',
-    product_code: '',
+    material_code: '',
     specification: '',
     quantity: '',
     unit: '',
     expect_wh_id: '',
-    expact_stock_location_id: '',
+    suggested_storage_location_id: '',
   };
   const [loadingRows, setLoadingRows] = useState([]);
   const [successRows, setSuccessRows] = useState([]);
@@ -96,33 +95,29 @@ function TaskListTable({ headers, rows, setRows }) {
     return true;
   };
   const handleBlurFetch = async (rowId, field, value) => {
-    if (field === 'name' || field === 'product_code') {
+    if (field === 'name' || field === 'material_code') {
       if (value !== '') {
         setLoadingRows((prevLoadingRows) => [...prevLoadingRows, rowId]);
         try {
           const materialData = await fetchMaterial({}, { [field]: value });
-          console.log(materialData);
           if (materialData.list.length > 0) {
             const materialCurr = materialData.list[0];
-
             setRows((prevRows) =>
               prevRows.map((row, i) => {
                 if (i === rowId) {
                   return {
+                    id: materialCurr.id,
                     name: materialCurr.name,
-                    product_code: materialCurr.product_code,
+                    material_code: materialCurr.material_code,
                     specification: materialCurr.specification,
-                    quantity: '',
+                    quantity: row?.quantity,
                     unit: materialCurr.unit,
-                    expect_wh_id: materialCurr.expect_wh_id.toString(),
-                    expect_wh_name:
-                      whNameMap[materialCurr.expect_wh_id.toString()],
-                    expact_stock_location_id:
-                      materialCurr.expact_stock_location_id.toString(),
-                    expact_stock_location_name:
-                      slNameMap[
-                        materialCurr.expact_stock_location_id.toString()
-                      ],
+                    expect_wh_id: materialCurr.expect_wh_id,
+                    expect_wh_name: whNameMap[materialCurr.expect_wh_id],
+                    suggested_storage_location_id:
+                      materialCurr.suggested_storage_location_id,
+                    suggested_storage_location_name:
+                      materialCurr.suggested_storage_location_name,
                   };
                 }
                 return row;
@@ -156,7 +151,7 @@ function TaskListTable({ headers, rows, setRows }) {
     setRows((prevRows) =>
       prevRows.map((prevRow, i) => {
         if (i === rowId) {
-          if (field === 'expact_stock_location_id') {
+          if (field === 'suggested_storage_location_id') {
             const inputValue = e.target.value;
             const locationId = Object.entries(slNameMap).find(
               ([id, name]) => name.toLowerCase() === inputValue.toLowerCase()
@@ -170,13 +165,13 @@ function TaskListTable({ headers, rows, setRows }) {
                 expect_wh_id: wh_id,
                 expect_wh_name: wh_name,
                 [field]: locationId,
-                expact_stock_location_name: inputValue,
+                suggested_storage_location_name: inputValue,
               };
             } else {
               return {
                 ...prevRow,
                 [field]: '',
-                expact_stock_location_name: inputValue,
+                suggested_storage_location_name: inputValue,
                 expect_wh_id: '',
                 expect_wh_name: '',
               };
@@ -192,7 +187,7 @@ function TaskListTable({ headers, rows, setRows }) {
       })
     );
     if (
-      (field === 'name' || field === 'product_code') &&
+      (field === 'name' || field === 'material_code') &&
       e.target.value === ''
     ) {
       setSuccessRows((prevSuccessRows) =>
@@ -322,6 +317,7 @@ function TaskListTable({ headers, rows, setRows }) {
                       ) : (
                         <div className="flex items-center w-48 gap-[0.5rem]">
                           <TextInput
+                            labelText=""
                             className="w-40"
                             id={`name-${i}`}
                             value={row[header.key]}
@@ -351,13 +347,14 @@ function TaskListTable({ headers, rows, setRows }) {
                     </TableCell>
                   );
                 }
-                if (header.key === 'product_code') {
+                if (header.key === 'material_code') {
                   return (
                     <TableCell key={header.key}>
                       {checkIsEdit() ? (
                         row[header.key]
                       ) : (
                         <TextInput
+                          labelText=""
                           className="w-40"
                           id={`product-code-${i}`}
                           value={row[header.key]}
@@ -379,6 +376,7 @@ function TaskListTable({ headers, rows, setRows }) {
                         row[header.key]
                       ) : (
                         <TextInput
+                          labelText=""
                           className="w-20"
                           id={`quantity-${i}`}
                           value={row[header.key]}
@@ -407,18 +405,18 @@ function TaskListTable({ headers, rows, setRows }) {
                     </TableCell>
                   );
                 }
-                if (header.key === 'expact_stock_location_id') {
+                if (header.key === 'suggested_storage_location_id') {
                   return (
                     <TableCell key={header.key}>
                       {checkIsEdit() ? (
-                        slNameMap[row[header.key]]
+                        'row[header.key]'
                       ) : (
                         <TextInput
+                          labelText=""
                           className="w-40"
-                          id={`expact-stock-location-id-${i}`}
-                          value={row.expact_stock_location_name}
+                          id={`suggested_storage_location_id-${i}`}
+                          value={row.suggested_storage_location_name}
                           onChange={(e) => {
-                            console.log(e);
                             handleInputChange(i, header.key, e);
                           }}
                         />

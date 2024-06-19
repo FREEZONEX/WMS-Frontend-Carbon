@@ -21,32 +21,38 @@ import {
 import { useRouter, usePathname } from 'next/navigation';
 import moment from 'moment';
 import { DateTimeFormat } from '@/utils/constants';
+import ShowMessageModal from '../Modal/ShowMessageModal';
 
 const headers = [
   { key: 'name', header: 'Material Name' },
-  { key: 'product_code', header: 'Material Code' },
+  { key: 'material_code', header: 'Material Code' },
   { key: 'specification', header: 'Specification' },
   { key: 'quantity', header: 'Quantity' },
   { key: 'unit', header: 'Unit' },
   { key: 'expect_wh_id', header: 'WH' },
-  { key: 'expact_stock_location_id', header: 'Location' },
+  { key: 'suggested_storage_location_name', header: 'Location' },
 ];
 
 function InboundCreateForm({ id }) {
   const router = useRouter();
-  // const [fieldValidation, setFieldValidation] = useState({
-  //   purchase_order_noInvalid: false,
-  //   creatorInvalid: false,
-  //   deliveryDateInvalid: false,
-  // });
+  const [fieldValidation, setFieldValidation] = useState({
+    purchase_order_noInvalid: false,
+    creatorInvalid: false,
+    deliveryDateInvalid: false,
+    supplierInvalid: false,
+  });
   const pathName = usePathname();
   const [taskList, setTaskList] = useState([]);
-  const [isAlert, setIsAlert] = useState(false);
+  const [alert, setAlert] = useState({ isAlert: false, msg: '' });
   const [formValue, setFormValues] = useState({
     creator: '',
     purchase_order_no: '',
     supplier: '',
     delivery_date: '',
+    status:
+      pathName === `${process.env.PATH_PREFIX}/operation/inbound/create`
+        ? 'Pending'
+        : 'Inbound',
     delivery_date_show: '',
   });
   const [dateShow, setDateShow] = useState('');
@@ -104,26 +110,36 @@ function InboundCreateForm({ id }) {
   }, [id]);
 
   const handleSubmit = (e) => {
+    setAlert({ isAlert: false, msg: '' });
     e.preventDefault();
-    // const newValidation = {
-    //   sourceInvalid: !formValue.source || formValue.source === '',
-    //   typeInvalid: !formValue.type || formValue.type === '',
-    // };
-    // setFieldValidation(newValidation);
+    const newValidation = {
+      creatorInvalid: !formValue.creator || formValue.creator === '',
+      purchase_order_noInvalid:
+        !formValue.purchase_order_no || formValue.purchase_order_no === '',
+      deliveryDateInvalid:
+        !formValue.delivery_date || formValue.delivery_date === '',
+      supplierInvalid: !formValue.supplier || formValue.supplier === '',
+    };
+    setFieldValidation(newValidation);
 
-    // if (Object.values(newValidation).some((v) => v)) {
-    //   setFieldValidation(newValidation);
-    //   return;
-    // }
+    if (Object.values(newValidation).some((v) => v)) {
+      setFieldValidation(newValidation);
+      setAlert({ isAlert: true, msg: 'Please check some field required.' });
+      return;
+    }
+
     if (taskList.length === 0) {
-      setIsAlert(true);
+      setAlert({
+        isAlert: true,
+        msg: 'At least one inbound materail requred.',
+      });
       return;
     }
     if (pathName === `${process.env.PATH_PREFIX}/operation/inbound/create`) {
       let body = {
         ...formValue,
         source: 'manual',
-        request_detail: convertTaskListToFormat(taskList),
+        details: convertTaskListToFormat(taskList),
       };
       addInboundRecord(body).then(() => {
         setFormValues({
@@ -159,10 +175,13 @@ function InboundCreateForm({ id }) {
   function convertTaskListToFormat(taskList) {
     const shelfRecords = taskList.map((task) => {
       return {
-        material_code: task.product_code,
+        material_id: task.id,
+        material_name: task.name,
+        operation_id: '',
+        rf_id: '',
+        stock_quantity: 0,
         quantity: task.quantity,
-        stock_location_id: task.expact_stock_location_id,
-        wh_id: task.expect_wh_id,
+        location_id: task.suggested_storage_location_id,
       };
     });
 
@@ -223,11 +242,7 @@ function InboundCreateForm({ id }) {
             labelText="Status"
             id="status"
             placeholder="Status"
-            value={
-              pathName === `${process.env.PATH_PREFIX}/operation/inbound/create`
-                ? 'Pending'
-                : 'Inbound'
-            }
+            value={formValue.status}
           />
         </Column>
       </Grid>
@@ -242,11 +257,12 @@ function InboundCreateForm({ id }) {
         />
       </div>
 
-      {isAlert && (
+      {alert.isAlert && (
         <InlineNotification
           className="w-full"
           title="Notice: "
-          subtitle="No inbound material"
+          subtitle={alert.msg}
+          onClose={() => setAlert({ isAlert: false, msg: '' })}
         />
       )}
       <div className="flex space-x-4 mt-10 justify-center ">
