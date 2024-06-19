@@ -3,7 +3,7 @@ import { Unity, useUnityContext } from 'react-unity-webgl';
 
 const UnityWebGL = () => {
   const buildUrl = '/webgl/WareHouseDemoWebGL_v3';
-  const { unityProvider, requestFullscreen } = useUnityContext({
+  const { unityProvider, requestFullscreen, sendMessage } = useUnityContext({
     // loaderUrl: buildUrl + '.loader.js',
     loaderUrl:
       'https://wmswebgl.oss-ap-southeast-1.aliyuncs.com/WareHouseDemoWebGL_v3.loader.js',
@@ -20,6 +20,23 @@ const UnityWebGL = () => {
   function handleClick() {
     requestFullscreen(true);
   }
+  useEffect(
+    (window.sendUnityMessage = function () {
+      const broker = {
+        type: 'wss',
+        address: 'supos.app',
+        port: '8084',
+      };
+
+      sendMessage(
+        'UnityWebServerFetcher',
+        'GetServerInfo',
+        JSON.stringify(broker)
+      );
+      console.log('Message received from Unity: ');
+    }),
+    []
+  );
   return (
     <>
       <Unity
