@@ -20,23 +20,24 @@ const UnityWebGL = () => {
   function handleClick() {
     requestFullscreen(true);
   }
-  useEffect(
-    (window.sendUnityMessage = function () {
-      const broker = {
-        type: 'wss',
-        address: 'supos.app',
-        port: '8084',
-      };
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.sendUnityMessage = function () {
+        const broker = {
+          type: 'wss',
+          address: 'supos.app',
+          port: '8084',
+        };
 
-      sendMessage(
-        'UnityWebServerFetcher',
-        'GetServerInfo',
-        JSON.stringify(broker)
-      );
-      console.log('Message received from Unity: ');
-    }),
-    []
-  );
+        sendMessage(
+          'UnityWebServerFetcher',
+          'GetServerInfo',
+          JSON.stringify(broker)
+        );
+        console.log('Message received from Unity: ');
+      };
+    }
+  }, []);
   return (
     <>
       <Unity
