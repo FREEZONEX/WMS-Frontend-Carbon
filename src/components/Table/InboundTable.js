@@ -45,27 +45,24 @@ function InboundTable({
   const [detailRows, setDetailRows] = useState({});
 
   useEffect(() => {
-    if (isSearchClicked) {
-      const filteredFormValue = Object.entries(filters).reduce(
-        (acc, [key, value]) => {
-          if (value !== '') {
-            acc[key] = value;
-          }
-          return acc;
-        },
-        {}
-      );
-      if (Object.entries(filteredFormValue).length > 0) {
-        console.log(filteredFormValue);
-        fetchInboundWithFilter(filteredFormValue, {
-          pageNum: page,
-          pageSize,
-        }).then((res) => {
-          setRows(res.list);
-          setTotal(res.total);
-          setLoading(false);
-        });
-      }
+    const filteredFormValue = Object.entries(filters).reduce(
+      (acc, [key, value]) => {
+        if (value !== '') {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {}
+    );
+    if (Object.entries(filteredFormValue).length > 0) {
+      fetchInboundWithFilter(filteredFormValue, {
+        pageNum: page,
+        pageSize,
+      }).then((res) => {
+        setRows(res.list);
+        setTotal(res.total);
+        setLoading(false);
+      });
     } else {
       fetchInbound({ pageNum: page, pageSize }).then((res) => {
         setRows(res.list);
@@ -153,7 +150,7 @@ function InboundTable({
                           router.push(
                             `${process.env.PATH_PREFIX}/operation/inbound/operate` +
                               '?' +
-                              createQueryString('id', row.inbound_id)
+                              createQueryString('id', row.id)
                           );
                         }}
                       >

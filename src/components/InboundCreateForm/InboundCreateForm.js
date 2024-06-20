@@ -17,11 +17,11 @@ import {
   addInboundRecord,
   fetchInboundDetails,
   updateInboundRecord,
+  fetchMaterial,
 } from '@/actions/actions';
 import { useRouter, usePathname } from 'next/navigation';
 import moment from 'moment';
 import { DateTimeFormat } from '@/utils/constants';
-import ShowMessageModal from '../Modal/ShowMessageModal';
 
 const headers = [
   { key: 'name', header: 'Material Name' },
@@ -80,34 +80,65 @@ function InboundCreateForm({ id }) {
     if (id) {
       fetchInboundDetails({ id })
         .then((data) => {
-          console.log(data);
           setFormValues({
-            creator: data.list[0].inbound_creator,
-            purchase_order_no: data.list[0].inbound_purchase_order_no,
-            supplier: data.list[0].inbound_supplier,
-            delivery_date: data.list[0].inbound_delivery_date,
+            creator: data.list[0].creator,
+            purchase_order_no: data.list[0].purchase_order_no,
+            supplier: data.list[0].supplier,
+            delivery_date: data.list[0].delivery_date,
           });
           setDateShow(
-            moment(data.list[0].inbound_delivery_date).format(
-              DateTimeFormat.shortDate
-            )
+            moment(data.list[0].delivery_date).format(DateTimeFormat.shortDate)
           );
-          const taskList = data.list.map((item) => ({
-            name: item.name,
-            product_code: item.product_code,
-            specification: item.specification,
-            quantity: item.quantity,
-            unit: item.unit,
-            expect_wh_id: item.warehouse_id,
-            expact_stock_location_id: item.stock_location_id,
-          }));
-          setTaskList(taskList);
+          if (
+            data.list &&
+            data.list.length > 0 &&
+            data.list[0].details.length > 0
+          ) {
+            const details = data.list[0]?.details?.map((item) => ({
+              material_id: item.material_id,
+              quantity: item.quantity,
+            }));
+            getTaskData(details);
+          }
         })
         .catch((error) => {
           console.error('Failed to fetch inbound details:', error);
         });
     }
   }, [id]);
+
+  const getTaskData = (inboundDetails) => {
+    if (inboundDetails.length > 0) {
+      fetchMaterial({ pageNum: 1, pageSize: 999999 }, {}).then((res) => {
+        const materialData = res;
+        if (materialData.list.length > 0) {
+          let details = [];
+          inboundDetails.forEach((m) => {
+            const materail = materialData.list.find(
+              (t) => t.id == m.material_id
+            );
+            if (materail) {
+              details.push({
+                id: materail.id,
+                name: materail.name,
+                material_code: materail.material_code,
+                specification: materail.specification,
+                quantity: m?.quantity,
+                unit: materail.unit,
+                expect_wh_id: materail.expect_wh_id,
+                expect_wh_name: '',
+                suggested_storage_location_id:
+                  materail.suggested_storage_location_id,
+                suggested_storage_location_name:
+                  materail.suggested_storage_location_name,
+              });
+            }
+          });
+          setTaskList(details);
+        }
+      });
+    }
+  };
 
   const handleSubmit = (e) => {
     setAlert({ isAlert: false, msg: '' });

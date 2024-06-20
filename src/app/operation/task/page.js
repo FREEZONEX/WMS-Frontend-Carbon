@@ -156,6 +156,10 @@ export default function Task() {
     getUtilization().then((res) => {
       if (res) {
         setStatistics(res);
+        setStatistics((prevDatas) => ({
+          ...prevDatas,
+          averageTime: '10h20m15s', //for demo test
+        }));
         setOccupys(res.occupy?.slice(0, pageSize));
         setIdles(res.idle?.slice(0, pageSize));
         setTotalPage({
