@@ -46,6 +46,7 @@ const MyLineChart1 = () => {
 
   const fetchApiData = () => {
     fetch('https://supos.app:8081/get_predictions')
+    // fetch('http://localhost:5000/get_predictions')
       .then(response => response.json())
       .then(apiData => {
         const apiDetails = apiData.test[selectedWarehouse];
@@ -102,6 +103,19 @@ const MyLineChart1 = () => {
     setSelectedWarehouse(event.target.value);
   };
 
+  const [maxStorageValue, setMaxStorageValue] = useState(0);
+  const updateMaxStorageValue = () => {
+    const combinedData = [...data, ...csvOnlyData];
+    const maxValue = combinedData.reduce((max, item) => Math.max(max, item.storage || 0), 0);
+    setMaxStorageValue(maxValue + 50); // Adding 150 as buffer or according to your scaling needs
+  };
+
+  useEffect(() => {
+    updateMaxStorageValue(); // Update max value on data change
+  }, [data, csvOnlyData]);
+
+
+
 
   return (
     <div className="w-full">
@@ -125,8 +139,8 @@ const MyLineChart1 = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" xAxisId="allData" />
-            <XAxis hide={true} dataKey="date" xAxisId="csvData" />
-            <YAxis />
+            <XAxis hide={true} dataKey="date" xAxisId="csvData"/>
+            <YAxis domain={[0, maxStorageValue]} />
             <Tooltip />
             <Legend />
             <Line xAxisId="allData" data={data} type="monotone" dataKey="storage" stroke="#82ca9d" dot={null} activeDot={{ r: 8 }} strokeDasharray="5 5" name="Prediction"/>
