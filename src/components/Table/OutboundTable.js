@@ -38,26 +38,29 @@ function OutboundTable({
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    if (isSearchClicked) {
-      const filteredFormValue = Object.entries(filters).reduce(
-        (acc, [key, value]) => {
-          if (value !== '') {
-            acc[key] = value;
-          }
-          return acc;
+    const filteredFormValue = Object.entries(filters).reduce(
+      (acc, [key, value]) => {
+        if (value !== '') {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {}
+    );
+    if (Object.entries(filteredFormValue).length > 0) {
+      fetchOutboundWithFilter(
+        {
+          ...filteredFormValue,
+          details: { material_name: filteredFormValue.material_name },
         },
-        {}
-      );
-      if (Object.entries(filteredFormValue).length > 0) {
-        console.log(filteredFormValue);
-        fetchOutboundWithFilter(filteredFormValue, {
+        {
           pageNum: page,
           pageSize,
-        }).then((res) => {
-          setRows(res.list);
-          setTotal(res.total);
-        });
-      }
+        }
+      ).then((res) => {
+        setRows(res.list);
+        setTotal(res.total);
+      });
     } else {
       fetchOutbound({ pageNum: page, pageSize }).then((res) => {
         setRows(res.list);
@@ -191,7 +194,7 @@ function OutboundTable({
                           router.push(
                             `${process.env.PATH_PREFIX}/operation/outbound/operate` +
                               '?' +
-                              createQueryString('id', row.outbound_id)
+                              createQueryString('id', row.id)
                           );
                         }}
                       >

@@ -53,7 +53,6 @@ function InboundCreateForm({ id }) {
       pathName === `${process.env.PATH_PREFIX}/operation/inbound/create`
         ? 'Pending'
         : 'Inbound',
-    delivery_date_show: '',
   });
   const [dateShow, setDateShow] = useState('');
   const onDateChange = (e) => {

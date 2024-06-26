@@ -17,6 +17,7 @@ import {
   updateOutboundRecord,
   fetchOutboundDetails,
   addOutboundRecord,
+  fetchMaterial,
 } from '@/actions/actions';
 import { useRouter, usePathname } from 'next/navigation';
 import moment from 'moment';
@@ -24,26 +25,32 @@ import { DateTimeFormat } from '@/utils/constants';
 
 const headers = [
   { key: 'name', header: 'Material Name' },
-  { key: 'product_code', header: 'Material Code' },
+  { key: 'material_code', header: 'Material Code' },
   { key: 'specification', header: 'Specification' },
   { key: 'quantity', header: 'Quantity' },
   { key: 'unit', header: 'Unit' },
   { key: 'expect_wh_id', header: 'WH' },
-  { key: 'expact_stock_location_id', header: 'Location' },
+  { key: 'suggested_storage_location_name', header: 'Location' },
 ];
 
 function OutboundCreateForm({ id }) {
   const router = useRouter();
   const pathName = usePathname();
-  // const [fieldValidation, setFieldValidation] = useState({
-  //   sourceInvalid: false,
-  //   typeInvalid: false,
-  // });
+  const [fieldValidation, setFieldValidation] = useState({
+    purchase_order_noInvalid: false,
+    creatorInvalid: false,
+    deliveryDateInvalid: false,
+    supplierInvalid: false,
+  });
   const [formValue, setFormValues] = useState({
     creator: '',
     purchase_order_no: '',
     supplier: '',
     delivery_date: '',
+    status:
+      pathName === `${process.env.PATH_PREFIX}/operation/outbound/create`
+        ? 'Pending'
+        : 'Outbound',
   });
   const [dateShow, setDateShow] = useState('');
   const onFormValueChange = (e) => {
@@ -66,7 +73,7 @@ function OutboundCreateForm({ id }) {
   };
   const [taskList, setTaskList] = useState([]);
 
-  const [isAlert, setIsAlert] = useState(false);
+  const [alert, setAlert] = useState({ isAlert: false, msg: '' });
 
   useEffect(() => {
     if (id) {
@@ -74,26 +81,25 @@ function OutboundCreateForm({ id }) {
         .then((data) => {
           console.log(data);
           setFormValues({
-            creator: data.list[0].outbound_creator,
-            purchase_order_no: data.list[0].outbound_purchase_order_no,
-            supplier: data.list[0].outbound_supplier,
-            delivery_date: data.list[0].outbound_delivery_date,
+            creator: data.list[0].creator,
+            purchase_order_no: data.list[0].purchase_order_no,
+            supplier: data.list[0].supplier,
+            delivery_date: data.list[0].delivery_date,
           });
           setDateShow(
-            moment(data.list[0].outbound_delivery_date).format(
-              DateTimeFormat.shortDate
-            )
+            moment(data.list[0].delivery_date).format(DateTimeFormat.shortDate)
           );
-          const taskList = data.list.map((item) => ({
-            name: item.name,
-            product_code: item.product_code,
-            specification: item.specification,
-            quantity: item.quantity,
-            unit: item.unit,
-            expect_wh_id: item.warehouse_id,
-            expact_stock_location_id: item.stock_location_id,
-          }));
-          setTaskList(taskList);
+          if (
+            data.list &&
+            data.list.length > 0 &&
+            data.list[0].details.length > 0
+          ) {
+            const details = data.list[0]?.details?.map((item) => ({
+              material_id: item.material_id,
+              quantity: item.quantity,
+            }));
+            getTaskData(details);
+          }
         })
         .catch((error) => {
           console.error('Failed to fetch inbound details:', error);
@@ -101,29 +107,69 @@ function OutboundCreateForm({ id }) {
     }
   }, [id]);
 
+  const getTaskData = (outboundDetails) => {
+    if (outboundDetails.length > 0) {
+      fetchMaterial({ pageNum: 1, pageSize: 999999 }, {}).then((res) => {
+        const materialData = res;
+        if (materialData.list.length > 0) {
+          let details = [];
+          outboundDetails.forEach((m) => {
+            const materail = materialData.list.find(
+              (t) => t.id == m.material_id
+            );
+            if (materail) {
+              details.push({
+                id: materail.id,
+                name: materail.name,
+                material_code: materail.material_code,
+                specification: materail.specification,
+                quantity: m?.quantity,
+                unit: materail.unit,
+                expect_wh_id: materail.expect_wh_id,
+                expect_wh_name: '',
+                suggested_storage_location_id:
+                  materail.suggested_storage_location_id,
+                suggested_storage_location_name:
+                  materail.suggested_storage_location_name,
+              });
+            }
+          });
+          setTaskList(details);
+        }
+      });
+    }
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
-    // const newValidation = {
-    //   sourceInvalid: !formValue.source || formValue.source === '',
-    //   typeInvalid: !formValue.type || formValue.type === '',
-    // };
-    // setFieldValidation(newValidation);
+    setAlert({ isAlert: false, msg: '' });
+    const newValidation = {
+      creatorInvalid: !formValue.creator || formValue.creator === '',
+      purchase_order_noInvalid:
+        !formValue.purchase_order_no || formValue.purchase_order_no === '',
+      deliveryDateInvalid:
+        !formValue.delivery_date || formValue.delivery_date === '',
+      supplierInvalid: !formValue.supplier || formValue.supplier === '',
+    };
+    setFieldValidation(newValidation);
 
-    // if (Object.values(newValidation).some((v) => v)) {
-    //   setFieldValidation(newValidation);
-    //   return;
-    // }
-    if (taskList.length === 0) {
-      setIsAlert(true);
+    if (Object.values(newValidation).some((v) => v)) {
+      setFieldValidation(newValidation);
+      setAlert({ isAlert: true, msg: 'Please check some field required.' });
       return;
-    } else {
-      setIsAlert(false);
+    }
+
+    if (taskList.length === 0) {
+      setAlert({
+        isAlert: true,
+        msg: 'At least one outbound materail requred.',
+      });
+      return;
     }
     if (pathName === `${process.env.PATH_PREFIX}/operation/outbound/create`) {
       let body = {
         ...formValue,
         source: 'manual',
-        request_detail: convertTaskListToFormat(taskList),
+        details: convertTaskListToFormat(taskList),
       };
       console.log(body);
       addOutboundRecord(body).then(() => {
@@ -160,10 +206,13 @@ function OutboundCreateForm({ id }) {
   function convertTaskListToFormat(taskList) {
     const shelfRecords = taskList.map((task) => {
       return {
-        material_code: task.product_code,
+        material_id: task.id,
+        material_name: task.name,
+        operation_id: '',
+        rf_id: '',
+        stock_quantity: 0,
         quantity: task.quantity,
-        stock_location_id: task.expact_stock_location_id,
-        wh_id: task.expect_wh_id,
+        location_id: task.suggested_storage_location_id,
       };
     });
 
@@ -220,12 +269,7 @@ function OutboundCreateForm({ id }) {
             labelText="Status"
             id="status"
             placeholder="Status"
-            value={
-              pathName ===
-              `${process.env.PATH_PREFIX}/operation/outbound/create`
-                ? 'Pending'
-                : 'Outbound'
-            }
+            value={formValue.status}
           />
         </Column>
       </Grid>
@@ -240,11 +284,12 @@ function OutboundCreateForm({ id }) {
         />
       </div>
 
-      {isAlert && (
+      {alert.isAlert && (
         <InlineNotification
           className="w-full"
           title="Notice: "
-          subtitle="No inbound material"
+          subtitle={alert.msg}
+          onClose={() => setAlert({ isAlert: false, msg: '' })}
         />
       )}
       <div className="flex space-x-4 mt-10 justify-center ">

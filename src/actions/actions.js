@@ -203,11 +203,13 @@ export async function fetchTodayOutboundDone(params) {
     });
 }
 
-export async function fetchOutboundWithFilter(body) {
-  return httpToBackend.post('/wms/outbound/get', body).then((res) => {
-    console.log(res);
-    return res.data.data;
-  });
+export async function fetchOutboundWithFilter(body, params) {
+  return httpToBackend
+    .post('/wms/outbound/get', body, { params })
+    .then((res) => {
+      console.log(res);
+      return res.data.data;
+    });
 }
 
 export async function updateOutboundRecord(body) {

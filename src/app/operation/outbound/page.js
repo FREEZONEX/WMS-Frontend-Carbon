@@ -19,6 +19,7 @@ import OutboundTable from '@/components/Table/OutboundTable';
 import { useRouter } from 'next/navigation';
 import moment from 'moment';
 import '@/app/page.scss';
+import { DateTimeFormat } from '@/utils/constants';
 
 const headers = [
   { key: 'id', header: 'ID' },
@@ -37,16 +38,16 @@ function Page() {
   const router = useRouter();
   const [refresh, setRefresh] = useState({});
   const defaultFormValue = {
-    outbound_id: '',
-    outbound_status: '',
-    outbound_type: '',
+    id: '',
+    status: '',
+    type: '',
     operator: '',
-    outbound_delivery_date: '',
-    outbound_purchase_order_no: '',
-    outbound_supplier: '',
-    material_code: '',
-    name: '',
+    delivery_date: '',
+    order_no: '',
+    supplier: '',
+    material_name: '',
   };
+  const [deliveryDateShow, setDeliveryDateShow] = useState('');
   const [formValue, setFormValues] = useState(defaultFormValue);
   const onFormValueChange = (e) => {
     const { id, value } = e.target;
@@ -61,10 +62,11 @@ function Page() {
     }
     setFormValues((prevValues) => ({
       ...prevValues,
-      outbound_delivery_date: moment(e[0]).format(),
+      delivery_date: moment(e[0]).format(),
     }));
+    setDeliveryDateShow(moment(e[0]).format(DateTimeFormat.shortDate));
   };
-  const [isSearchClicked, setIsSearchClicked] = useState(false);
+  const [isSearchClicked, setIsSearchClicked] = useState(0);
 
   console.log(formValue);
   return (
@@ -120,7 +122,7 @@ function Page() {
           <TextInput
             className="flex-auto "
             labelText="Outbound Id"
-            id="outbound_id"
+            id="id"
             placeholder="Id"
             value={formValue.outbound_id}
             onChange={onFormValueChange}
@@ -131,7 +133,7 @@ function Page() {
             <DatePickerInput
               placeholder="dd/mm/yyyy"
               labelText="Delivery date"
-              id="outbound_delivery_date"
+              value={deliveryDateShow}
             />
           </DatePicker>
         </Column>
@@ -140,7 +142,7 @@ function Page() {
           <TextInput
             className="flex-auto "
             labelText="Purchase order No."
-            id="outbound_purchase_order_no"
+            id="purchase_order_no"
             placeholder="Purchase order No."
             value={formValue.outbound_purchase_order_no}
             onChange={onFormValueChange}
@@ -150,7 +152,7 @@ function Page() {
           <TextInput
             className="flex-auto "
             labelText="Supplier"
-            id="outbound_supplier"
+            id="supplier"
             placeholder="Supplier"
             value={formValue.outbound_supplier}
             onChange={onFormValueChange}
@@ -159,7 +161,7 @@ function Page() {
         <Column className="ml-0" sm={2} md={4} lg={4}>
           <Select
             className="flex-auto"
-            id="outbound_status"
+            id="status"
             defaultValue=""
             labelText="Status"
             value={formValue.outbound_status}
@@ -184,20 +186,10 @@ function Page() {
         <Column className="ml-0" sm={2} md={4} lg={4}>
           <TextInput
             className="flex-auto "
-            labelText="Material Code"
-            id="material_code"
-            placeholder="Material Code"
-            value={formValue.material_code}
-            onChange={onFormValueChange}
-          />
-        </Column>
-        <Column className="ml-0" sm={2} md={4} lg={4}>
-          <TextInput
-            className="flex-auto "
             labelText="Material Name"
-            id="name"
+            id="material_name"
             placeholder="Material Name"
-            value={formValue.name}
+            value={formValue.material_name}
             onChange={onFormValueChange}
           />
         </Column>
@@ -221,7 +213,9 @@ function Page() {
         <Column className="ml-0" sm={1} md={1} lg={1}>
           <HeaderGlobalAction
             aria-label="Search"
-            onClick={() => setIsSearchClicked(true)}
+            onClick={() =>
+              setIsSearchClicked((prevValue) => ({ prevValue: prevValue + 1 }))
+            }
           >
             <Search size={16} />
           </HeaderGlobalAction>
@@ -230,8 +224,9 @@ function Page() {
           <HeaderGlobalAction
             aria-label="Remove Filters"
             onClick={() => {
-              setIsSearchClicked(false);
+              setIsSearchClicked(0);
               setFormValues(defaultFormValue);
+              setDeliveryDateShow('');
             }}
           >
             <CloseOutline size={16} />
