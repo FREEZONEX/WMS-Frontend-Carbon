@@ -1,5 +1,9 @@
 # WMS Frontend with NextJS + Carbon UI
 
+The following diagram shows the structure of this system.
+![alt text](./image.png)
+Or you can click [here](https://ofra65wfwe.feishu.cn/docx/VO6Gdq3bAoTUS4x1ah1cDfLLnAd) to view.
+
 Clone the repository to your local device. Run the following cmd:
 
 below command is used for running in development mode
