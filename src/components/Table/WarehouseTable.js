@@ -22,6 +22,7 @@ import {
 import EditWarehouseModal from '../Modal/EditWarehouseModal';
 import TableSkeleton from '../Skeleton/TableSkeleton';
 import ShowMessageModal from '../Modal/ShowMessageModal';
+import WarehouseCard from '../MobileComponents/Warehouse/WarehouseCard';
 
 function WarehouseTable({
   headers,
@@ -31,7 +32,7 @@ function WarehouseTable({
   isSearchClicked,
 }) {
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(9999);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   //const rowsToShow = rows.slice((page - 1) * pageSize, page * pageSize);
@@ -90,23 +91,14 @@ function WarehouseTable({
     });
     setModalOpen(true);
   };
-  console.log(selectedWarehouseInfo);
+  console.log(rows);
 
   return (
-    <div>
-      {loading && <TableSkeleton headers={headers} />}
-      <StructuredListWrapper isCondensed>
-        {!loading && (
-          <StructuredListHead>
-            <StructuredListRow head className="headerRow">
-              {headers.map((header, index) => (
-                <StructuredListCell head key={header.key}>
-                  {header.header}
-                </StructuredListCell>
-              ))}
-            </StructuredListRow>
-          </StructuredListHead>
-        )}
+    <div className="flex flex-col gap-2">
+      {rows.map((row) => (
+        <WarehouseCard key={row.id} warehouse={row}></WarehouseCard>
+      ))}
+      {/* <StructuredListWrapper isCondensed>
         <StructuredListBody>
           {rows.map((row, index) => (
             <StructuredListRow key={row.id}>
@@ -121,8 +113,7 @@ function WarehouseTable({
                             row['warehouse_id'],
                             row['name']
                           )
-                        }
-                      >
+                        }>
                         All Locations
                       </Link>
                     </StructuredListCell>
@@ -134,15 +125,13 @@ function WarehouseTable({
                       <IconButton
                         size="sm"
                         kind="ghost"
-                        className="mr-[0.5rem]"
-                      >
+                        className="mr-[0.5rem]">
                         <Edit size={15} onClick={() => handleEditRow(row)} />
                       </IconButton>
                       <IconButton
                         size="sm"
                         kind="ghost"
-                        onClick={() => handleDeleteRow(row.id)}
-                      >
+                        onClick={() => handleDeleteRow(row.id)}>
                         <Delete size={15} />
                       </IconButton>
                     </StructuredListCell>
@@ -175,16 +164,14 @@ function WarehouseTable({
       <ShelfLocationModal
         warehouse_info={selectedWarehouseInfo}
         isModalOpen={isModalOpen}
-        setModalOpen={setModalOpen}
-      ></ShelfLocationModal>
+        setModalOpen={setModalOpen}></ShelfLocationModal>
 
       <EditWarehouseModal
         isOpen={isEditModalOpen}
         onClose={handleEditModalClose}
         warehouseValues={editRow}
         setRefresh={setRefresh}
-        setWarehouseValues={setEditRow}
-      ></EditWarehouseModal>
+        setWarehouseValues={setEditRow}></EditWarehouseModal> */}
     </div>
   );
 }

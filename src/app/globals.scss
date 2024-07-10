@@ -22,7 +22,7 @@
 
 .cds--content {
   padding: 2rem;
-  padding-top: 5rem;
+  padding-top: 4rem;
   color: var(--cds-text-primary, #161616);
   will-change: margin-left;
 }
@@ -58,19 +58,16 @@
   }
 }
 @media (max-width: 65.98rem) {
-  .cds--side-nav--ux {
-    width: 3rem;
-  }
   .cds--side-nav--expanded {
     width: 16rem;
   }
 }
 .cds--side-nav--ux {
   top: 3rem;
-  width: 3rem;
+  width: 0rem;
 }
 .cds--side-nav--expanded {
-  width: 16rem;
+  width: 10rem;
 }
 
 :root[data-carbon-theme='g10'] {

@@ -9,10 +9,14 @@ import {
   HeaderGlobalAction,
   Grid,
   Column,
+  Select,
+  SelectItem,
+  Search,
 } from '@carbon/react';
-import { Add, Search, CloseOutline } from '@carbon/icons-react';
+import { Add, CloseOutline } from '@carbon/icons-react';
 import WarehouseTable from '@/components/Table/WarehouseTable';
 import CreateWarehouseModal from '@/components/Modal/CreateWarehouseModal';
+import WarehouseCard from '@/components/MobileComponents/Warehouse/WarehouseCard';
 import { useRouter } from 'next/navigation';
 import '@/app/page.scss';
 
@@ -55,43 +59,25 @@ function Page() {
   const [isSearchClicked, setIsSearchClicked] = useState(false);
   return (
     <div>
-      <Breadcrumb>
-        <BreadcrumbItem className="cursor-pointer">
-          <a
-            onClick={() => {
-              router.push(`${process.env.PATH_PREFIX}/home`);
-            }}
-          >
-            Home
-          </a>
-        </BreadcrumbItem>
-        <BreadcrumbItem
-          className="cursor-pointer"
-          onClick={() => {
-            router.push(`${process.env.PATH_PREFIX}/warehouse`);
-          }}
-        >
-          Warehouse
-        </BreadcrumbItem>
-      </Breadcrumb>
       <div className="bx--col-lg-16 flex justify-between items-center">
         <div>
-          <Heading className="mt-2 text-[28px] font-normal">Warehouse</Heading>
+          <Heading className="mt-1 text-[28px] font-normal">Warehouse</Heading>
           <Heading className="mt-1 text-sm">
             List of warehouses for your storage solutions
           </Heading>
+          <Button
+            className="cds--btn-customize mt-3"
+            onClick={() => {
+              setCreateModalOpen(true);
+            }}
+            isExpressive
+            size="sm"
+            renderIcon={Add}
+          >
+            Create a Warehouse
+          </Button>
         </div>
-        <Button
-          className="cds--btn-customize"
-          onClick={() => {
-            setCreateModalOpen(true);
-          }}
-          isExpressive
-          size="sm"
-          renderIcon={Add}
-        >
-          Create a Warehouse
-        </Button>
+
         <CreateWarehouseModal
           isOpen={isCreateModalOpen}
           onClose={handleModalClose}
@@ -99,67 +85,55 @@ function Page() {
         />
       </div>
 
-      <Grid className="p-0 mt-[50px] gap-[9px]">
-        <Column className="ml-0 " sm={2} md={4} lg={4}>
-          <TextInput
-            className="flex-auto"
-            labelText="Warehouse Id"
-            id="warehouse_id"
-            placeholder="Id"
-            value={formValue.warehouse_id}
-            onChange={onFormValueChange}
-          />
-        </Column>
-        <Column className="ml-0 " sm={2} md={4} lg={4}>
-          <TextInput
-            className="flex-auto"
-            labelText="Name"
-            id="name"
-            placeholder="Name"
-            value={formValue.name}
-            onChange={onFormValueChange}
-          />
-        </Column>
-        <Column className="ml-0 " sm={2} md={4} lg={4}>
-          <TextInput
-            className="flex-auto"
-            labelText="Type"
+      <div className="flex flex-col mt-[50px] gap-[9px]">
+        <div className="flex w-full gap-1">
+          <Select
+            className="w-1/2"
             id="type"
-            placeholder="Type"
+            defaultValue=""
+            hideLabel={true}
             value={formValue.type}
             onChange={onFormValueChange}
-          />
-        </Column>
-        <Column className="ml-0 " sm={2} md={4} lg={4}>
-          <TextInput
-            className="flex-auto"
-            labelText="Manager"
+          >
+            <SelectItem text="Type" hidden />
+            <SelectItem value="" text="None" />
+            <SelectItem value="Option 2" text="Option 2" />
+            <SelectItem value="Option 3" text="Option 3" />
+            <SelectItem value="Option 4" text="Option 4" />
+          </Select>
+          <Select
+            className="w-1/2"
             id="manager"
-            placeholder="Manager"
+            defaultValue=""
+            hideLabel={true}
             value={formValue.manager}
             onChange={onFormValueChange}
+          >
+            <SelectItem text="Manager" hidden />
+            <SelectItem value="" text="None" />
+            <SelectItem value="Option 2" text="Option 2" />
+            <SelectItem value="Option 3" text="Option 3" />
+            <SelectItem value="Option 4" text="Option 4" />
+          </Select>
+        </div>
+        <div className="flex w-full gap-1">
+          <Search
+            size="lg"
+            placeholder="Find your items"
+            labelText="Search"
+            closeButtonLabelText="Clear search input"
+            id="search-1"
+            onChange={() => {}}
+            onKeyDown={() => {}}
           />
-        </Column>
-        <Column className="ml-0 " sm={1} md={1} lg={1}>
-          <HeaderGlobalAction
-            aria-label="Search"
-            onClick={() => setIsSearchClicked(true)}
-          >
-            <Search size={16} />
-          </HeaderGlobalAction>
-        </Column>
-        <Column className="ml-0 " sm={1} md={1} lg={1}>
-          <HeaderGlobalAction
-            aria-label="Remove Filters"
-            onClick={() => {
-              setIsSearchClicked(false);
-              setFormValue(defaultFormValue);
-            }}
-          >
-            <CloseOutline size={16} />
-          </HeaderGlobalAction>
-        </Column>
-      </Grid>
+          <Button
+            style={{ backgroundColor: '#0F62FE', color: 'white' }}
+            renderIcon={Add}
+            iconDescription="WarehouseID, Name ..."
+            hasIconOnly
+          />
+        </div>
+      </div>
 
       <div className="mt-12">
         <WarehouseTable

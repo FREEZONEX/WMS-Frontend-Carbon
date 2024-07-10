@@ -144,92 +144,10 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
             >
               Auditing
             </SideNavLink>
-            <SideNavLink
-              isSideNavExpanded={isExpanded}
-              renderIcon={DocumentTasks}
-              onClick={() => {
-                router.push(`${process.env.PATH_PREFIX}/operation/task`);
-              }}
-              className="cursor-pointer"
-              isActive={isCurrentPath('/operation/task')}
-            >
-              Task
-            </SideNavLink>
-            <SideNavLink
-              isSideNavExpanded={isExpanded}
-              renderIcon={IbmEngineeringSystemsDesignRhapsodySn2}
-              onClick={() => {
-                router.push(`${process.env.PATH_PREFIX}/operation/task/rules`);
-              }}
-              className="cursor-pointer"
-              isActive={isCurrentPath('/operation/task/rules')}
-            >
-              Rule
-            </SideNavLink>
-            <SideNavLink
-              isSideNavExpanded={isExpanded}
-              renderIcon={GroupResource}
-              onClick={() => {
-                router.push(
-                  `${process.env.PATH_PREFIX}/operation/task/resource`
-                );
-              }}
-              className="cursor-pointer"
-              isActive={isCurrentPath('/operation/task/resource')}
-            >
-              Resource
-            </SideNavLink>
-            <SwitcherDivider />
-            <SideNavLink
-              isSideNavExpanded={isExpanded}
-              renderIcon={Analytics}
-              onClick={() => {
-                router.push(`${process.env.PATH_PREFIX}/analysis`);
-              }}
-              className="cursor-pointer"
-              isActive={isCurrentPath('/analysis')}
-            >
-              Analysis
-            </SideNavLink>
-            <SideNavLink
-              isSideNavExpanded={isExpanded}
-              renderIcon={WatsonHealth3DCursor}
-              onClick={() => {
-                router.push(`${process.env.PATH_PREFIX}/analysis/3d`);
-              }}
-              className="cursor-pointer"
-              isActive={isCurrentPath('/analysis/3d')}
-            >
-              3D-Modeling
-            </SideNavLink>
           </SideNavItems>
         </SideNav>
       </Theme>
       <HeaderGlobalBar className="flex items-center">
-        <Toggle
-          labelA="Light"
-          labelB="Dark"
-          className="mr-[2rem]"
-          size="sm"
-          id="theme-toggle"
-          toggled={theme.headerTheme === 'g100'}
-          onToggle={(e) => {
-            console.log(e);
-            if (e) {
-              setTheme({
-                headerTheme: 'g100',
-                contentTheme: 'g10',
-                sideNavTheme: 'g90',
-              });
-            } else {
-              setTheme({
-                headerTheme: 'white',
-                contentTheme: 'white',
-                sideNavTheme: 'white',
-              });
-            }
-          }}
-        />
         <HeaderGlobalAction aria-label="Settings">
           <Settings size={20} />
         </HeaderGlobalAction>

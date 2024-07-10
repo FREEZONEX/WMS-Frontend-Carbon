@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
       <body>
         <ThemeProvider>
           <Providers>
-            <div className="ml-12">{children}</div>
+            <div>{children}</div>
           </Providers>
         </ThemeProvider>
       </body>
