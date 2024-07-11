@@ -1,14 +1,34 @@
-import React from 'react';
-import { Heading, Link } from '@carbon/react';
+import React, { useState } from 'react';
+import { Heading, Link, Menu, MenuItem, OverflowMenu } from '@carbon/react';
 import { OverflowMenuVertical } from '@carbon/icons-react';
+import './warehouseCard.scss';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
-function WarehouseCard({ warehouse }) {
-  console.log(warehouse);
+function WarehouseCard({
+  warehouse,
+  handleDeleteRow,
+  handleShowStorageLocation,
+}) {
   return (
     <div className="border border-solid border-[#E0E0E0] shadow-md">
       <div className="w-full flex justify-between items-start inline-flex p-2 pl-3 pr-3 bg-[#E0E0E0]">
         <Heading className="text-sm font-semibold">Warehouse ID</Heading>
-        <OverflowMenuVertical />
+        <DropdownMenu className="mr-3">
+          <DropdownMenuTrigger>
+            <OverflowMenuVertical />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="min-w-[6rem] w-16">
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleDeleteRow(warehouse.id)}>
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className="space-y-[-8px]">
         <div className="flex justify-between items-center p-2 pl-3 pr-3">
@@ -41,7 +61,17 @@ function WarehouseCard({ warehouse }) {
         </div>
         <div className="flex justify-between items-center p-2 pl-3 pr-3">
           <Heading className="text-sm text-[#525252]">Storage Location</Heading>
-          <Link onClick={() => {}}>All Locations</Link>
+          <Link
+            onClick={() => {
+              handleShowStorageLocation(
+                warehouse?.id,
+                warehouse?.warehouse_id,
+                warehouse?.name
+              );
+            }}
+          >
+            All Locations
+          </Link>
         </div>
       </div>
     </div>

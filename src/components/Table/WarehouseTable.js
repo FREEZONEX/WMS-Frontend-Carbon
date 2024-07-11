@@ -24,7 +24,7 @@ import TableSkeleton from '../Skeleton/TableSkeleton';
 import ShowMessageModal from '../Modal/ShowMessageModal';
 import WarehouseCard from '../MobileComponents/Warehouse/WarehouseCard';
 
-function WarehouseTable({
+function WarehouseCardPanel({
   headers,
   refresh,
   setRefresh,
@@ -96,84 +96,14 @@ function WarehouseTable({
   return (
     <div className="flex flex-col gap-2">
       {rows.map((row) => (
-        <WarehouseCard key={row.id} warehouse={row}></WarehouseCard>
+        <WarehouseCard
+          key={row.id}
+          warehouse={row}
+          handleDeleteRow={handleDeleteRow}
+        ></WarehouseCard>
       ))}
-      {/* <StructuredListWrapper isCondensed>
-        <StructuredListBody>
-          {rows.map((row, index) => (
-            <StructuredListRow key={row.id}>
-              {headers.map((header) => {
-                if (header.key === 'storage_location') {
-                  return (
-                    <StructuredListCell key={header.key}>
-                      <Link
-                        onClick={() =>
-                          handleShowShelves(
-                            row.id,
-                            row['warehouse_id'],
-                            row['name']
-                          )
-                        }>
-                        All Locations
-                      </Link>
-                    </StructuredListCell>
-                  );
-                }
-                if (header.key == 'operation') {
-                  return (
-                    <StructuredListCell key={header.key} className="w-[100px]">
-                      <IconButton
-                        size="sm"
-                        kind="ghost"
-                        className="mr-[0.5rem]">
-                        <Edit size={15} onClick={() => handleEditRow(row)} />
-                      </IconButton>
-                      <IconButton
-                        size="sm"
-                        kind="ghost"
-                        onClick={() => handleDeleteRow(row.id)}>
-                        <Delete size={15} />
-                      </IconButton>
-                    </StructuredListCell>
-                  );
-                }
-                return (
-                  <StructuredListCell key={header.key}>
-                    {row[header.key]}
-                  </StructuredListCell>
-                );
-              })}
-            </StructuredListRow>
-          ))}
-        </StructuredListBody>
-      </StructuredListWrapper>
-      <Pagination
-        backwardText="Previous page"
-        forwardText="Next page"
-        itemsPerPageText="Items per page:"
-        page={page}
-        pageNumberText="Page Number"
-        pageSize={pageSize}
-        pageSizes={[10, 20, 30, 40, 50]}
-        totalItems={total}
-        onChange={({ page, pageSize }) => {
-          setPage(page);
-          setPageSize(pageSize);
-        }}
-      />
-      <ShelfLocationModal
-        warehouse_info={selectedWarehouseInfo}
-        isModalOpen={isModalOpen}
-        setModalOpen={setModalOpen}></ShelfLocationModal>
-
-      <EditWarehouseModal
-        isOpen={isEditModalOpen}
-        onClose={handleEditModalClose}
-        warehouseValues={editRow}
-        setRefresh={setRefresh}
-        setWarehouseValues={setEditRow}></EditWarehouseModal> */}
     </div>
   );
 }
 
-export default WarehouseTable;
+export default WarehouseCardPanel;
