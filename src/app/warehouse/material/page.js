@@ -8,10 +8,12 @@ import {
   Button,
   HeaderGlobalAction,
 } from '@carbon/react';
-import { Add, Search, CloseOutline } from '@carbon/icons-react';
+import { Add, Search, CloseOutline, ScanAlt } from '@carbon/icons-react';
 import MaterialTable from '@/components/Table/MaterialTable';
 import { useRouter } from 'next/navigation';
 import '@/app/page.scss';
+import QRCodeGenerate from '@/components/QRCode/qrcode-generate';
+import ShowMessageModal from '@/components/Modal/ShowMessageModal';
 
 const headers = [
   { key: 'id', header: 'ID' },
@@ -44,6 +46,15 @@ function Page() {
 
   const [refresh, setRefresh] = useState({});
   const [isSearchClicked, setIsSearchClicked] = useState(false);
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+  const [materialCodes, setMaterialCodes] = useState([]);
+  const handleQRCode = () => {
+    if (materialCodes.length == 0) {
+      ShowMessageModal.showInfo('Please select an item at least.');
+      return;
+    }
+    setIsQRModalOpen(true);
+  };
   return (
     <div>
       <Breadcrumb>
@@ -83,16 +94,22 @@ function Page() {
         <div>
           <Button
             className="cds--btn-customize"
-            onClick={() => {
-              router.push(`${process.env.PATH_PREFIX}/warehouse/material/rfid`);
-            }}
+            // onClick={() => {
+            //   router.push(`${process.env.PATH_PREFIX}/warehouse/material/rfid`);
+            // }}
             style={{ backgroundColor: '#6f42c1', marginRight: '8px' }}
             isExpressive
             size="sm"
-            renderIcon={Search}
+            onClick={handleQRCode}
+            renderIcon={ScanAlt}
           >
-            RFID Tag
+            Generate QRCode
           </Button>
+          <QRCodeGenerate
+            texts={materialCodes}
+            isModalOpen={isQRModalOpen}
+            onClose={() => setIsQRModalOpen(false)}
+          ></QRCodeGenerate>
           <Button
             className="cds--btn-customize"
             onClick={() => {
@@ -156,6 +173,7 @@ function Page() {
           setRefresh={setRefresh}
           filters={formValue}
           isSearchClicked={isSearchClicked}
+          setMaterialCodes={setMaterialCodes}
         />
       </div>
     </div>

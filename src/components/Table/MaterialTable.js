@@ -9,6 +9,8 @@ import {
   Pagination,
   Tag,
   IconButton,
+  CheckboxGroup,
+  Checkbox,
 } from '@carbon/react';
 import { Edit, Delete } from '@carbon/icons-react';
 import './_table.scss';
@@ -29,6 +31,7 @@ function MaterialTable({
   setRefresh,
   filters,
   isSearchClicked,
+  setMaterialCodes,
 }) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -78,6 +81,36 @@ function MaterialTable({
       deleteMaterial({ id }).then((res) => setRefresh({}));
     });
   };
+  const checkboxOnChange = (event, { checked, id }) => {
+    if (id == 'checkbox-all') {
+      const codes = [];
+      const checks = document.getElementsByClassName('cds--checkbox');
+      console.log(checks);
+      if (checked) {
+        for (let i = 0; i < checks.length; i++) {
+          checks[i].checked = true;
+          if (checks[i].defaultValue) {
+            codes.push(checks[i].defaultValue);
+          }
+        }
+        setMaterialCodes(codes);
+      } else {
+        for (let i = 0; i < checks.length; i++) {
+          checks[i].checked = false;
+        }
+        setMaterialCodes([]);
+      }
+    } else {
+      const signleCheck = document.getElementById(id);
+      if (checked) {
+        setMaterialCodes((prev) => [...prev, signleCheck.defaultValue]);
+      } else {
+        setMaterialCodes((prev) =>
+          prev.filter((t) => t != signleCheck.defaultValue)
+        );
+      }
+    }
+  };
   return (
     <div>
       {loading && <TableSkeleton headers={headers} />}
@@ -85,6 +118,9 @@ function MaterialTable({
         {!loading && (
           <StructuredListHead>
             <StructuredListRow head className="headerRow">
+              <StructuredListCell>
+                <Checkbox id="checkbox-all" onChange={checkboxOnChange} />
+              </StructuredListCell>
               {headers.map((header, index) => (
                 <StructuredListCell head key={header.key}>
                   {header.header}
@@ -96,6 +132,14 @@ function MaterialTable({
         <StructuredListBody>
           {rows.map((row, index) => (
             <StructuredListRow key={row.id}>
+              <StructuredListCell>
+                <Checkbox
+                  id={`checkbox-${row.id}`}
+                  hideLabel={true}
+                  defaultValue={row['material_code']}
+                  onChange={checkboxOnChange}
+                />
+              </StructuredListCell>
               {headers.map((header) => {
                 if (header.key === 'product_type') {
                   return (
@@ -168,6 +212,7 @@ function MaterialTable({
         onChange={({ page, pageSize }) => {
           setPage(page);
           setPageSize(pageSize);
+          checkboxOnChange(null, { checked: false, id: 'checkbox-all' });
         }}
       />
       <EditMaterialModal
