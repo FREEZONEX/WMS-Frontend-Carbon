@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Heading, Breadcrumb, BreadcrumbItem } from '@carbon/react';
 import { SimpleBarChart, GaugeChart, MeterChart } from '@carbon/charts-react';
 import '@carbon/charts/styles.css';
@@ -30,127 +30,208 @@ import {
   Close,
   Wheat,
 } from '@carbon/icons-react';
-
+import moment from 'moment';
 import {
   fetchTodayInbound,
   fetchTodayInboundDone,
   fetchTodayOutbound,
   fetchTodayOutboundDone,
 } from '@/actions/actions';
+import * as echarts from 'echarts';
+// const MyLineChart1 = () => {
+//   const [data, setData] = useState([]);
+//   const [csvOnlyData, setCsvOnlyData] = useState([]);
+//   const [selectedWarehouse, setSelectedWarehouse] = useState('Aluminum Foil');
+//   const [warehouseNames, setWarehouseNames] = useState([]);
+
+//   const currentDate = new Date();
+//   const previousDate = new Date(currentDate);
+//   previousDate.setDate(currentDate.getDate() - 1);
+//   const nextDate = new Date(currentDate);
+//   nextDate.setDate(currentDate.getDate() + 1);
+
+//   const fetchApiData = () => {
+//     fetch('https://supos.app:8081/get_predictions')
+//     // fetch('http://localhost:5000/get_predictions')
+//       .then(response => response.json())
+//       .then(apiData => {
+//         const apiDetails = apiData.test[selectedWarehouse];
+//         const additionalData = apiDetails ? [{
+//           date: currentDate.toISOString().split('T')[0],
+//           storage: apiDetails.currentdata[0],
+//           warehouse_name: selectedWarehouse,
+//           next_day_storage: apiDetails.prediction[0]
+//         }, {
+//           date: nextDate.toISOString().split('T')[0],
+//           storage: apiDetails.prediction[0],
+//           warehouse_name: selectedWarehouse
+//         }] : [];
+
+//         setData(prevData => prevData.filter(d =>  new Date(d.date) <= previousDate).concat(additionalData)); // Update only prediction data
+//       })
+//       .catch(error => {
+//         console.error("Failed to fetch API data:", error);
+//       });
+//   };
+
+//   useEffect(() => {
+//     // Load and parse the CSV data
+//     fetch('/realdatepre.csv')
+//       .then(response => response.text())
+//       .then(csvData => {
+//         const allData = Papa.parse(csvData, {
+//           header: true,
+//           skipEmptyLines: true
+//         }).data;
+
+//         const warehouseOptions = Array.from(new Set(allData.map(item => item.warehouse_name))).sort();
+//         setWarehouseNames(warehouseOptions);
+
+//         const filteredCsvData = allData.filter(d => d.warehouse_name === selectedWarehouse);
+//         let enhancedCsvData = filteredCsvData.map(d => ({
+//           ...d,
+//           storage: new Date(d.date) <= new Date() ? d.storage : null
+//         }));
+
+//         setCsvOnlyData(enhancedCsvData);
+//         setData(filteredCsvData);
+
+//         fetchApiData(); // Initial fetch for API data
+//       })
+//       .catch(error => {
+//         console.error("Error loading or parsing CSV:", error);
+//       });
+
+//     const interval = setInterval(fetchApiData, 5000); // Fetch API data every 5 seconds
+//     return () => clearInterval(interval); // Clean up the interval on component unmount
+//   }, [selectedWarehouse]);
+
+//   const handleWarehouseChange = (event) => {
+//     setSelectedWarehouse(event.target.value);
+//   };
+
+//   const [maxStorageValue, setMaxStorageValue] = useState(0);
+//   const updateMaxStorageValue = () => {
+//     const combinedData = [...data, ...csvOnlyData];
+//     const maxValue = combinedData.reduce((max, item) => Math.max(max, item.storage || 0), 0);
+//     setMaxStorageValue(maxValue + 50); // Adding 150 as buffer or according to your scaling needs
+//   };
+
+//   useEffect(() => {
+//     updateMaxStorageValue(); // Update max value on data change
+//   }, [data, csvOnlyData]);
+
 
 const MyLineChart1 = () => {
-  const [data, setData] = useState([]);
-  const [csvOnlyData, setCsvOnlyData] = useState([]);
+  const [historicalData, setHistoricalData] = useState([]);
+  const [predictedData, setPredictedData] = useState([]);
   const [selectedWarehouse, setSelectedWarehouse] = useState('Aluminum Foil');
-  const [warehouseNames, setWarehouseNames] = useState([]);
-
-  const fetchApiData = () => {
-    fetch('https://supos.app:8081/get_predictions')
-    // fetch('http://localhost:5000/get_predictions')
-      .then(response => response.json())
-      .then(apiData => {
-        const apiDetails = apiData.test[selectedWarehouse];
-        const additionalData = apiDetails ? [{
-          date: '2024-06-04',
-          storage: apiDetails.currentdata[0],
-          warehouse_name: selectedWarehouse
-        }, {
-          date: '2024-06-05',
-          storage: apiDetails.prediction[0],
-          warehouse_name: selectedWarehouse
-        }] : [];
-
-        setData(prevData => prevData.filter(d => new Date(d.date) <= new Date('2024-06-03')).concat(additionalData)); // Update only prediction data
-      })
-      .catch(error => {
-        console.error("Failed to fetch API data:", error);
-      });
-  };
+  const chartRef = useRef(null);
 
   useEffect(() => {
-    // Load and parse the CSV data
-    fetch('/realdatepre.csv')
-      .then(response => response.text())
-      .then(csvData => {
-        const allData = Papa.parse(csvData, {
-          header: true,
-          skipEmptyLines: true
-        }).data;
-
-        const warehouseOptions = Array.from(new Set(allData.map(item => item.warehouse_name))).sort();
-        setWarehouseNames(warehouseOptions);
-
-        const filteredCsvData = allData.filter(d => d.warehouse_name === selectedWarehouse);
-        let enhancedCsvData = filteredCsvData.map(d => ({
-          ...d,
-          storage: new Date(d.date) <= new Date('2024-06-03') ? d.storage : null
-        }));
-
-        setCsvOnlyData(enhancedCsvData);
-        setData(filteredCsvData);
-
-        fetchApiData(); // Initial fetch for API data
-      })
-      .catch(error => {
-        console.error("Error loading or parsing CSV:", error);
-      });
-
-    const interval = setInterval(fetchApiData, 5000); // Fetch API data every 5 seconds
-    return () => clearInterval(interval); // Clean up the interval on component unmount
+    fetchData();
   }, [selectedWarehouse]);
+
+  useEffect(() => {
+    if (chartRef.current && (historicalData.length || predictedData.length)) {
+      const chartInstance = echarts.init(chartRef.current);
+      const option = {
+        title: {
+          text: 'Storage Predictions'
+        },
+        tooltip: {
+          trigger: 'axis',
+          formatter: function (params) {
+            return params.map(param => {
+              return `${param.seriesName}<br/>${param.name} : ${param.value[1]}`;
+            }).join('<br/>');
+          }
+        },
+        legend: {
+          data: ['Historical Storage', 'Predicted Storage']
+        },
+        xAxis: {
+          type: 'time',
+          axisLabel: {
+            formatter: function (value) {
+              return echarts.format.formatTime('yyyy-MM-dd', value);
+            }
+          }
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            name: 'Historical Storage',
+            type: 'line',
+            data: historicalData.map(item => [new Date(item.date), item.storage]),
+            smooth: true,
+            itemStyle: {
+              color: '#3366CC'
+            }
+          },
+          {
+            name: 'Predicted Storage',
+            type: 'line',
+            data: predictedData.map(item => [new Date(item.date), item.storage]),
+            smooth: true,
+            itemStyle: {
+              color: '#DC3912'
+            },
+            lineStyle: {
+              type: 'dashed'
+            }
+          }
+        ]
+      };
+      chartInstance.setOption(option);
+
+      return () => {
+        chartInstance.dispose();
+      };
+    }
+  }, [historicalData, predictedData]);
+
+  const fetchData = async () => {
+    const response = await fetch(`http://127.0.0.1:5000/get_csv_data?warehouse_name=${encodeURIComponent(selectedWarehouse)}`);
+    const jsonData = await response.json();
+    setHistoricalData(jsonData.historicalData || []);
+    setPredictedData(jsonData.predictedData || []);
+  };
 
   const handleWarehouseChange = (event) => {
     setSelectedWarehouse(event.target.value);
   };
 
-  const [maxStorageValue, setMaxStorageValue] = useState(0);
-  const updateMaxStorageValue = () => {
-    const combinedData = [...data, ...csvOnlyData];
-    const maxValue = combinedData.reduce((max, item) => Math.max(max, item.storage || 0), 0);
-    setMaxStorageValue(maxValue + 50); // Adding 150 as buffer or according to your scaling needs
-  };
-
-  useEffect(() => {
-    updateMaxStorageValue(); // Update max value on data change
-  }, [data, csvOnlyData]);
-
-
-
-
   return (
     <div className="w-full">
-
-      <div className="flex items-center justify-center mb-2">
-        <Heading className="mt-3 text-xl font-normal mb-2">Real-time Predictions</Heading>
+      <div className="mb-2 text-center">
+        <h2 className="text-xl font-normal">Real-time Predictions</h2>
       </div>
-
-      <div className="flex items-center justify-center mb-2">
+      <div className="mb-2 text-center">
         <select onChange={handleWarehouseChange} value={selectedWarehouse}>
-          {warehouseNames.map(name => (
-            <option key={name} value={name}>{name}</option>
+          {[
+            'Aluminum Foil', 'Disposable Gloves', 'Paper Plates', 'Shampoo', 'Water Bottles', 'Toothpaste', 'Trash Bags', 'Vinegar', 'Soap Bars', 'Baking Soda',
+            'Bath Towels', 'Batteries', 'Bleach', 'Canned Beans', 'Canned Soup', 'Coffee Beans', 'Dish Soap', 'Face Masks', 'Flashlights', 'Flour',
+            'Hand Sanitizer', 'Instant Noodles', 'Laundry Detergent', 'Light Bulbs', 'Matches', 'Microwave Popcorn', 'Olive Oil', 'Paper Towels', 'Pasta', 'Peanut Butter',
+            'Plastic Cutlery', 'Plastic Wrap', 'Potato Chips', 'Printer Paper', 'Rubbing Alcohol', 'Salt', 'Shampoo', 'Soap Bars', 'Sugar', 'Tea Bags',
+            'Toilet Paper', 'Toothpaste', 'Trash Bags', 'Vinegar', 'SC51', 'SC52', 'SC53', 'SC54', 'SC55', 'SC56',
+            'SC57', 'SC58', 'SC60', 'SC61', 'SC63', 'SC66', 'SC68'
+          ].map((name, index) => (
+            <option key={index} value={name}>{name}</option>
           ))}
         </select>
       </div>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart
-            margin={{
-              top: 5, right: 30, left: 20, bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" xAxisId="allData" />
-            <XAxis hide={true} dataKey="date" xAxisId="csvData"/>
-            <YAxis domain={[0, maxStorageValue]} />
-            <Tooltip />
-            <Legend />
-            <Line xAxisId="allData" data={data} type="monotone" dataKey="storage" stroke="#82ca9d" dot={null} activeDot={{ r: 8 }} strokeDasharray="5 5" name="Prediction"/>
-            <Line xAxisId="csvData" data={csvOnlyData} type="monotone" dataKey="storage" stroke="#8884d8" dot={null} activeDot={{ r: 8 }} name="Storage"/>
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-
+      <div ref={chartRef} style={{ width: '100%', height: '400px' }} />
+    </div>
   );
 };
+
+
+
+
+
 
 
 const MyLineChart = ({ csvFile }) => {
