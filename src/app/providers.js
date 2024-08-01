@@ -17,7 +17,10 @@ export default function Providers({ children }) {
   const router = useRouter();
   useLayoutEffect(() => {
     const isLogin = window.localStorage.getItem(ISLOGIN);
-    if (path != '/login' && isLogin != null && isLogin.toString() == 'false') {
+    if (
+      path != '/login' &&
+      (isLogin == null || (isLogin != null && isLogin.toString() == 'false'))
+    ) {
       router.replace('/login');
     }
   });
