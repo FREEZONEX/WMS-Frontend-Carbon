@@ -327,7 +327,11 @@ export async function getUsers(body) {
     return res.data.data;
   });
 }
-
+export async function userLogin(body) {
+  return httpToBackend.post('/wms/user/login', body).then((res) => {
+    return res.data.data;
+  });
+}
 //rule
 export async function addRule(body) {
   return httpToBackend.post('/wms/rule/add', body).then((res) => {

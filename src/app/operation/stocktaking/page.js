@@ -14,6 +14,7 @@ import { Add, Search, CloseOutline } from '@carbon/icons-react';
 import StocktakingTable from '@/components/Table/StocktakingTable';
 import { useRouter } from 'next/navigation';
 import '@/app/page.scss';
+import { hasPermission } from '@/utils/utils';
 
 const headers = [
   { key: 'id', header: 'ID' },
@@ -93,6 +94,7 @@ function Page() {
           isExpressive
           size="sm"
           renderIcon={Add}
+          disabled={!hasPermission()}
         >
           Create a Auditing Order
         </Button>

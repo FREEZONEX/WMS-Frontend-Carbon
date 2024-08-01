@@ -7,6 +7,7 @@ import { Add } from '@carbon/icons-react';
 import { useRouter } from 'next/navigation';
 import RuleBoard from '@/components/Rule/RuleBoard';
 import '@/app/page.scss';
+import { hasPermission } from '@/utils/utils';
 
 export default function Page() {
   const router = useRouter();
@@ -61,6 +62,7 @@ export default function Page() {
               `${process.env.PATH_PREFIX}/operation/task/rules/create`
             );
           }}
+          disabled={!hasPermission()}
         >
           Create a New Rule
         </Button>

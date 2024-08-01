@@ -14,6 +14,8 @@ import {
   SwitcherDivider,
   Toggle,
   Theme,
+  OverflowMenu,
+  OverflowMenuItem,
 } from '@carbon/react';
 
 import {
@@ -34,7 +36,13 @@ import {
 import { usePathname } from 'next/navigation';
 import { ThemeContext } from '@/utils/ThemeContext';
 import { useRouter } from 'next/navigation';
-import { sysTitle, sysTitleShort } from '@/utils/constants';
+import {
+  ACCOUNT_TYPE,
+  ISLOGIN,
+  sysTitle,
+  sysTitleShort,
+  USER_NAME,
+} from '@/utils/constants';
 
 export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
   const router = useRouter();
@@ -45,7 +53,7 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
   };
 
   const [screenWidth, setScreenWidth] = useState(0);
-
+  const [userName, setUserName] = useState('');
   useEffect(() => {
     const handleResize = () => {
       setScreenWidth(window.innerWidth);
@@ -54,11 +62,21 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
     handleResize();
 
     window.addEventListener('resize', handleResize);
-
+    const userName = window.localStorage.getItem(USER_NAME);
+    setUserName(userName);
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(ISLOGIN, false);
+      window.localStorage.setItem(ACCOUNT_TYPE, '0');
+      window.localStorage.setItem(USER_NAME, '');
+      router.replace('/login');
+    }
+  };
 
   return (
     <Header aria-label={sysTitle}>
@@ -233,8 +251,17 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
         <HeaderGlobalAction aria-label="Settings">
           <Settings size={20} />
         </HeaderGlobalAction>
-        <HeaderGlobalAction aria-label="User">
-          <User size={20} />
+        <HeaderGlobalAction aria-label="User" tooltipAlignment="right">
+          <OverflowMenu
+            flipped={true}
+            renderIcon={User}
+            menuOffsetFlip={{ top: 5, left: -55 }}
+          >
+            {userName && (
+              <OverflowMenuItem itemText={userName}></OverflowMenuItem>
+            )}
+            <OverflowMenuItem itemText="Logout" onClick={handleLogout} />
+          </OverflowMenu>
         </HeaderGlobalAction>
         <HeaderGlobalAction aria-label="Info" tooltipAlignment="end">
           <Information size={20} />

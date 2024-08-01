@@ -24,6 +24,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import './_table.scss';
 import TableSkeleton from '../Skeleton/TableSkeleton';
 import ShowMessageModal from '../Modal/ShowMessageModal';
+import { hasPermission } from '@/utils/utils';
 
 function MaterialTable({
   headers,
@@ -177,6 +178,7 @@ function MaterialTable({
                         size="xs"
                         kind="ghost"
                         className="mr-[0.5rem]"
+                        disabled={!hasPermission()}
                       >
                         <Edit size={15} onClick={() => handleEditRow(row)} />
                       </IconButton>
@@ -184,6 +186,7 @@ function MaterialTable({
                         size="xs"
                         kind="ghost"
                         onClick={() => handleDeleteRow(row.id)}
+                        disabled={!hasPermission()}
                       >
                         <Delete size={15} />
                       </IconButton>

@@ -18,6 +18,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import moment from 'moment';
 import { DateTimeFormat } from '@/utils/constants';
 import TableSkeleton from '../Skeleton/TableSkeleton';
+import { hasPermission } from '@/utils/utils';
 
 function OutboundTable({
   headers,
@@ -186,8 +187,10 @@ function OutboundTable({
                         size="sm"
                         kind="secondary"
                         disabled={
-                          row['status']?.toLowerCase() === 'pending'
-                            ? false
+                          hasPermission()
+                            ? row['status']?.toLowerCase() === 'pending'
+                              ? false
+                              : true
                             : true
                         }
                         onClick={() => {

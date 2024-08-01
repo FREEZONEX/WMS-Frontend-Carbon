@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import ResourceTable from '@/components/Table/ResourceTable';
 import AddEditResourceModal from '@/components/Task/resource/AddEditResourceModal';
 import '@/app/page.scss';
+import { hasPermission } from '@/utils/utils';
 
 export default function Page() {
   const router = useRouter();
@@ -67,6 +68,7 @@ export default function Page() {
           style={{ backgroundColor: '#393939' }}
           renderIcon={Add}
           onClick={onCreate}
+          disabled={!hasPermission()}
         >
           Create a New Resource
         </Button>

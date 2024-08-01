@@ -15,6 +15,7 @@ import WarehouseTable from '@/components/Table/WarehouseTable';
 import CreateWarehouseModal from '@/components/Modal/CreateWarehouseModal';
 import { useRouter } from 'next/navigation';
 import '@/app/page.scss';
+import { hasPermission } from '@/utils/utils';
 
 const headers = [
   { key: 'name', header: 'Name' },
@@ -89,6 +90,7 @@ function Page() {
           isExpressive
           size="sm"
           renderIcon={Add}
+          disabled={!hasPermission()}
         >
           Create a Warehouse
         </Button>

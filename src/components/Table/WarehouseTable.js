@@ -22,6 +22,7 @@ import {
 import EditWarehouseModal from '../Modal/EditWarehouseModal';
 import TableSkeleton from '../Skeleton/TableSkeleton';
 import ShowMessageModal from '../Modal/ShowMessageModal';
+import { hasPermission } from '@/utils/utils';
 
 function WarehouseTable({
   headers,
@@ -135,6 +136,7 @@ function WarehouseTable({
                         size="sm"
                         kind="ghost"
                         className="mr-[0.5rem]"
+                        disabled={!hasPermission()}
                       >
                         <Edit size={15} onClick={() => handleEditRow(row)} />
                       </IconButton>
@@ -142,6 +144,7 @@ function WarehouseTable({
                         size="sm"
                         kind="ghost"
                         onClick={() => handleDeleteRow(row.id)}
+                        disabled={!hasPermission()}
                       >
                         <Delete size={15} />
                       </IconButton>

@@ -20,6 +20,7 @@ import { useRouter } from 'next/navigation';
 import moment from 'moment';
 import '@/app/page.scss';
 import { DateTimeFormat } from '@/utils/constants';
+import { hasPermission } from '@/utils/utils';
 
 const headers = [
   { key: 'id', header: 'ID' },
@@ -126,6 +127,7 @@ function Page() {
           isExpressive
           size="sm"
           renderIcon={Add}
+          disabled={!hasPermission()}
         >
           Create an Inbound List
         </Button>

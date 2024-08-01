@@ -6,7 +6,9 @@ export const DateTimeFormat = {
 export const sysTitle = 'Supply Chain Management';
 export const sysTitleShort = 'SCM';
 export const sysSubTitle = 'Supply Chain Management';
-
+export const ISLOGIN = '_ISLOGIN_';
+export const ACCOUNT_TYPE = '_ACCOUNT_TYPE_';
+export const USER_NAME = '_USER_NAME';
 export const tagColors = [
   'red',
   'magenta',

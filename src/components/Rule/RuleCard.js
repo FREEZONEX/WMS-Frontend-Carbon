@@ -5,6 +5,7 @@ import { Draggable } from '@carbon/icons-react';
 import { Heading } from '@carbon/react';
 import { Button } from '@/components/ui/button';
 import RuleEditModal from './RuleEditModal';
+import { hasPermission } from '@/utils/utils';
 
 function RuleCard({ rule, setRefresh }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,6 +33,7 @@ function RuleCard({ rule, setRefresh }) {
             <Button
               className="bg-[#E0E0E0] w-[57px] h-[24px] rounded-none text-[#525252] hover:text-white"
               onClick={() => onEdit()}
+              disabled={!hasPermission()}
             >
               Edit
             </Button>

@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import '@/app/page.scss';
 import QRCodeGenerate from '@/components/QRCode/qrcode-generate';
 import ShowMessageModal from '@/components/Modal/ShowMessageModal';
+import { hasPermission } from '@/utils/utils';
 
 const headers = [
   { key: 'id', header: 'ID' },
@@ -120,6 +121,7 @@ function Page() {
             isExpressive
             size="sm"
             renderIcon={Add}
+            disabled={!hasPermission()}
           >
             Create a Material
           </Button>
