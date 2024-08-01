@@ -195,7 +195,7 @@ const MyLineChart1 = () => {
 
   const fetchData = async () => {
     // const response = await fetch(`http://127.0.0.1:5000/get_csv_data?warehouse_name=${encodeURIComponent(selectedWarehouse)}`);
-    const response = await fetch(`https://supos.app:8081/get_csv_data?warehouse_name=${encodeURIComponent(selectedWarehouse)}`);
+    const response = await fetch(`https://supos.app:8081/get_predictions?warehouse_name=${encodeURIComponent(selectedWarehouse)}`);
     // https://supos.app:8081/get_predictions
     const jsonData = await response.json();
     setHistoricalData(jsonData.historicalData || []);
