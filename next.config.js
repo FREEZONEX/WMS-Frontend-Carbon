@@ -9,7 +9,7 @@ const nextConfig = {
 
     switch (process.env.RUNTIME_IDC_NAME) {
       case 'local':
-        destination = 'http://127.0.0.1:8085/:slug*'; // Local development destination
+        destination = 'http://192.168.39.101:8085/:slug*'; // Local development destination
         break;
       case 'sg':
         destination = 'http://supcononenorth.fortiddns.com:30086/:slug*'; // Production destination in China
@@ -25,6 +25,10 @@ const nextConfig = {
       {
         source: '/wmsbackendapi/:slug*',
         destination: destination,
+      },
+      {
+        source: '/ai/:slug*',
+        destination: 'http://supcononenorth.fortiddns.com:30078/query',
       },
     ];
   },
