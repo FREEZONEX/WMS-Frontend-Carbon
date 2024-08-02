@@ -18,9 +18,9 @@ function LoginPage() {
       .then((res) => {
         if (res) {
           if (typeof window !== 'undefined') {
-            window.localStorage.setItem(ISLOGIN, 'true');
-            window.localStorage.setItem(ACCOUNT_TYPE, res.accounttype);
-            window.localStorage.setItem(USER_NAME, res.username);
+            window.sessionStorage.setItem(ISLOGIN, 'true');
+            window.sessionStorage.setItem(ACCOUNT_TYPE, res.accounttype);
+            window.sessionStorage.setItem(USER_NAME, res.username);
             router.replace('/home');
           }
         } else {
@@ -40,13 +40,17 @@ function LoginPage() {
             <span className="ml-2">Login</span>
           </div>
           <div className="mt-4">
-            <FormGroup>
+            <FormGroup legendText="">
               <TextInput
+                id="userName"
+                labelText=""
                 placeholder="User Name"
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
               />
               <TextInput
+                id="password"
+                labelText=""
                 className="mt-6"
                 type="password"
                 value={password}

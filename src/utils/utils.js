@@ -8,8 +8,8 @@ export function cn(...inputs) {
 
 export function hasPermission() {
   if (typeof window !== 'undefined') {
-    const isLogin = window.localStorage.getItem(ISLOGIN);
-    const accounttype = window.localStorage.getItem(ACCOUNT_TYPE);
+    const isLogin = window.sessionStorage.getItem(ISLOGIN);
+    const accounttype = window.sessionStorage.getItem(ACCOUNT_TYPE);
     if (isLogin != null && isLogin == 'true') {
       if (accounttype == 1 || accounttype == '1') {
         return true;

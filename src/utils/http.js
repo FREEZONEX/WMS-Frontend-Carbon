@@ -11,6 +11,9 @@ httpToBackend.interceptors.request.use(
     if (Cookies.get('isv_token') != null) {
       config.headers.userToken = Cookies.get('isv_token');
     }
+    if (config.url.includes('/ai')) {
+      config.baseURL = '/ai';
+    }
     return config;
   },
   (err) => {

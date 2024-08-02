@@ -415,3 +415,8 @@ export async function getTaskDoneCount(params) {
       return res.data.data;
     });
 }
+export async function getAIAnswers(data) {
+  return httpToBackend.post('/ai/query', data).then((res) => {
+    return res.data;
+  });
+}

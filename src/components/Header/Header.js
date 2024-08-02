@@ -32,6 +32,7 @@ import {
   DocumentTasks,
   GroupResource,
   IbmEngineeringSystemsDesignRhapsodySn2,
+  AiLaunch,
 } from '@carbon/icons-react';
 import { usePathname } from 'next/navigation';
 import { ThemeContext } from '@/utils/ThemeContext';
@@ -62,8 +63,11 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
     handleResize();
 
     window.addEventListener('resize', handleResize);
-    const userName = window.localStorage.getItem(USER_NAME);
-    setUserName(userName);
+    const userName = window.sessionStorage.getItem(USER_NAME);
+    if (userName) {
+      setUserName(userName);
+    }
+
     return () => {
       window.removeEventListener('resize', handleResize);
     };
@@ -71,9 +75,9 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
 
   const handleLogout = () => {
     if (typeof window !== 'undefined') {
-      window.localStorage.setItem(ISLOGIN, false);
-      window.localStorage.setItem(ACCOUNT_TYPE, '0');
-      window.localStorage.setItem(USER_NAME, '');
+      window.sessionStorage.removeItem(ISLOGIN);
+      window.sessionStorage.removeItem(ACCOUNT_TYPE);
+      window.sessionStorage.removeItem(USER_NAME);
       router.replace('/login');
     }
   };
@@ -219,6 +223,17 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
               isActive={isCurrentPath('/analysis/3d')}
             >
               3D-Modeling
+            </SideNavLink>
+            <SideNavLink
+              isSideNavExpanded={isExpanded}
+              renderIcon={AiLaunch}
+              onClick={() => {
+                router.push(`${process.env.PATH_PREFIX}/ai`);
+              }}
+              className="cursor-pointer"
+              isActive={isCurrentPath('/ai')}
+            >
+              AI Assistant
             </SideNavLink>
           </SideNavItems>
         </SideNav>

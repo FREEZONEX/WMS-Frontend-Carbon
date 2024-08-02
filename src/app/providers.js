@@ -16,12 +16,17 @@ export default function Providers({ children }) {
   const path = usePathname();
   const router = useRouter();
   useLayoutEffect(() => {
-    const isLogin = window.localStorage.getItem(ISLOGIN);
+    const isLogin = window.sessionStorage.getItem(ISLOGIN);
+    if (!isLogin) {
+      router.replace('/login');
+      return;
+    }
     if (
       path != '/login' &&
       (isLogin == null || (isLogin != null && isLogin.toString() == 'false'))
     ) {
       router.replace('/login');
+      return;
     }
   });
   return (
