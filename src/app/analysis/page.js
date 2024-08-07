@@ -233,127 +233,127 @@ const MyLineChart1 = () => {
 
 
 
-
-
-
-const MyLineChart = ({ csvFile }) => {
-  const [data, setData] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [showLSTM, setShowLSTM] = useState(true);
-  const [showGRU, setShowGRU] = useState(true);
-
-  useEffect(() => {
-      Papa.parse(csvFile, {
-          download: true,
-          header: true,
-          complete: (results) => {
-              const parsedData = results.data.map(item => ({
-                  ...item,
-                  date: item.date,  // Ensure date is parsed if necessary
-                  storage: Number(item.storage),
-                  next_day_storage: Number(item.next_day_storage || 0),
-                  lstm: Number(item.lstm || 0),
-                  GRU: Number(item.mamba || 0)
-              }));
-              setData(parsedData);
-          }
-      });
-  }, [csvFile]);
-
-  useEffect(() => {
-      const interval = setInterval(() => {
-          setCurrentIndex(prevIndex => {
-              return (prevIndex < data.length - 1) ? prevIndex + 1 : prevIndex;
-          });
-      }, 3000); // Update every 3 seconds
-
-      return () => clearInterval(interval); // Clean up the interval on component unmount
-  }, [data]);
-
-  const startSliceIndex = Math.max(0, currentIndex - 59);
-  const currentData = data.slice(startSliceIndex, currentIndex + 1);
-  const predictionData = currentIndex < data.length - 1 ? data.slice(startSliceIndex, currentIndex + 2) : [];
-
-  return (
-      <div className="w-full">
-        <div className="flex  items-center justify-center mb-2">
-               <Heading className="mt-3 text-xl font-normal  mb-2">
-                Storage Predictions
-              </Heading>
-              </div>
-          <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={currentData}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                      type="monotone"
-                      dataKey="storage"
-                      stroke="#8884d8"
-                      strokeWidth={2}
-                      dot={false}
-                      isAnimationActive={false}
-                  />
-                  {currentIndex > 0 && currentIndex < data.length - 1 && (
-                      <Line
-                          type="monotone"
-                          dataKey="next_day_storage"
-                          stroke="#82ca9d"
-                          strokeWidth={2}
-                          strokeDasharray="5 5"
-                          dot={false}
-                          isAnimationActive={false}
-                          data={predictionData}
-                      />
-                  )}
-                  {showLSTM && (
-                      <Line
-                          type="monotone"
-                          dataKey="lstm"
-                          stroke="#ff7300"
-                          strokeWidth={2}
-                          strokeDasharray="5 5"
-                          dot={false}
-                          isAnimationActive={false}
-                          key="lstmLine"
-                      />
-                  )}
-                  {showGRU && (
-                      <Line
-                          type="monotone"
-                          dataKey="GRU"
-                          stroke="#387908"
-                          strokeWidth={2}
-                          strokeDasharray="5 5"
-                          dot={false}
-                          isAnimationActive={false}
-                          key="GRULine"
-                      />
-                  )}
-              </LineChart>
-          </ResponsiveContainer>
-          <div style={{ marginTop: '10px' }}>
-              <label>
-                  <input
-                      type="checkbox"
-                      checked={showLSTM}
-                      onChange={(e) => setShowLSTM(e.target.checked)}
-                  /> Show LSTM Prediction
-              </label>
-              <label style={{ marginLeft: '20px' }}>
-                  <input
-                      type="checkbox"
-                      checked={showGRU}
-                      onChange={(e) => setShowGRU(e.target.checked)}
-                  /> Show GRU Prediction
-              </label>
-          </div>
-      </div>
-  );
-};
+//
+//
+//
+//const MyLineChart = ({ csvFile }) => {
+//  const [data, setData] = useState([]);
+//  const [currentIndex, setCurrentIndex] = useState(0);
+//  const [showLSTM, setShowLSTM] = useState(true);
+//  const [showGRU, setShowGRU] = useState(true);
+//
+//  useEffect(() => {
+//      Papa.parse(csvFile, {
+//          download: true,
+//          header: true,
+//          complete: (results) => {
+//              const parsedData = results.data.map(item => ({
+//                  ...item,
+//                  date: item.date,  // Ensure date is parsed if necessary
+//                  storage: Number(item.storage),
+//                  next_day_storage: Number(item.next_day_storage || 0),
+//                  lstm: Number(item.lstm || 0),
+//                  GRU: Number(item.mamba || 0)
+//              }));
+//              setData(parsedData);
+//          }
+//      });
+//  }, [csvFile]);
+//
+//  useEffect(() => {
+//      const interval = setInterval(() => {
+//          setCurrentIndex(prevIndex => {
+//              return (prevIndex < data.length - 1) ? prevIndex + 1 : prevIndex;
+//          });
+//      }, 3000); // Update every 3 seconds
+//
+//      return () => clearInterval(interval); // Clean up the interval on component unmount
+//  }, [data]);
+//
+//  const startSliceIndex = Math.max(0, currentIndex - 59);
+//  const currentData = data.slice(startSliceIndex, currentIndex + 1);
+//  const predictionData = currentIndex < data.length - 1 ? data.slice(startSliceIndex, currentIndex + 2) : [];
+//
+//  return (
+//      <div className="w-full">
+//        <div className="flex  items-center justify-center mb-2">
+//               <Heading className="mt-3 text-xl font-normal  mb-2">
+//                Storage Predictions
+//              </Heading>
+//              </div>
+//          <ResponsiveContainer width="100%" height={300}>
+//              <LineChart data={currentData}
+//                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+//                  <CartesianGrid strokeDasharray="3 3" />
+//                  <XAxis dataKey="date" />
+//                  <YAxis />
+//                  <Tooltip />
+//                  <Legend />
+//                  <Line
+//                      type="monotone"
+//                      dataKey="storage"
+//                      stroke="#8884d8"
+//                      strokeWidth={2}
+//                      dot={false}
+//                      isAnimationActive={false}
+//                  />
+//                  {currentIndex > 0 && currentIndex < data.length - 1 && (
+//                      <Line
+//                          type="monotone"
+//                          dataKey="next_day_storage"
+//                          stroke="#82ca9d"
+//                          strokeWidth={2}
+//                          strokeDasharray="5 5"
+//                          dot={false}
+//                          isAnimationActive={false}
+//                          data={predictionData}
+//                      />
+//                  )}
+//                  {showLSTM && (
+//                      <Line
+//                          type="monotone"
+//                          dataKey="lstm"
+//                          stroke="#ff7300"
+//                          strokeWidth={2}
+//                          strokeDasharray="5 5"
+//                          dot={false}
+//                          isAnimationActive={false}
+//                          key="lstmLine"
+//                      />
+//                  )}
+//                  {showGRU && (
+//                      <Line
+//                          type="monotone"
+//                          dataKey="GRU"
+//                          stroke="#387908"
+//                          strokeWidth={2}
+//                          strokeDasharray="5 5"
+//                          dot={false}
+//                          isAnimationActive={false}
+//                          key="GRULine"
+//                      />
+//                  )}
+//              </LineChart>
+//          </ResponsiveContainer>
+//          <div style={{ marginTop: '10px' }}>
+//              <label>
+//                  <input
+//                      type="checkbox"
+//                      checked={showLSTM}
+//                      onChange={(e) => setShowLSTM(e.target.checked)}
+//                  /> Show LSTM Prediction
+//              </label>
+//              <label style={{ marginLeft: '20px' }}>
+//                  <input
+//                      type="checkbox"
+//                      checked={showGRU}
+//                      onChange={(e) => setShowGRU(e.target.checked)}
+//                  /> Show GRU Prediction
+//              </label>
+//          </div>
+//      </div>
+//  );
+//};
 
 
 function Page() {
@@ -743,9 +743,9 @@ function Page() {
                <MyLineChart1 csvFile="realdatepre.csv" />
           </div>
 
-        <div className="bg-white p-6 shadow h-128 flex w-full mt-5">
+       {/* <div className="bg-white p-6 shadow h-128 flex w-full mt-5">
                <MyLineChart csvFile="realdatetrain.csv" />
-          </div>
+          </div> */}
 
         <div className="flex py-8 w-full h-1/2-screen">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
