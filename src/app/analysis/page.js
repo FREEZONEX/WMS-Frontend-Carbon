@@ -129,8 +129,19 @@ const MyLineChart1 = () => {
   const chartRef = useRef(null);
 
   useEffect(() => {
-    fetchData();
-  }, [selectedWarehouse]);
+    const fetchData = async () => {
+      const response = await fetch(`https://supos.app:8081/get_predictions?warehouse_name=${encodeURIComponent(selectedWarehouse)}`);
+      const jsonData = await response.json();
+      setHistoricalData(jsonData.historicalData || []);
+      setPredictedData(jsonData.predictedData || []);
+    };
+
+    fetchData();  // Fetch data initially
+
+    const intervalId = setInterval(fetchData, 3000);  // Set interval to fetch data every 3 seconds
+
+    return () => clearInterval(intervalId);  // Clear interval on component unmount
+  }, [selectedWarehouse]);  // Re-run effect when 'selectedWarehouse' changes
 
   useEffect(() => {
     if (chartRef.current && (historicalData.length || predictedData.length)) {
@@ -192,16 +203,6 @@ const MyLineChart1 = () => {
       };
     }
   }, [historicalData, predictedData]);
-
-  const fetchData = async () => {
-    // const response = await fetch(`http://127.0.0.1:5000/get_csv_data?warehouse_name=${encodeURIComponent(selectedWarehouse)}`);
-    const response = await fetch(`https://supos.app:8081/get_predictions?warehouse_name=${encodeURIComponent(selectedWarehouse)}`);
-    // https://supos.app:8081/get_predictions
-    const jsonData = await response.json();
-    setHistoricalData(jsonData.historicalData || []);
-    setPredictedData(jsonData.predictedData || []);
-  };
-
   const handleWarehouseChange = (event) => {
     setSelectedWarehouse(event.target.value);
   };
