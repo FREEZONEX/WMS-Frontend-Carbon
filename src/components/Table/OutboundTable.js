@@ -52,7 +52,6 @@ function OutboundTable({
     fetchOutboundWithFilter(
       {
         ...filteredFormValue,
-        details: { material_name: filteredFormValue.material_name },
       },
       {
         pageNum: page,
@@ -61,6 +60,7 @@ function OutboundTable({
     ).then((res) => {
       setRows(res.list);
       setTotal(res.total);
+      setLoading(false);
     });
   }, [page, pageSize, refresh, filters, isSearchClicked]);
   const createQueryString = useCallback(

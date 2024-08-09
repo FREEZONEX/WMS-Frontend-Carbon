@@ -46,7 +46,6 @@ function Page() {
     delivery_date: '',
     order_no: '',
     supplier: '',
-    material_name: '',
   };
   const [deliveryDateShow, setDeliveryDateShow] = useState('');
   const [formValue, setFormValues] = useState(defaultFormValue);
@@ -182,16 +181,6 @@ function Page() {
             id="operator"
             placeholder="Outbounder"
             value={formValue.operator}
-            onChange={onFormValueChange}
-          />
-        </Column>
-        <Column className="ml-0" sm={2} md={4} lg={4}>
-          <TextInput
-            className="flex-auto "
-            labelText="Material Name"
-            id="material_name"
-            placeholder="Material Name"
-            value={formValue.material_name}
             onChange={onFormValueChange}
           />
         </Column>
