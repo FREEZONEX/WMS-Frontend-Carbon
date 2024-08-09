@@ -15,6 +15,7 @@ export default function AIPage() {
       ref.current.scrollTop = ref.current.scrollHeight;
     }
   }, [results]);
+
   const loadData = () => {
     getAIAnswers({
       question: question,
@@ -36,6 +37,11 @@ export default function AIPage() {
     loadData();
     if (ref) {
       ref.current.scrollTop = ref.current.scrollHeight;
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.keyCode === 13) {
+      handleCommit();
     }
   };
   return (
@@ -64,6 +70,7 @@ export default function AIPage() {
                 placeholder="Enter your question,then click send."
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
+                onKeyDown={handleKeyDown}
               ></TextInput>
               <Button
                 label="Send"

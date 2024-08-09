@@ -48,27 +48,20 @@ function OutboundTable({
       },
       {}
     );
-    if (Object.entries(filteredFormValue).length > 0) {
-      fetchOutboundWithFilter(
-        {
-          ...filteredFormValue,
-          details: { material_name: filteredFormValue.material_name },
-        },
-        {
-          pageNum: page,
-          pageSize,
-        }
-      ).then((res) => {
-        setRows(res.list);
-        setTotal(res.total);
-      });
-    } else {
-      fetchOutbound({ pageNum: page, pageSize }).then((res) => {
-        setRows(res.list);
-        setTotal(res.total);
-        setLoading(false);
-      });
-    }
+
+    fetchOutboundWithFilter(
+      {
+        ...filteredFormValue,
+        details: { material_name: filteredFormValue.material_name },
+      },
+      {
+        pageNum: page,
+        pageSize,
+      }
+    ).then((res) => {
+      setRows(res.list);
+      setTotal(res.total);
+    });
   }, [page, pageSize, refresh, filters, isSearchClicked]);
   const createQueryString = useCallback(
     (name, value) => {

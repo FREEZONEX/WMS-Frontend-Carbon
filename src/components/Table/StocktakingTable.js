@@ -34,17 +34,12 @@ function StocktakingTable({
 
   useEffect(() => {
     let filteredFormValue = {};
-    if (isSearchClicked) {
-      filteredFormValue = Object.entries(filters).reduce(
-        (acc, [key, value]) => {
-          if (value !== '') {
-            acc[key] = value;
-          }
-          return acc;
-        },
-        {}
-      );
-    }
+    filteredFormValue = Object.entries(filters).reduce((acc, [key, value]) => {
+      if (value !== '') {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
     fetchStocktaking(filteredFormValue, { pageNum: page, pageSize }).then(
       (res) => {
         if (res) {

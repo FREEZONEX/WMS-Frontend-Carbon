@@ -145,7 +145,7 @@ function Page() {
         <Column className="ml-0 " sm={1} md={1} lg={1}>
           <HeaderGlobalAction
             aria-label="Search"
-            onClick={() => setIsSearchClicked(true)}
+            onClick={() => setIsSearchClicked(!isSearchClicked)}
           >
             <Search size={16} />
           </HeaderGlobalAction>
@@ -154,8 +154,9 @@ function Page() {
           <HeaderGlobalAction
             aria-label="Remove Filters"
             onClick={() => {
-              setIsSearchClicked(false);
+              setIsSearchClicked(!isSearchClicked);
               setFormValue(defaultFormValue);
+              console.log('isclick', isSearchClicked);
             }}
           >
             <CloseOutline size={16} />

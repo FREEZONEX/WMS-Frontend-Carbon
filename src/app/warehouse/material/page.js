@@ -32,9 +32,9 @@ const headers = [
 function Page() {
   const router = useRouter();
   const defaultFormValue = {
-    product_code: '',
+    material_code: '',
     name: '',
-    product_type: '',
+    material_type: '',
   };
   const [formValue, setFormValues] = useState(defaultFormValue);
   const onFormValueChange = (e) => {
@@ -131,9 +131,9 @@ function Page() {
         <TextInput
           className="flex-auto w-20"
           labelText="Material Code"
-          id="product_code"
+          id="material_code"
           placeholder="Material Code"
-          value={formValue.product_code}
+          value={formValue.material_code}
           onChange={onFormValueChange}
         />
         <TextInput
@@ -147,21 +147,21 @@ function Page() {
         <TextInput
           className="flex-auto w-20"
           labelText="Material Type"
-          id="product_type"
+          id="material_type"
           placeholder="Material Type"
-          value={formValue.product_type}
+          value={formValue.material_type}
           onChange={onFormValueChange}
         />
         <HeaderGlobalAction
           aria-label="Search"
-          onClick={() => setIsSearchClicked(true)}
+          onClick={() => setIsSearchClicked(!isSearchClicked)}
         >
           <Search size={16} />
         </HeaderGlobalAction>
         <HeaderGlobalAction
           aria-label="Remove Filters"
           onClick={() => {
-            setIsSearchClicked(false);
+            setIsSearchClicked(!isSearchClicked);
             setFormValues(defaultFormValue);
           }}
         >

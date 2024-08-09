@@ -106,7 +106,7 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
           expanded={isExpanded}
           addFocusListeners={false}
           className="w-10"
-          onOverlayClick={() => {}}
+          onOverlayClick={toggleSideNavExpanded}
         >
           <SideNavItems isSideNavExpanded={isExpanded}>
             <SideNavLink
@@ -266,16 +266,24 @@ export const HeaderWSideNav = ({ isExpanded, toggleSideNavExpanded }) => {
         <HeaderGlobalAction aria-label="Settings">
           <Settings size={20} />
         </HeaderGlobalAction>
-        <HeaderGlobalAction aria-label="User" tooltipAlignment="right">
+        <HeaderGlobalAction aria-label="User" tooltipAlignment="end">
           <OverflowMenu
+            key={(row) => row.id}
             flipped={true}
             renderIcon={User}
             menuOffsetFlip={{ top: 5, left: -55 }}
           >
             {userName && (
-              <OverflowMenuItem itemText={userName}></OverflowMenuItem>
+              <OverflowMenuItem
+                key="username"
+                itemText={userName}
+              ></OverflowMenuItem>
             )}
-            <OverflowMenuItem itemText="Logout" onClick={handleLogout} />
+            <OverflowMenuItem
+              key="logout"
+              itemText="Logout"
+              onClick={handleLogout}
+            />
           </OverflowMenu>
         </HeaderGlobalAction>
         <HeaderGlobalAction aria-label="Info" tooltipAlignment="end">

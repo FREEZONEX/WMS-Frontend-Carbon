@@ -20,11 +20,12 @@ import {
   fetchWHNameMap,
   fetchSLNameMap,
   fetchWHSLNameMap,
+  fetchMaterialForOutbound,
 } from '@/actions/actions';
 import './_table.scss';
 import { usePathname } from 'next/navigation';
 
-function TaskListTable({ headers, rows, setRows }) {
+function TaskListTable({ headers, rows, setRows, isOutboundCreate = false }) {
   const defaultDetailValue = {
     name: '',
     material_code: '',
@@ -99,7 +100,14 @@ function TaskListTable({ headers, rows, setRows }) {
       if (value !== '') {
         setLoadingRows((prevLoadingRows) => [...prevLoadingRows, rowId]);
         try {
-          const materialData = await fetchMaterial({}, { [field]: value });
+          let materialData = null;
+          if (isOutboundCreate) {
+            materialData = await fetchMaterialForOutbound({
+              [field]: value,
+            });
+          } else {
+            materialData = await fetchMaterial({}, { [field]: value });
+          }
           if (materialData.list.length > 0) {
             const materialCurr = materialData.list[0];
             setRows((prevRows) =>

@@ -41,34 +41,26 @@ function WarehouseTable({
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedWarehouseInfo, setSelectedWarehouseInfo] = useState({});
   const [rows, setRows] = useState([]);
+
   useEffect(() => {
-    if (isSearchClicked) {
-      const filteredFormValue = Object.entries(filters).reduce(
-        (acc, [key, value]) => {
-          if (value !== '') {
-            acc[key] = value;
-          }
-          return acc;
-        },
-        {}
-      );
-      if (Object.entries(filteredFormValue).length > 0) {
-        fetchWarehousesWithFilters(filteredFormValue, {
-          pageNum: page,
-          pageSize,
-        }).then((res) => {
-          setRows(res.list);
-          setTotal(res.total);
-        });
-      }
-    } else {
-      fetchWarehouses({ pageNum: page, pageSize }).then((res) => {
-        setRows(res.list);
-        setTotal(res.total);
-        setLoading(false);
-      });
-    }
-  }, [page, pageSize, refresh, isSearchClicked, filters]);
+    const filteredFormValue = Object.entries(filters).reduce(
+      (acc, [key, value]) => {
+        if (value !== '') {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {}
+    );
+    fetchWarehousesWithFilters(filteredFormValue, {
+      pageNum: page,
+      pageSize,
+    }).then((res) => {
+      setRows(res.list);
+      setTotal(res.total);
+      setLoading(false);
+    });
+  }, [page, pageSize, refresh, filters, isSearchClicked]);
 
   const handleEditModalClose = () => {
     setEditModalOpen(false);

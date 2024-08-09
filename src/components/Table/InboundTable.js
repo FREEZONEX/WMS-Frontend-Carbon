@@ -55,22 +55,15 @@ function InboundTable({
       },
       {}
     );
-    if (Object.entries(filteredFormValue).length > 0) {
-      fetchInboundWithFilter(filteredFormValue, {
-        pageNum: page,
-        pageSize,
-      }).then((res) => {
-        setRows(res.list);
-        setTotal(res.total);
-        setLoading(false);
-      });
-    } else {
-      fetchInbound({ pageNum: page, pageSize }).then((res) => {
-        setRows(res.list);
-        setTotal(res.total);
-        setLoading(false);
-      });
-    }
+
+    fetchInboundWithFilter(filteredFormValue, {
+      pageNum: page,
+      pageSize,
+    }).then((res) => {
+      setRows(res.list);
+      setTotal(res.total);
+      setLoading(false);
+    });
   }, [page, pageSize, refresh, filters, isSearchClicked]);
   const createQueryString = useCallback(
     (name, value) => {

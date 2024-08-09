@@ -112,6 +112,14 @@ export async function addMaterialRFID(body) {
     return res.data.data;
   });
 }
+export async function fetchMaterialForOutbound(body) {
+  return httpToBackend
+    .post('/wms/material/getMaterialForOutbound', body)
+    .then((res) => {
+      console.log(res);
+      return res.data.data;
+    });
+}
 
 // wms/inbound
 export async function addInboundRecord(body) {

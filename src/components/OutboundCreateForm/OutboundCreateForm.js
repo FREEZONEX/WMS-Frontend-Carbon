@@ -278,6 +278,7 @@ function OutboundCreateForm({ id }) {
       <div className="mb-10">
         <FormLabel className="mb-2">Material List</FormLabel>
         <TaskListTable
+          isOutboundCreate={true}
           headers={headers}
           rows={taskList}
           setRows={setTaskList}

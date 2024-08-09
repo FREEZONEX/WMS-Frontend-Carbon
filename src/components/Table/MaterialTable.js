@@ -41,33 +41,25 @@ function MaterialTable({
   const [editRow, setEditRow] = useState({});
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [rows, setRows] = useState([]);
+
   useEffect(() => {
-    if (isSearchClicked) {
-      const filteredFormValue = Object.entries(filters).reduce(
-        (acc, [key, value]) => {
-          if (value !== '') {
-            acc[key] = value;
-          }
-          return acc;
-        },
-        {}
-      );
-      if (Object.entries(filteredFormValue).length > 0) {
-        fetchMaterialWithFilters(filteredFormValue, {
-          pageNum: page,
-          pageSize,
-        }).then((res) => {
-          setRows(res.list);
-          setTotal(res.total);
-        });
-      }
-    } else {
-      fetchMaterial({ pageNum: page, pageSize }, {}).then((res) => {
-        setRows(res.list);
-        setTotal(res.total);
-        setLoading(false);
-      });
-    }
+    const filteredFormValue = Object.entries(filters).reduce(
+      (acc, [key, value]) => {
+        if (value !== '') {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {}
+    );
+    fetchMaterialWithFilters(filteredFormValue, {
+      pageNum: page,
+      pageSize,
+    }).then((res) => {
+      setRows(res.list);
+      setTotal(res.total);
+      setLoading(false);
+    });
   }, [page, pageSize, refresh, isSearchClicked, filters]);
 
   const handleEditModalClose = () => {

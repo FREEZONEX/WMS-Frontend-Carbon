@@ -34,10 +34,10 @@ function Page() {
   const [refresh, setRefresh] = useState({});
   const [isSearchClicked, setIsSearchClicked] = useState(false);
   const defaultFormValue = {
-    ref_id: '',
+    id: '',
     status: '',
     type: '',
-    warehouse_name: '',
+    operator: '',
   };
   const [formValue, setFormValues] = useState(defaultFormValue);
   const onFormValueChange = (e) => {
@@ -102,10 +102,10 @@ function Page() {
       <div className="flex mt-20 space-x-4 items-end">
         <TextInput
           className="flex-auto "
-          labelText="Ref Id"
-          id="ref_id"
-          placeholder="Ref Id"
-          value={formValue.ref_id}
+          labelText="ID"
+          id="id"
+          placeholder="Id"
+          value={formValue.id}
           onChange={onFormValueChange}
         />
         <Select
@@ -137,22 +137,22 @@ function Page() {
         </Select>
         <TextInput
           className="flex-auto "
-          labelText="Warehouse Name"
-          id="warehouse_name"
-          placeholder="Warehouse Name"
-          value={formValue.warehouse_name}
+          labelText="Operator"
+          id="operator"
+          placeholder="Operator"
+          value={formValue.operator}
           onChange={onFormValueChange}
         />
         <HeaderGlobalAction
           aria-label="Search"
-          onClick={() => setIsSearchClicked(true)}
+          onClick={() => setIsSearchClicked(!isSearchClicked)}
         >
           <Search size={16} />
         </HeaderGlobalAction>
         <HeaderGlobalAction
           aria-label="Remove Filters"
           onClick={() => {
-            setIsSearchClicked(false);
+            setIsSearchClicked(!isSearchClicked);
             setFormValues(defaultFormValue);
           }}
         >
