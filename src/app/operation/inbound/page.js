@@ -24,13 +24,17 @@ import { hasPermission } from '@/utils/utils';
 
 const headers = [
   { key: 'id', header: 'ID' },
-  { key: 'purchase_order_no', header: 'Purchase Order No.' },
+  { key: 'purchase_order_no', header: 'PO No' },
   { key: 'supplier', header: 'Supplier' },
   { key: 'status', header: 'Status' },
   { key: 'operator', header: 'Inbounder' },
   { key: 'details', header: 'Material' },
   { key: 'delivery_date', header: 'Delivery Date' },
   { key: 'create_time', header: 'Create Time' },
+  { key: 'grn', header: 'GRN' },
+  { key: 'invoice', header: 'Invoice' },
+  { key: 'project', header: 'Project' },
+  { key: 'rate', header: 'Rate' },
   { key: 'note', header: 'Note' },
   { key: 'operate', header: 'Operation' },
 ];
@@ -46,6 +50,10 @@ function Page() {
     delivery_date: '',
     purchase_order_no: '',
     supplier: '',
+    grn: '',
+    invoice: '',
+    project: '',
+    rate: '',
     details: [
       {
         material_name: '',
@@ -205,6 +213,46 @@ function Page() {
             id="material_name"
             placeholder="Material Name"
             value={formValue.details[0].material_name}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="GRN"
+            id="grn"
+            placeholder="GRN"
+            value={formValue.grn}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="Invoice"
+            id="invoice"
+            placeholder="Invoice"
+            value={formValue.invoice}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="Project"
+            id="project"
+            placeholder="Project"
+            value={formValue.project}
+            onChange={onFormValueChange}
+          />
+        </Column>
+        <Column className="ml-0" sm={2} md={4} lg={4}>
+          <TextInput
+            className="flex-auto "
+            labelText="Rate"
+            id="rate"
+            placeholder="Rate"
+            value={formValue.rate}
             onChange={onFormValueChange}
           />
         </Column>
