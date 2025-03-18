@@ -24,7 +24,7 @@ function LoginPage() {
             router.replace('/home');
           }
         } else {
-          setMsg('* Login failed,please check your name or password');
+          setMsg('* Login failed, please check your name or password');
         }
       })
       .catch((e) => {
