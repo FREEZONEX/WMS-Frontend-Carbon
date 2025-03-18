@@ -79,7 +79,7 @@ function Page() {
         <div>
           <Heading className="mt-2 text-[28px] font-normal">Warehouse</Heading>
           <Heading className="mt-1 text-sm">
-            List of warehouses for your storage solutions
+            List of warehouses for your storage solutions1
           </Heading>
         </div>
         <Button
