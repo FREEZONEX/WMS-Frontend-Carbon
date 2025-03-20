@@ -17,6 +17,9 @@ const nextConfig = {
       case 'aws':
         destination = 'http://52.77.217.53:30086/:slug*'; // Production destination in China
         break;
+      case 'supos':
+        destination = 'http://wms-server:8085/:slug*'; // Production destination in China
+        break;
       case 'cn':
         destination = 'http://office.unibutton.com:6585//:slug*'; // Example destination for Singapore
         break;
