@@ -342,9 +342,30 @@ function TaskListTable({ headers, rows, setRows, isOutboundCreate = false }) {
                           {successRows.includes(i) && (
                             <CheckmarkFilled
                               color={
-                                Object.values(row).every(
-                                  (value) => value.trim() !== ''
-                                )
+                                Object.entries(row)
+                                  .filter(([key]) =>
+                                    [
+                                      'name',
+                                      'material_code',
+                                      'specification',
+                                      'quantity',
+                                      'unit',
+                                    ].includes(key)
+                                  )
+                                  .every(([key, value]) => {
+                                    if (key === 'quantity') {
+                                      return (
+                                        value !== null &&
+                                        value !== undefined &&
+                                        value > 0
+                                      );
+                                    }
+                                    return (
+                                      value !== null &&
+                                      value !== undefined &&
+                                      String(value).trim() !== ''
+                                    );
+                                  })
                                   ? 'green'
                                   : '#c6c6c6'
                               }
